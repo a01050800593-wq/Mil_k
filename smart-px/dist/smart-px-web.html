@@ -1,0 +1,2665 @@
+<title>스마트 PX 시연</title>
+<style>
+/* 스마트 PX 시연 — 빔프로젝터 가독성을 위해 밝은 테마, 큰 글자 */
+:root {
+  --bg: #e8ede9; --ink: #1b2520; --muted: #6a746e; --line: #dce3de; --card: #fff; --soft: #f4f7f5;
+  --brand: #2c5a4a; --brand2: #3b7862; --brand-soft: #e1eee8;
+  --accent: #f0a500; --danger: #cf4040; --ok: #2c9a57; --info: #2f6bd1; --amber: #b97700;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+html { box-sizing: border-box; color-scheme: light; } /* claude.ai가 넣는 안전 영역 패딩을 높이에 포함 */
+body {
+  font-family: 'Pretendard', 'Malgun Gothic', 'Apple SD Gothic Neo', system-ui, sans-serif;
+  background: var(--bg); color: var(--ink); font-size: 14px; line-height: 1.45;
+  display: flex; flex-direction: column; overflow: hidden;
+}
+button { font: inherit; color: inherit; cursor: pointer; }
+button:disabled { cursor: not-allowed; opacity: .5; }
+h1, h2, h3, h4, p { margin: 0; }
+small { font-size: 12px; }
+.muted { color: var(--muted); }
+.small { font-size: 12px; }
+.center { text-align: center; }
+.mono { font-family: Consolas, 'D2Coding', monospace; font-size: 12.5px; }
+.pad { padding: 14px 4px; }
+.mt8 { margin-top: 8px; }
+.link { background: none; border: 0; padding: 0; color: var(--info); font-size: 12px; text-decoration: underline; }
+.logo { width: 38px; height: 38px; border-radius: 11px; background: linear-gradient(135deg, var(--accent), #ffcf4d); color: #2a2100; font-weight: 900; display: grid; place-items: center; font-size: 15px; flex: none; letter-spacing: -.5px; }
+.logo.lg { width: 72px; height: 72px; border-radius: 20px; font-size: 28px; margin: 0 auto 12px; box-shadow: 0 8px 20px rgba(240,165,0,.35); }
+
+/* ---------- 버튼·입력 ---------- */
+.btn { border: 1px solid var(--line); background: #fff; border-radius: 10px; padding: 9px 14px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: background .15s, transform .05s; }
+.btn:active:not(:disabled) { transform: translateY(1px); }
+.btn.primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+.btn.primary:hover:not(:disabled) { background: var(--brand2); }
+.btn.ghost { background: transparent; }
+.btn.danger { background: var(--danger); border-color: var(--danger); color: #fff; }
+.btn.danger-ghost { color: var(--danger); border-color: #f0c9c9; background: #fff; }
+.btn.ok { background: var(--ok); border-color: var(--ok); color: #fff; }
+.btn.on { background: var(--brand-soft); border-color: var(--brand2); color: var(--brand); }
+.btn.block { width: 100%; margin-top: 8px; }
+.btn.lg { padding: 13px 16px; font-size: 15.5px; border-radius: 12px; }
+.btn.sm { padding: 7px 10px; font-size: 13px; }
+.btn.xs { padding: 5px 9px; font-size: 12px; border-radius: 8px; }
+.finput, .fsel { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px; font: inherit; background: #fff; color: var(--ink); }
+.finput:focus, .fsel:focus { outline: 2px solid var(--brand2); outline-offset: -1px; }
+.finput.sm { width: 220px; padding: 8px 12px; }
+.flabel { display: block; font-size: 12.5px; font-weight: 700; color: #3b4741; margin: 14px 0 6px; }
+.flabel small { font-weight: 400; color: var(--muted); margin-left: 4px; }
+.err { color: var(--danger); background: #fdecec; border-radius: 8px; padding: 8px 10px; font-size: 13px; margin-top: 10px; }
+.note { font-size: 12.5px; color: #4c5852; background: var(--soft); border-radius: 10px; padding: 9px 11px; margin-top: 10px; }
+
+/* ---------- 상단 시연 바 ---------- */
+#topbar { flex: none; height: 62px; display: flex; align-items: center; gap: 18px; padding: 0 18px; background: var(--brand); color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.15); z-index: 5; }
+.tb-brand { display: flex; align-items: center; gap: 10px; }
+.tb-brand b { display: block; font-size: 16px; }
+.tb-brand small { opacity: .75; }
+.tb-modes { display: flex; background: rgba(0,0,0,.2); border-radius: 12px; padding: 4px; }
+.tb-modes button { border: 0; background: none; color: rgba(255,255,255,.8); padding: 8px 14px; border-radius: 9px; font-weight: 600; }
+.tb-modes button.on { background: #fff; color: var(--brand); }
+.tb-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.tb-clock { text-align: right; margin-right: 6px; }
+.tb-clock small { display: block; opacity: .7; font-size: 11px; }
+.tb-clock b { font-size: 17px; font-variant-numeric: tabular-nums; }
+.tb-btn { border: 1px solid rgba(255,255,255,.35); background: rgba(255,255,255,.08); color: #fff; padding: 8px 12px; border-radius: 9px; font-weight: 600; white-space: nowrap; }
+.tb-btn:hover { background: rgba(255,255,255,.18); }
+.tb-btn.reset.armed { background: var(--danger); border-color: var(--danger); }
+
+/* ---------- 무대 레이아웃 ---------- */
+#stage { flex: 1; min-height: 0; display: flex; }
+#soldierPane { flex: 1; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 36px; padding: 14px; }
+#adminPane { flex: 1; min-width: 0; display: none; }
+body[data-mode="admin"] #soldierPane { display: none; }
+body[data-mode="admin"] #adminPane, body[data-mode="split"] #adminPane { display: block; }
+body[data-mode="split"] #soldierPane { flex: none; width: 430px; border-right: 1px solid var(--line); }
+body[data-mode="split"] #guide { display: none; }
+
+/* ---------- 시연 가이드 ---------- */
+.guide { width: 300px; background: #fff; border-radius: 18px; padding: 20px; box-shadow: 0 6px 24px rgba(0,0,0,.06); align-self: center; }
+.guide h3 { font-size: 16px; margin-bottom: 12px; }
+.g-steps { list-style: none; padding: 0; margin: 0 0 14px; }
+.g-steps li { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+.g-steps li i { flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--soft); border: 1px solid var(--line); font-style: normal; display: grid; place-items: center; font-size: 12px; font-weight: 700; color: var(--muted); }
+.g-steps li b { display: block; font-size: 13.5px; }
+.g-steps li small { color: var(--muted); }
+.g-steps li.done i { background: var(--ok); border-color: var(--ok); color: #fff; }
+.g-steps li.done b { color: var(--ok); }
+.g-box { background: var(--soft); border-radius: 12px; padding: 12px; font-size: 12.5px; }
+.g-box ul { margin: 6px 0 0; padding-left: 18px; }
+.g-tip { margin-top: 12px; font-size: 12.5px; color: #5a4300; background: #fff6dd; border-radius: 12px; padding: 10px 12px; }
+
+/* ---------- 스마트폰 프레임 ---------- */
+.phone { flex: none; width: 392px; height: min(830px, calc(100vh - 90px)); background: #121614; border-radius: 48px; padding: 12px; box-shadow: 0 24px 60px rgba(0,0,0,.28), inset 0 0 0 2px #333; }
+.phone-screen { position: relative; width: 100%; height: 100%; background: #f5f7f5; border-radius: 37px; overflow: hidden; }
+#phoneApp { height: 100%; }
+.p-app { height: 100%; display: flex; flex-direction: column; position: relative; }
+.p-status { flex: none; height: 36px; display: flex; justify-content: space-between; align-items: center; padding: 4px 26px 0; font-size: 12.5px; background: #fff; }
+.p-body { flex: 1; min-height: 0; overflow-y: auto; position: relative; scrollbar-width: thin; }
+.p-pad { padding: 12px 16px 20px; }
+.p-head { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px 6px; background: #fff; }
+.p-hello { font-size: 18px; font-weight: 800; }
+.p-sub { font-size: 12px; color: var(--muted); }
+.p-icons { display: flex; gap: 4px; }
+.icon-btn { position: relative; border: 0; background: var(--soft); width: 40px; height: 40px; border-radius: 12px; font-size: 18px; display: grid; place-items: center; }
+.icon-btn i, .p-nav i, .a-side nav i { position: absolute; top: -4px; right: -6px; background: var(--danger); color: #fff; font-style: normal; font-size: 10.5px; font-weight: 800; min-width: 18px; height: 18px; border-radius: 9px; display: grid; place-items: center; padding: 0 4px; }
+.p-banner { margin: 8px 16px 0; background: linear-gradient(120deg, #23463a, #3b7862); color: #fff; border-radius: 14px; padding: 12px 14px; }
+.p-banner b { display: block; font-size: 14.5px; }
+.p-banner span { font-size: 12px; opacity: .85; }
+.p-chips { display: flex; gap: 6px; flex-wrap: wrap; padding: 10px 16px 2px; }
+.chip { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 4px 10px; font-size: 11.5px; font-weight: 600; }
+.p-cats { display: flex; gap: 6px; padding: 10px 16px; overflow-x: auto; scrollbar-width: none; position: sticky; top: 0; background: #f5f7f5; z-index: 2; }
+.p-cats button { flex: none; border: 1px solid var(--line); background: #fff; border-radius: 20px; padding: 6px 12px; font-size: 13px; font-weight: 600; }
+.p-cats button.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+.p-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 2px 16px 20px; }
+.pcard { background: #fff; border-radius: 16px; padding: 8px; display: flex; flex-direction: column; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+.pcard.soldout { opacity: .55; }
+.pimg { position: relative; height: 96px; border-radius: 12px; display: grid; place-items: center; }
+.pimg > span { font-size: 46px; filter: drop-shadow(0 4px 4px rgba(0,0,0,.12)); }
+.bdgs { position: absolute; top: 6px; left: 6px; display: flex; flex-direction: column; gap: 3px; align-items: flex-start; }
+.bdg { display: inline-block; font-size: 10.5px; font-weight: 800; border-radius: 6px; padding: 2px 6px; white-space: nowrap; }
+.bdg.pick { background: #3d3d8f; color: #fff; }
+.bdg.sale { background: var(--danger); color: #fff; }
+.bdg.out { background: #555; color: #fff; }
+.pname { font-size: 13.5px; font-weight: 700; margin: 8px 2px 2px; min-height: 20px; }
+.pprice { margin: 0 2px; font-size: 14px; }
+.pprice s { color: var(--muted); font-size: 11.5px; margin-right: 4px; }
+.pprice b.sale, b.sale { color: var(--danger); }
+.pmeta { font-size: 11.5px; color: var(--muted); margin: 2px 2px 6px; }
+.pmeta.few { color: var(--amber); font-weight: 700; }
+.pcard .btn { margin-top: auto; }
+.stepper { display: flex; align-items: center; justify-content: space-between; background: var(--brand-soft); border-radius: 10px; padding: 3px; min-width: 96px; }
+.stepper button { width: 30px; height: 28px; border: 0; background: #fff; border-radius: 8px; font-size: 16px; font-weight: 700; color: var(--brand); }
+.stepper b { font-size: 14px; min-width: 22px; text-align: center; }
+.pcard .stepper { margin-top: auto; }
+.p-nav { flex: none; display: flex; border-top: 1px solid var(--line); background: #fff; padding: 6px 4px 12px; }
+.p-nav button { flex: 1; border: 0; background: none; font-size: 11px; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 1px; }
+.p-nav button span { position: relative; font-size: 20px; filter: grayscale(1); opacity: .7; }
+.p-nav button.on { color: var(--brand); font-weight: 800; }
+.p-nav button.on span { filter: none; opacity: 1; }
+.p-subhead { display: grid; grid-template-columns: 40px 1fr 40px; align-items: center; padding: 8px 12px; background: #fff; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 3; }
+.p-subhead b { text-align: center; font-size: 16px; }
+.p-subhead .icon-btn { font-size: 26px; background: none; }
+.p-cta { position: sticky; bottom: 0; padding: 10px 16px 12px; background: linear-gradient(transparent, #f5f7f5 30%); }
+.p-cta .btn { margin-top: 0; }
+.sec { font-size: 14px; margin: 18px 0 8px; }
+.sec small { font-weight: 400; color: var(--muted); margin-left: 4px; }
+.empty { text-align: center; padding: 70px 20px; color: var(--muted); }
+.empty-ico { font-size: 48px; margin-bottom: 8px; }
+.empty .btn { margin-top: 14px; }
+
+/* 로그인 */
+.p-login { padding: 30px 24px; background: #fff; }
+.login-hero { text-align: center; margin: 12px 0 18px; }
+.login-hero h1 { font-size: 24px; }
+.login-hero p { color: var(--muted); font-size: 13px; }
+.samples { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 12px; }
+.samples-title { font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+.sample { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 8px; border: 1px solid var(--line); background: var(--soft); border-radius: 10px; padding: 8px 10px; margin-top: 6px; text-align: left; font-size: 12.5px; }
+.sample small { color: var(--muted); font-family: Consolas, monospace; }
+.fine { text-align: center; color: var(--muted); font-size: 11.5px; margin-top: 14px; }
+
+/* 장바구니 */
+.cline { display: flex; gap: 10px; background: #fff; border-radius: 14px; padding: 10px; margin-bottom: 8px; }
+.cimg { width: 56px; height: 56px; border-radius: 12px; display: grid; place-items: center; font-size: 28px; flex: none; }
+.cinfo { flex: 1; min-width: 0; }
+.cname { font-weight: 700; font-size: 13.5px; }
+.cprice { font-size: 12.5px; color: var(--muted); margin: 2px 0 6px; }
+.cprice b { color: var(--ink); }
+.cctl { display: flex; align-items: center; justify-content: space-between; }
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.seg button { border: 2px solid var(--line); background: #fff; border-radius: 14px; padding: 12px 8px; text-align: center; }
+.seg button b { display: block; font-size: 14.5px; }
+.seg button small { color: var(--muted); }
+.seg button.on { border-color: var(--brand); background: var(--brand-soft); }
+.rounds { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.round { border: 1.5px solid var(--line); background: #fff; border-radius: 10px; padding: 7px 4px; }
+.round b { display: block; font-size: 13px; }
+.round small { color: var(--muted); font-size: 11px; }
+.round.on { border-color: var(--brand); background: var(--brand-soft); }
+.round:disabled { background: #f0f0f0; text-decoration: line-through; }
+.warnbox { margin-top: 12px; background: #fff7e3; border: 1px solid #f3d58c; border-radius: 12px; padding: 12px; }
+.warnbox b { color: #7a5200; }
+.warnbox p { font-size: 12.5px; margin-top: 4px; }
+.warnbox .flabel { margin-top: 10px; }
+.sumbox { background: #fff; border-radius: 14px; padding: 4px 12px; }
+.sumrow { padding: 10px 0; border-bottom: 1px solid var(--line); }
+.sumrow small { display: block; color: var(--muted); margin-top: 2px; }
+.sumrow small.items { color: #3b4741; }
+.sumtop { display: flex; justify-content: space-between; align-items: center; font-size: 13.5px; }
+.sumtotal { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; }
+.sumtotal b { font-size: 18px; color: var(--brand); }
+.tag { display: inline-block; font-size: 11px; font-weight: 800; padding: 2px 7px; border-radius: 6px; background: #eee; }
+.tag.shuttle { background: #e3edff; color: #2650a8; }
+.tag.pickup { background: #fff0d9; color: #8a5600; }
+.tag.mobile { background: #e9e3ff; color: #5130a8; }
+
+/* 결제 */
+.paym { width: 100%; display: flex; align-items: center; gap: 12px; border: 2px solid var(--line); background: #fff; border-radius: 14px; padding: 12px; margin-bottom: 8px; text-align: left; }
+.paym.on { border-color: var(--brand); background: var(--brand-soft); }
+.paym-ico { font-size: 26px; }
+.paym-txt { flex: 1; }
+.paym-txt b { display: block; }
+.paym-txt small { color: var(--muted); }
+.radio { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--line); }
+.paym.on .radio { border: 6px solid var(--brand); }
+.paying { padding: 120px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.paying small { color: var(--muted); }
+.spinner { width: 52px; height: 52px; border-radius: 50%; border: 5px solid var(--brand-soft); border-top-color: var(--brand); animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.done-ico { font-size: 54px; margin: 10px 0 4px; }
+.qrcard { display: flex; gap: 12px; align-items: center; background: #fff; border-radius: 14px; padding: 10px; margin: 12px 0; text-align: left; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+.qrcard .qr { width: 110px; height: 110px; flex: none; }
+.qrcard b { display: block; font-family: Consolas, monospace; }
+.qrcard small { display: block; color: var(--muted); }
+
+/* 내 주문 */
+.ocard { background: #fff; border-radius: 16px; padding: 12px; margin-bottom: 10px; border: 2px solid transparent; }
+.ocard.ready { border-color: var(--ok); box-shadow: 0 4px 16px rgba(44,154,87,.18); }
+.ocard.cancelled { opacity: .55; }
+.ohead { display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+.ohead b { font-family: Consolas, monospace; }
+.oitems { font-size: 13px; margin: 6px 0 4px; }
+.ometa { font-size: 12px; color: var(--muted); }
+.oready { margin-top: 8px; background: #e6f6ec; color: #1d6b3d; font-weight: 700; font-size: 12.5px; border-radius: 10px; padding: 8px 10px; }
+.oacts { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.steps { display: flex; margin: 12px 0 2px; }
+.step { flex: 1; text-align: center; position: relative; font-size: 10.5px; color: #9aa39e; }
+.step i { display: block; width: 12px; height: 12px; border-radius: 50%; background: #dfe5e1; margin: 0 auto 4px; position: relative; z-index: 1; }
+.step::before { content: ''; position: absolute; top: 5px; left: -50%; right: 50%; height: 2px; background: #dfe5e1; }
+.step:first-child::before { display: none; }
+.step.done i, .step.cur i { background: var(--brand); }
+.step.done::before, .step.cur::before { background: var(--brand); }
+.step.cur { color: var(--brand); font-weight: 800; }
+.step.cur i { box-shadow: 0 0 0 4px rgba(44,90,74,.2); }
+.step.done { color: var(--ink); }
+.sbadge { display: inline-block; font-size: 11.5px; font-weight: 800; padding: 3px 8px; border-radius: 20px; white-space: nowrap; }
+.b-gray { background: #eceeed; color: #555; }
+.b-blue { background: #e2ebff; color: #2650a8; }
+.b-amber { background: #fff0d1; color: #8a5600; }
+.b-green { background: #dff4e6; color: #1d6b3d; }
+.b-done { background: #e8efe9; color: #3b5a4a; }
+.b-red { background: #fde3e3; color: #a52a2a; }
+
+/* 휴대폰 안 모달·토스트 */
+.p-modal { position: absolute; inset: 0; background: rgba(10,20,15,.45); display: flex; align-items: flex-end; z-index: 20; animation: fade .15s; }
+.p-sheet { width: 100%; max-height: 88%; overflow-y: auto; background: #fff; border-radius: 22px 22px 0 0; padding: 14px 18px 22px; animation: up .2s ease-out; }
+.p-sheet.tall { max-height: 94%; }
+.sheet-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.sheet-head b { font-size: 16px; }
+@keyframes fade { from { opacity: 0; } }
+@keyframes up { from { transform: translateY(40px); opacity: 0; } }
+.qr-big { position: relative; width: 230px; margin: 6px auto 10px; }
+.qr-big .qr { width: 100%; display: block; }
+.qr-big.used .qr { opacity: .25; }
+.stamp { position: absolute; inset: 0; margin: auto; width: 150px; height: 56px; border: 4px solid var(--ok); color: var(--ok); font-weight: 900; font-size: 22px; display: grid; place-items: center; border-radius: 10px; transform: rotate(-12deg); background: rgba(255,255,255,.8); }
+.nlist { display: flex; flex-direction: column; gap: 8px; }
+.nitem { background: var(--soft); border-radius: 10px; padding: 10px; font-size: 13px; }
+.nitem small { display: block; color: var(--muted); margin-top: 2px; }
+.p-toasts { position: absolute; top: 42px; left: 10px; right: 10px; z-index: 30; display: flex; flex-direction: column; gap: 6px; pointer-events: none; }
+.p-toasts .toast { background: rgba(28,36,32,.94); color: #fff; border-radius: 16px; padding: 12px 14px; font-size: 13px; font-weight: 600; box-shadow: 0 8px 22px rgba(0,0,0,.25); animation: drop .25s ease-out; }
+.page-toasts { position: fixed; top: 74px; right: 18px; z-index: 50; display: flex; flex-direction: column; gap: 8px; width: 360px; pointer-events: none; }
+.page-toasts .toast { background: #fff; border-left: 5px solid var(--info); border-radius: 10px; padding: 11px 14px; font-size: 13.5px; font-weight: 600; box-shadow: 0 8px 26px rgba(0,0,0,.15); animation: slide .25s ease-out; }
+.toast.t-warn { border-left-color: var(--accent); }
+.toast.t-ok { border-left-color: var(--ok); }
+.toast.t-muted { border-left-color: #999; }
+.toast.out { opacity: 0; transform: translateY(-6px); transition: all .4s; }
+@keyframes drop { from { transform: translateY(-20px); opacity: 0; } }
+@keyframes slide { from { transform: translateX(30px); opacity: 0; } }
+
+/* 이동 PX (장병) */
+.veh-card { background: #fff; border-radius: 16px; padding: 12px; }
+.veh-top { display: flex; justify-content: space-between; align-items: center; }
+.veh-sub { font-size: 12px; color: var(--muted); margin: 2px 0 4px; }
+.vpill { display: inline-block; font-size: 11.5px; font-weight: 800; border-radius: 20px; padding: 3px 9px; background: #eceeed; }
+.v-운행 { background: #e2ebff; color: #2650a8; }
+.v-정차 { background: #dff4e6; color: #1d6b3d; }
+.v-대기, .v-복귀 { background: #fff0d1; color: #8a5600; }
+.v-중지 { background: var(--danger); color: #fff; }
+.route { width: 100%; height: auto; display: block; }
+.route-line { fill: none; stroke: #d5ddd8; stroke-width: 12; stroke-linejoin: round; }
+.route-dash { fill: none; stroke: #fff; stroke-width: 2; stroke-dasharray: 6 6; }
+.stop circle { fill: #fff; stroke: var(--brand); stroke-width: 3; }
+.stop text { font-size: 12.5px; font-weight: 700; fill: #3b4741; }
+.stop.mine circle { fill: var(--accent); stroke: #8a5600; }
+.stop.mine text { fill: #8a5600; }
+.stop.here circle { fill: var(--brand); }
+.veh { transition: transform 1.4s ease-in-out; }
+.veh circle { fill: #fff; stroke: var(--brand); stroke-width: 3; filter: drop-shadow(0 3px 4px rgba(0,0,0,.25)); }
+.veh text { font-size: 17px; }
+.veh.stopped circle { stroke: var(--danger); fill: #ffe9e9; }
+.eta-box { background: #fff; border-radius: 14px; padding: 12px; margin-top: 10px; font-size: 13px; }
+.eta-box div:first-child { font-size: 12px; color: #8a5600; font-weight: 700; margin-bottom: 2px; }
+.errbox { background: #fde3e3; color: #a52a2a; border-radius: 12px; padding: 10px 12px; margin-top: 10px; font-size: 12.5px; font-weight: 700; }
+.toggle-row { width: 100%; display: flex; justify-content: space-between; align-items: center; background: #fff; border: 0; border-radius: 14px; padding: 12px; margin-top: 8px; font-weight: 600; }
+.switch { width: 44px; height: 26px; border-radius: 13px; background: #cfd6d2; position: relative; transition: background .2s; }
+.switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: left .2s; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+.switch.on { background: var(--ok); }
+.switch.on::after { left: 21px; }
+.load-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.load-item { display: grid; grid-template-columns: 36px 1fr auto; grid-template-rows: auto auto; column-gap: 8px; align-items: center; background: #fff; border-radius: 12px; padding: 6px 8px; font-size: 12px; }
+.load-item .li-emo { grid-row: span 2; width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; font-size: 20px; }
+.load-item .li-name { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.load-item small { color: var(--muted); grid-column: 2; }
+.load-item b { grid-row: 1 / span 2; grid-column: 3; }
+.load-item.empty { opacity: .45; }
+.door-open { background: #e6f6ec; color: #1d6b3d; font-weight: 800; border-radius: 12px; padding: 12px; text-align: center; font-size: 15px; }
+.pick-list { margin: 8px 0; }
+.pick-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+.pick-row small { display: block; color: var(--muted); }
+.pick-row.empty { opacity: .45; }
+
+/* ---------- 관리자 ---------- */
+.admin { display: flex; height: 100%; }
+.a-side { width: 214px; flex: none; background: #fff; border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: 16px 12px; }
+.a-brand { display: flex; align-items: center; gap: 10px; padding: 4px 6px 16px; }
+.a-brand b { display: block; font-size: 15px; }
+.a-brand small { color: var(--muted); }
+.a-side nav { display: flex; flex-direction: column; gap: 2px; }
+.a-side nav button { position: relative; display: flex; align-items: center; gap: 10px; width: 100%; padding: 11px 12px; border: 0; background: none; border-radius: 10px; font-size: 14px; font-weight: 600; text-align: left; color: #3b4741; }
+.a-side nav button em { font-style: normal; }
+.a-side nav button:hover { background: var(--soft); }
+.a-side nav button.on { background: var(--brand-soft); color: var(--brand); }
+.a-side nav i { position: static; margin-left: auto; }
+.a-user { margin-top: auto; padding: 12px 8px 0; border-top: 1px solid var(--line); font-size: 13px; }
+.a-user small { display: block; color: var(--muted); margin-bottom: 4px; }
+.a-main { flex: 1; min-width: 0; height: 100%; overflow: auto; padding: 20px 24px 40px; }
+.a-title { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+.a-title h2 { font-size: 22px; }
+body[data-mode="split"] .a-side { width: 64px; padding: 16px 8px; }
+body[data-mode="split"] .a-side nav button { justify-content: center; padding: 11px 0; font-size: 20px; }
+body[data-mode="split"] .a-side nav em, body[data-mode="split"] .a-brand > div:last-child, body[data-mode="split"] .a-user small, body[data-mode="split"] .a-user b { display: none; }
+body[data-mode="split"] .a-side nav i { position: absolute; top: 2px; right: 2px; }
+body[data-mode="split"] .a-user { padding: 10px 0 0; text-align: center; }
+body[data-mode="split"] .a-main { padding: 16px 16px 40px; }
+
+.a-login { height: 100%; display: grid; place-items: center; padding: 20px; }
+.a-login-card { width: 380px; background: #fff; border-radius: 20px; padding: 28px; box-shadow: 0 10px 40px rgba(0,0,0,.08); }
+.a-brand.big b { font-size: 18px; }
+.a-login-card .sample { margin-top: 14px; }
+
+.card { background: #fff; border-radius: 16px; padding: 16px 18px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.04); min-width: 0; }
+.card-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
+.card-head h3 { font-size: 15.5px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid2 > .card { margin-bottom: 16px; }
+.grid2.wide-left { grid-template-columns: 1.3fr 1fr; }
+.alert-banner { display: flex; align-items: center; gap: 14px; background: linear-gradient(110deg, #fff4d6, #ffe7b0); border: 1px solid #f1cf76; border-radius: 16px; padding: 14px 18px; margin-bottom: 16px; }
+.ab-icon { font-size: 30px; }
+.ab-text { flex: 1; }
+.ab-title { font-weight: 800; color: #6b4a00; }
+.ab-title small { font-weight: 400; color: #8a6a1c; margin-left: 6px; }
+.ab-body { font-size: 19px; margin-top: 2px; }
+.ab-body b { color: #b34700; }
+.ab-acts { display: flex; gap: 6px; }
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+.kpi { display: flex; gap: 12px; align-items: center; background: #fff; border-radius: 16px; padding: 14px 16px; border-top: 4px solid var(--brand2); }
+.kpi.warn { border-top-color: var(--accent); }
+.kpi.danger { border-top-color: var(--danger); }
+.kpi-ico { font-size: 26px; }
+.kpi small { display: block; color: var(--muted); font-weight: 600; }
+.kpi b { display: block; font-size: 22px; line-height: 1.2; }
+.kpi span { font-size: 11.5px; color: var(--muted); }
+.kpis.small .kpi b { font-size: 19px; }
+body[data-mode="split"] .kpis { grid-template-columns: repeat(2, 1fr); }
+body[data-mode="split"] .grid2 { grid-template-columns: 1fr; }
+
+.tbl-wrap { overflow-x: auto; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tbl th { text-align: left; font-size: 12px; color: var(--muted); font-weight: 700; padding: 8px; border-bottom: 2px solid var(--line); white-space: nowrap; }
+.tbl td { padding: 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.tbl tr:last-child td { border-bottom: 0; }
+.tbl .ellipsis { max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tbl.board td, .tbl.board th { text-align: center; }
+.tbl.board tbody th { text-align: left; color: var(--ink); border-bottom: 1px solid var(--line); }
+.tbl.board td b { display: block; font-size: 15px; }
+.tbl.board td small { color: var(--muted); font-size: 11px; }
+.tbl.board td.dim { color: #bbb; }
+.ph { display: inline-block; font-size: 10.5px; font-weight: 700; border-radius: 10px; padding: 1px 7px; margin-top: 3px; }
+.ph-open { background: #e2ebff; color: #2650a8; }
+.ph-prep { background: #fff0d1; color: #8a5600; }
+.ph-move { background: #ffe1c7; color: #a24c00; }
+.ph-done { background: #dff4e6; color: #1d6b3d; }
+.feed { display: flex; flex-direction: column; }
+.feed-item { display: flex; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.feed-item:last-child { border-bottom: 0; }
+.fi-ico { font-size: 20px; width: 34px; height: 34px; background: var(--soft); border-radius: 10px; display: grid; place-items: center; flex: none; }
+.feed-item > div:nth-child(2) { flex: 1; min-width: 0; }
+.feed-item b { display: block; font-size: 13px; }
+.feed-item small { color: var(--muted); }
+.fi-right { text-align: right; }
+.fi-right small { display: block; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chipbtn { border: 1px solid var(--line); background: #fff; border-radius: 20px; padding: 6px 12px; font-size: 13px; font-weight: 600; }
+.chipbtn small { color: var(--muted); margin-left: 2px; }
+.chipbtn.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+.chipbtn.on small { color: #ccc; }
+.pad-b { margin-bottom: 10px; }
+.toolbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.picking { background: var(--soft); border-radius: 10px; padding: 10px 12px; margin: 12px 0; font-size: 13px; }
+.pk { display: inline-block; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 2px 8px; margin: 3px 2px 0; font-size: 12px; }
+.wh-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+.wh { border: 1px solid var(--line); border-radius: 12px; padding: 10px; }
+.wh-head { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.wh-row { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; padding: 6px 0; border-top: 1px dashed var(--line); font-size: 12.5px; }
+.wh-row small { color: var(--muted); grid-column: 1; }
+.wh-row .sbadge { grid-row: 1 / span 2; grid-column: 2; align-self: center; }
+
+.inv td:first-child { white-space: nowrap; }
+.emo { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; margin-right: 8px; font-size: 17px; vertical-align: middle; }
+.stockcell { display: flex; align-items: center; gap: 8px; min-width: 120px; }
+.stockcell b { width: 26px; text-align: right; font-size: 15px; }
+.warn-t { color: var(--danger); font-weight: 800; }
+.bar { position: relative; flex: 1; height: 8px; background: #edf0ee; border-radius: 4px; }
+.bar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--brand2); border-radius: 4px; transition: width .4s; }
+.bar i.low { background: var(--danger); }
+.bar em { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--accent); }
+.bar.mini { width: 80px; flex: none; }
+.dd { display: inline-block; font-size: 11px; font-weight: 800; border-radius: 6px; padding: 1px 6px; background: #eceeed; }
+.dd-amber { background: #fff0d1; color: #8a5600; }
+.dd-red { background: #fde3e3; color: #a52a2a; }
+tr.row-dispose td { background: #fff7f7; }
+tr.flash td { animation: flash 2.6s ease-out; }
+@keyframes flash { 0%, 30% { background: #fff1b8; } 100% { background: transparent; } }
+.rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.rules div { background: var(--soft); border-radius: 12px; padding: 12px; }
+.rules p { font-size: 12.5px; color: #4c5852; margin-top: 4px; }
+
+/* QR 수령 단말 */
+.scan-grid { display: grid; grid-template-columns: 1fr 420px; gap: 16px; align-items: start; }
+body[data-mode="split"] .scan-grid { grid-template-columns: 1fr 360px; }
+body[data-mode="split"] .viewfinder { height: 250px; }
+body[data-mode="split"] .inv th:nth-child(2), body[data-mode="split"] .inv td:nth-child(2) { display: none; }
+.slist { max-height: calc(100vh - 230px); overflow-y: auto; }
+.sgroup { font-size: 12px; font-weight: 800; color: var(--muted); margin: 10px 0 4px; }
+.srow { width: 100%; display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; text-align: left; border: 1.5px solid var(--line); background: #fff; border-radius: 10px; padding: 8px 10px; margin-bottom: 6px; font-size: 13px; }
+.srow b { font-family: Consolas, monospace; }
+.srow small { color: var(--muted); grid-column: 1; }
+.srow .sbadge { grid-row: 1 / span 2; grid-column: 2; align-self: center; }
+.srow.on { border-color: var(--brand); background: var(--brand-soft); }
+.srow.dim { opacity: .6; }
+.terminal { background: #1a211e; color: #e8efe9; border-radius: 22px; padding: 16px; box-shadow: 0 12px 40px rgba(0,0,0,.25); position: sticky; top: 0; }
+.term-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; font-weight: 700; }
+.fsel.dark, .finput.dark { background: #27302c; color: #fff; border-color: #3a4540; width: auto; }
+.finput.dark { flex: 1; }
+.viewfinder { position: relative; height: 290px; background: #0d1210; border-radius: 16px; display: grid; place-items: center; overflow: hidden; }
+.viewfinder video { width: 100%; height: 100%; object-fit: cover; }
+.vf-qr { width: 200px; background: #fff; padding: 6px; border-radius: 10px; }
+.vf-qr .qr { display: block; width: 100%; }
+.vf-empty { color: #7d8a84; font-size: 15px; }
+.viewfinder .c { position: absolute; width: 34px; height: 34px; border: 4px solid var(--accent); }
+.c.tl { top: 22px; left: 22px; border-right: 0; border-bottom: 0; border-radius: 10px 0 0 0; }
+.c.tr { top: 22px; right: 22px; border-left: 0; border-bottom: 0; border-radius: 0 10px 0 0; }
+.c.bl { bottom: 22px; left: 22px; border-right: 0; border-top: 0; border-radius: 0 0 0 10px; }
+.c.br { bottom: 22px; right: 22px; border-left: 0; border-top: 0; border-radius: 0 0 10px 0; }
+.scanline { position: absolute; left: 30px; right: 30px; height: 3px; background: #4dff9a; box-shadow: 0 0 14px #4dff9a; top: 30px; display: none; }
+.viewfinder.scanning .scanline { display: block; animation: scan 1s ease-in-out infinite alternate; }
+@keyframes scan { to { top: calc(100% - 34px); } }
+.term-acts { display: flex; gap: 8px; margin-top: 12px; }
+.term-acts .btn.primary { flex: 1; }
+.btn.ghost-dark { background: #27302c; border-color: #3a4540; color: #e8efe9; }
+.term-token { display: flex; gap: 8px; margin-top: 10px; }
+.term-result { display: flex; gap: 12px; align-items: center; border-radius: 14px; padding: 12px 14px; margin-top: 12px; animation: up .2s; }
+.term-result.ok { background: #1f4d33; }
+.term-result.fail { background: #5a2424; }
+.tr-ico { font-size: 30px; }
+.term-result b { font-size: 16px; }
+.term-result p { font-size: 13px; margin-top: 2px; }
+.term-result small { color: #b9c6bf; }
+
+/* 이동 PX 관제 */
+.map-wrap { background: var(--soft); border-radius: 14px; padding: 6px; }
+.map-wrap .route { max-height: 340px; margin: 0 auto; }
+.ctrl-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 12px; }
+.vstat { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.vstat > div { background: var(--soft); border-radius: 12px; padding: 10px 12px; }
+.vstat small { display: block; color: var(--muted); }
+.vstat b { font-size: 14px; }
+.batt { display: inline-block; vertical-align: middle; width: 60px; height: 12px; border: 2px solid #8a948f; border-radius: 3px; position: relative; padding: 1px; }
+.batt i { display: block; height: 100%; background: var(--ok); border-radius: 1px; }
+.batt i.low { background: var(--danger); }
+
+@media (max-width: 1100px) {
+  .guide { display: none; }
+  .kpis { grid-template-columns: repeat(2, 1fr); }
+  .grid2, .grid2.wide-left, .scan-grid { grid-template-columns: 1fr; }
+}
+/* 실시간 연결·데이터 준비 화면 */
+#gate { display: none; }
+body.gated #stage { display: none; }
+body.gated #gate { display: flex; flex: 1; min-height: 0; align-items: center; justify-content: center; padding: 20px max(16px, env(safe-area-inset-right, 0px)) 20px max(16px, env(safe-area-inset-left, 0px)); }
+.gate-card { max-width: 440px; background: #fff; border-radius: 20px; padding: 32px 28px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 14px; box-shadow: 0 10px 40px rgba(0,0,0,.08); }
+.gate-card .logo.lg { margin: 0; }
+.gate-card h2 { font-size: 20px; text-wrap: balance; }
+.gate-card p { color: #4c5852; font-size: 14px; }
+.sync { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 20px; background: rgba(255,255,255,.12); white-space: nowrap; }
+.sync i { width: 8px; height: 8px; border-radius: 50%; background: #c9d2cd; }
+.sync-live i { background: #5ee08f; box-shadow: 0 0 0 3px rgba(94,224,143,.25); }
+.sync-busy i { background: var(--accent); animation: pulse 1s ease-in-out infinite alternate; }
+.sync-warn i { background: #ff8a6b; }
+@keyframes pulse { to { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .sync-busy i, .spinner, .viewfinder.scanning .scanline { animation: none; } }
+
+/* 실제 휴대폰으로 열었을 때: 기기 틀 없이 전체 화면 */
+@media (max-width: 640px) {
+  #topbar { height: auto; flex-wrap: wrap; padding: 8px max(12px, env(safe-area-inset-right, 0px)) 8px max(12px, env(safe-area-inset-left, 0px)); gap: 8px; }
+  .tb-brand small, .tb-clock small, .tb-btn { display: none; }
+  .tb-brand b { font-size: 14px; }
+  .tb-brand .logo { width: 30px; height: 30px; font-size: 12px; border-radius: 9px; }
+  .tb-right { gap: 6px; }
+  .tb-clock { margin-right: 0; }
+  .tb-clock b { font-size: 13px; }
+  .tb-modes { order: 3; width: 100%; }
+  .tb-modes button { flex: 1; padding: 6px 4px; font-size: 12.5px; }
+  #soldierPane { padding: 0; gap: 0; }
+  body[data-mode="split"] #soldierPane { width: 100%; border-right: 0; }
+  body[data-mode="split"] #adminPane { display: none; }
+  .phone { width: 100%; height: 100%; padding: 0; border-radius: 0; background: none; box-shadow: none; }
+  .phone-screen { border-radius: 0; }
+  .p-status { display: none; }
+  .p-nav { padding-bottom: max(10px, env(safe-area-inset-bottom, 0px)); }
+  .a-side { width: 56px; padding: 12px 6px; }
+  .a-side nav button { justify-content: center; padding: 10px 0; font-size: 18px; }
+  .a-side nav em, .a-brand > div:last-child, .a-user small, .a-user b { display: none; }
+  .a-side nav i { position: absolute; top: 2px; right: 0; }
+  .a-main { padding: 14px 12px 40px; }
+  .kpis { grid-template-columns: 1fr 1fr; }
+  .alert-banner { flex-wrap: wrap; }
+  .ab-body { font-size: 15px; }
+  .page-toasts { left: 12px; right: 12px; width: auto; }
+}
+
+</style>
+
+
+<header id="topbar"></header>
+<main id="stage">
+  <section id="soldierPane">
+    <aside id="guide" class="guide"></aside>
+    <div class="phone">
+      <div class="phone-screen">
+        <div id="phoneApp"></div>
+        <div id="phoneToasts" class="p-toasts"></div>
+      </div>
+    </div>
+  </section>
+  <section id="adminPane"></section>
+</main>
+<div id="gate"></div>
+<div id="pageToasts" class="page-toasts"></div>
+<script>
+/* 경량 QR 코드 생성기 — Byte 모드, 오류정정 M, 버전 1~10 (외부 라이브러리 없이 오프라인 동작) */
+const QR = (() => {
+  const EXP = new Array(512), LOG = new Array(256);
+  for (let i = 0, x = 1; i < 255; i++) { EXP[i] = x; LOG[x] = i; x <<= 1; if (x & 0x100) x ^= 0x11d; }
+  for (let i = 255; i < 512; i++) EXP[i] = EXP[i - 255];
+  const mul = (a, b) => (a === 0 || b === 0) ? 0 : EXP[LOG[a] + LOG[b]];
+
+  // 버전별 표 (오류정정 M)
+  const ECC_PER_BLOCK = [0, 10, 16, 26, 18, 24, 16, 18, 22, 22, 26];
+  const NUM_BLOCKS = [0, 1, 1, 1, 2, 2, 4, 4, 4, 5, 5];
+  const TOTAL_CW = [0, 26, 44, 70, 100, 134, 172, 196, 242, 292, 346];
+  const ALIGN = [[], [], [6, 18], [6, 22], [6, 26], [6, 30], [6, 34], [6, 22, 38], [6, 24, 42], [6, 26, 46], [6, 28, 50]];
+  const MASKS = [
+    (x, y) => (x + y) % 2 === 0,
+    (x, y) => y % 2 === 0,
+    (x, y) => x % 3 === 0,
+    (x, y) => (x + y) % 3 === 0,
+    (x, y) => (Math.floor(x / 3) + Math.floor(y / 2)) % 2 === 0,
+    (x, y) => x * y % 2 + x * y % 3 === 0,
+    (x, y) => (x * y % 2 + x * y % 3) % 2 === 0,
+    (x, y) => ((x + y) % 2 + x * y % 3) % 2 === 0,
+  ];
+
+  function generator(deg) {
+    let poly = [1];
+    for (let i = 0; i < deg; i++) {
+      const next = new Array(poly.length + 1).fill(0);
+      for (let j = 0; j < poly.length; j++) { next[j] ^= poly[j]; next[j + 1] ^= mul(poly[j], EXP[i]); }
+      poly = next;
+    }
+    return poly;
+  }
+
+  function remainder(data, gen, deg) {
+    let res = new Array(deg).fill(0);
+    for (const b of data) {
+      const factor = b ^ res[0];
+      res = res.slice(1).concat(0);
+      for (let i = 0; i < deg; i++) res[i] ^= mul(gen[i + 1], factor);
+    }
+    return res;
+  }
+
+  function penalty(m) {
+    const n = m.length;
+    let score = 0, dark = 0;
+    for (let a = 0; a < n; a++) {
+      let rc = null, rl = 0, cc = null, cl = 0;
+      for (let b = 0; b < n; b++) {
+        const r = m[a][b], c = m[b][a];
+        if (r === rc) { rl++; if (rl === 5) score += 3; else if (rl > 5) score++; } else { rc = r; rl = 1; }
+        if (c === cc) { cl++; if (cl === 5) score += 3; else if (cl > 5) score++; } else { cc = c; cl = 1; }
+        if (r) dark++;
+        if (a < n - 1 && b < n - 1 && r === m[a][b + 1] && r === m[a + 1][b] && r === m[a + 1][b + 1]) score += 3;
+      }
+    }
+    return score + Math.max(0, Math.ceil(Math.abs(dark * 20 - n * n * 10) / (n * n)) - 1) * 10;
+  }
+
+  function encode(text) {
+    const bytes = Array.from(new TextEncoder().encode(text));
+    let ver = 1;
+    for (; ver <= 10; ver++) {
+      const cap = TOTAL_CW[ver] - ECC_PER_BLOCK[ver] * NUM_BLOCKS[ver];
+      if (4 + (ver < 10 ? 8 : 16) + bytes.length * 8 <= cap * 8) break;
+    }
+    if (ver > 10) throw new Error('QR 데이터가 너무 깁니다');
+    const cap = TOTAL_CW[ver] - ECC_PER_BLOCK[ver] * NUM_BLOCKS[ver];
+
+    // 데이터 비트열
+    const bits = [];
+    const push = (val, len) => { for (let i = len - 1; i >= 0; i--) bits.push((val >>> i) & 1); };
+    push(4, 4);
+    push(bytes.length, ver < 10 ? 8 : 16);
+    bytes.forEach(b => push(b, 8));
+    push(0, Math.min(4, cap * 8 - bits.length));
+    push(0, (8 - bits.length % 8) % 8);
+    const data = [];
+    for (let i = 0; i < bits.length; i += 8) { let b = 0; for (let j = 0; j < 8; j++) b = (b << 1) | bits[i + j]; data.push(b); }
+    for (let pad = 0xEC; data.length < cap; pad ^= 0xEC ^ 0x11) data.push(pad);
+
+    // 블록 분할 + 오류정정 + 인터리브
+    const nb = NUM_BLOCKS[ver], ecLen = ECC_PER_BLOCK[ver], total = TOTAL_CW[ver];
+    const numShort = nb - total % nb, shortLen = Math.floor(total / nb);
+    const gen = generator(ecLen), blocks = [];
+    for (let i = 0, k = 0; i < nb; i++) {
+      const len = shortLen - ecLen + (i < numShort ? 0 : 1);
+      const dat = data.slice(k, k + len); k += len;
+      blocks.push({ dat, ecc: remainder(dat, gen, ecLen) });
+    }
+    const cw = [];
+    for (let i = 0; i <= shortLen - ecLen; i++) blocks.forEach(b => { if (i < b.dat.length) cw.push(b.dat[i]); });
+    for (let i = 0; i < ecLen; i++) blocks.forEach(b => cw.push(b.ecc[i]));
+
+    // 행렬 구성
+    const size = ver * 4 + 17;
+    const mod = Array.from({ length: size }, () => new Array(size).fill(false));
+    const fn = Array.from({ length: size }, () => new Array(size).fill(false));
+    const set = (x, y, dark) => { mod[y][x] = dark; fn[y][x] = true; };
+    for (let i = 0; i < size; i++) { set(6, i, i % 2 === 0); set(i, 6, i % 2 === 0); }
+    const finder = (cx, cy) => {
+      for (let dy = -4; dy <= 4; dy++) for (let dx = -4; dx <= 4; dx++) {
+        const x = cx + dx, y = cy + dy;
+        if (x < 0 || y < 0 || x >= size || y >= size) continue;
+        const d = Math.max(Math.abs(dx), Math.abs(dy));
+        set(x, y, d !== 2 && d !== 4);
+      }
+    };
+    finder(3, 3); finder(size - 4, 3); finder(3, size - 4);
+    const al = ALIGN[ver], n = al.length;
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+      if ((i === 0 && j === 0) || (i === 0 && j === n - 1) || (i === n - 1 && j === 0)) continue;
+      for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) set(al[i] + dx, al[j] + dy, Math.max(Math.abs(dx), Math.abs(dy)) !== 1);
+    }
+    const drawFormat = mask => {
+      const d = mask; // 오류정정 M = 00
+      let r = d;
+      for (let i = 0; i < 10; i++) r = (r << 1) ^ ((r >>> 9) * 0x537);
+      const f = ((d << 10) | r) ^ 0x5412;
+      const bit = i => ((f >>> i) & 1) === 1;
+      for (let i = 0; i <= 5; i++) set(8, i, bit(i));
+      set(8, 7, bit(6)); set(8, 8, bit(7)); set(7, 8, bit(8));
+      for (let i = 9; i < 15; i++) set(14 - i, 8, bit(i));
+      for (let i = 0; i < 8; i++) set(size - 1 - i, 8, bit(i));
+      for (let i = 8; i < 15; i++) set(8, size - 15 + i, bit(i));
+      set(8, size - 8, true);
+    };
+    drawFormat(0);
+    if (ver >= 7) {
+      let r = ver;
+      for (let i = 0; i < 12; i++) r = (r << 1) ^ ((r >>> 11) * 0x1F25);
+      const v = (ver << 12) | r;
+      for (let i = 0; i < 18; i++) {
+        const b = ((v >>> i) & 1) === 1, a = size - 11 + i % 3, c = Math.floor(i / 3);
+        set(a, c, b); set(c, a, b);
+      }
+    }
+
+    // 데이터 배치 (지그재그)
+    let idx = 0;
+    for (let right = size - 1; right >= 1; right -= 2) {
+      if (right === 6) right = 5;
+      for (let v = 0; v < size; v++) for (let j = 0; j < 2; j++) {
+        const x = right - j, up = ((right + 1) & 2) === 0, y = up ? size - 1 - v : v;
+        if (!fn[y][x] && idx < cw.length * 8) { mod[y][x] = ((cw[idx >>> 3] >>> (7 - (idx & 7))) & 1) === 1; idx++; }
+      }
+    }
+
+    // 마스크 선택
+    const applyMask = m => {
+      for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) if (!fn[y][x] && MASKS[m](x, y)) mod[y][x] = !mod[y][x];
+    };
+    let best = 0, bestScore = Infinity;
+    for (let m = 0; m < 8; m++) {
+      applyMask(m); drawFormat(m);
+      const s = penalty(mod);
+      if (s < bestScore) { best = m; bestScore = s; }
+      applyMask(m);
+    }
+    applyMask(best); drawFormat(best);
+    return mod;
+  }
+
+  function svg(text) {
+    const m = encode(text), n = m.length, q = 4, full = n + q * 2;
+    let d = '';
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (m[y][x]) d += `M${x + q} ${y + q}h1v1h-1z`;
+    return `<svg class="qr" viewBox="0 0 ${full} ${full}" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"><rect width="${full}" height="${full}" fill="#fff"/><path d="${d}" fill="#111"/></svg>`;
+  }
+
+  return { encode, svg, _remainder: remainder, _generator: generator };
+})();
+
+</script>
+<script>
+/* 스마트 PX 시연용 가상 샘플 데이터 — 실제 장병·상품 정보가 아님 */
+const SPX_DATA = (() => {
+  // 시드 고정 난수: 초기화할 때마다 같은 데이터가 만들어진다
+  function rng(seed) {
+    return function () {
+      seed = (seed + 0x6D2B79F5) | 0;
+      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  const CATEGORIES = ['식품·간식', '음료', '생활용품', '기타'];
+  // PRD 7.1 카테고리별 안전재고·적정재고
+  const CAT_RULE = {
+    '식품·간식': { safety: 15, optimal: 50, bg: '#fff1df' },
+    '음료': { safety: 20, optimal: 60, bg: '#e2f0ff' },
+    '생활용품': { safety: 5, optimal: 20, bg: '#e4f5e8' },
+    '기타': { safety: 5, optimal: 15, bg: '#eee8ff' },
+  };
+  const CAT_CODE = { F: '식품·간식', D: '음료', L: '생활용품', E: '기타' };
+
+  // [상품명, 카테고리, 가격, 일러스트, 현재고, 유통기한(기준일+n일, 없으면 null), 픽업전용, 입고 시 유통기한 일수]
+  // 시연 구성: 재고부족 5종(P007·P023·P031·P033·P048), 유통기한 임박 5종(P014~P016·P027·P028), 픽업전용 7종
+  const PRODUCTS = [
+    ['컵라면(대)', 'F', 1200, '🍜', 16, 90, 0, 120],
+    ['컵라면(소)', 'F', 900, '🍜', 42, 100, 0, 120],
+    ['봉지라면 5입', 'F', 4500, '🍝', 25, 120, 0, 150],
+    ['라면 1박스(30입)', 'F', 19800, '📦', 22, 150, 1, 150],
+    ['감자칩', 'F', 1500, '🥔', 38, 60, 0, 90],
+    ['새우맛 과자', 'F', 1400, '🦐', 33, 60, 0, 90],
+    ['초코파이(12입)', 'F', 4800, '🍪', 9, 45, 0, 90],
+    ['초콜릿바', 'F', 1000, '🍫', 45, 120, 0, 180],
+    ['젤리', 'F', 1200, '🍬', 30, 90, 0, 180],
+    ['즉석밥', 'F', 1300, '🍚', 28, 180, 0, 240],
+    ['참치캔', 'F', 2200, '🐟', 26, 365, 0, 720],
+    ['소시지', 'F', 1500, '🌭', 24, 30, 0, 60],
+    ['냉동만두', 'F', 4200, '🥟', 18, 90, 0, 180],
+    ['삼각김밥', 'F', 1100, '🍙', 16, 1, 0, 3],
+    ['샌드위치', 'F', 2500, '🥪', 18, 2, 0, 3],
+    ['단팥빵', 'F', 1300, '🍞', 20, 5, 0, 7],
+    ['아이스크림', 'F', 1000, '🍦', 40, 300, 0, 365],
+    ['견과류 믹스', 'F', 2800, '🥜', 19, 120, 0, 180],
+    ['과자 종합박스', 'F', 12000, '🎁', 17, 90, 1, 120],
+    ['육포', 'F', 3500, '🥓', 21, 120, 0, 180],
+    ['콜라', 'D', 1200, '🥤', 48, 200, 0, 300],
+    ['사이다', 'D', 1200, '🥤', 44, 200, 0, 300],
+    ['이온음료', 'D', 1300, '🧃', 12, 180, 0, 300],
+    ['생수 500ml', 'D', 600, '💧', 55, 300, 0, 365],
+    ['생수 2L 6입 묶음', 'D', 4800, '🚰', 26, 300, 1, 365],
+    ['캔커피', 'D', 1000, '☕', 36, 200, 0, 300],
+    ['흰우유', 'D', 1100, '🥛', 22, 3, 0, 10],
+    ['바나나우유', 'D', 1400, '🍌', 25, 6, 0, 10],
+    ['오렌지주스', 'D', 1500, '🍊', 30, 90, 0, 120],
+    ['에너지음료', 'D', 1800, '⚡', 34, 240, 0, 300],
+    ['탄산수', 'D', 1000, '💦', 0, null, 0, 300],
+    ['음료 1박스(24캔)', 'D', 22000, '🧊', 21, 200, 1, 300],
+    ['물티슈', 'L', 1500, '🧽', 3, null, 0, null],
+    ['칫솔', 'L', 2000, '🪥', 14, null, 0, null],
+    ['치약', 'L', 2500, '🦷', 12, null, 0, null],
+    ['샴푸', 'L', 5500, '🧴', 9, null, 0, null],
+    ['바디워시', 'L', 5000, '🧼', 8, null, 0, null],
+    ['면도기', 'L', 4500, '🪒', 11, null, 0, null],
+    ['세탁세제 대용량', 'L', 9800, '🧺', 8, null, 1, null],
+    ['섬유유연제 대용량', 'L', 8800, '🌸', 7, null, 1, null],
+    ['화장지 30롤', 'L', 13000, '🧻', 6, null, 1, null],
+    ['로션', 'L', 7000, '🧴', 10, null, 0, null],
+    ['선크림', 'L', 8000, '☀️', 13, null, 0, null],
+    ['군용 양말(3켤레)', 'E', 4000, '🧦', 18, null, 0, null],
+    ['건전지(AA 4입)', 'E', 3500, '🔋', 12, null, 0, null],
+    ['유선 이어폰', 'E', 9900, '🎧', 7, null, 0, null],
+    ['충전 케이블', 'E', 6500, '🔌', 9, null, 0, null],
+    ['핫팩', 'E', 800, '🔥', 2, null, 0, null],
+    ['볼펜·수첩 세트', 'E', 3000, '📝', 14, null, 0, null],
+    ['립밤', 'E', 2500, '💄', 11, null, 0, null],
+  ];
+
+  function buildProducts(today) {
+    return PRODUCTS.map(([name, code, price, emoji, stock, exp, pickupOnly, shelf], i) => {
+      const cat = CAT_CODE[code], rule = CAT_RULE[cat];
+      return {
+        id: 'P' + String(i + 1).padStart(3, '0'), name, cat, price, emoji, stock,
+        safety: rule.safety, optimal: rule.optimal,
+        expiry: exp === null ? null : U.addDays(today, exp),
+        shelf, pickupOnly: !!pickupOnly,
+      };
+    });
+  }
+
+  const SURNAMES = '김이박최정강조윤장임한오서신권황안송류홍'.split('');
+  const GIVEN = ['민준', '서준', '도윤', '예준', '시우', '하준', '주원', '지호', '지후', '준우', '준서', '도현', '건우', '현우', '우진', '선우', '연우', '유준', '정우', '승우', '승현', '시윤', '준혁', '은우', '지환', '승민', '지우', '유찬', '윤우', '민성', '준영', '시후', '진우', '지원', '수호', '재윤', '시현', '동현', '태윤', '민재', '한결', '재원', '은호', '이준', '성민', '태현', '민규', '하진', '지성'];
+
+  // 장병 100명. 첫 번째는 PRD 5.1 시나리오의 시연 계정
+  function buildSoldiers() {
+    const r = rng(300);
+    const list = [{ id: '26-70001234', name: '김민준', rank: '일병', barracks: '3생활관', pin: '1234', pay: '나라사랑카드' }];
+    const used = new Set([list[0].id]);
+    while (list.length < 100) {
+      const senior = r() < 0.5;
+      const id = `${senior ? '25' : '26'}-7${String(Math.floor(r() * 10000000)).padStart(7, '0')}`;
+      if (used.has(id)) continue;
+      used.add(id);
+      list.push({
+        id,
+        name: SURNAMES[Math.floor(r() * SURNAMES.length)] + GIVEN[Math.floor(r() * GIVEN.length)],
+        rank: senior ? (r() < 0.5 ? '상병' : '병장') : (r() < 0.4 ? '이병' : '일병'),
+        barracks: `${1 + Math.floor(r() * 4)}생활관`,
+        pin: String(Math.floor(r() * 10000)).padStart(4, '0'),
+        pay: r() < 0.6 ? '나라사랑카드' : '간편결제',
+      });
+    }
+    return list;
+  }
+
+  // PRD 16장 이동 PX: 노선(마지막은 본점 복귀), 회차 출발 기준 도착 시각(분), 노선도 좌표
+  const STOPS = [
+    { name: 'PX 본점', short: 'PX 본점', off: 0, x: 90, y: 212, tx: 90, ty: 240, anchor: 'middle' },
+    { name: '1생활관 앞', short: '1생활관', off: 12, x: 48, y: 136, tx: 62, ty: 140, anchor: 'start' },
+    { name: '2생활관 앞', short: '2생활관', off: 26, x: 95, y: 60, tx: 95, ty: 40, anchor: 'middle' },
+    { name: '연병장', short: '연병장', off: 40, x: 195, y: 42, tx: 195, ty: 24, anchor: 'middle' },
+    { name: '3생활관 앞', short: '3생활관', off: 54, x: 295, y: 62, tx: 295, ty: 42, anchor: 'middle' },
+    { name: '정비고', short: '정비고', off: 68, x: 334, y: 140, tx: 320, ty: 144, anchor: 'end' },
+    { name: '4생활관 앞', short: '4생활관', off: 82, x: 272, y: 212, tx: 272, ty: 240, anchor: 'middle' },
+    { name: 'PX 본점 (복귀)', short: 'PX 본점', off: 100, x: 90, y: 212, tx: 90, ty: 240, anchor: 'middle' },
+  ];
+  const VEH_ROUNDS = [{ label: '18:00', min: 1080 }, { label: '20:00', min: 1200 }];
+  const BARRACKS_STOP = { '1생활관': 1, '2생활관': 2, '3생활관': 4, '4생활관': 6 };
+  // 적재 품목 11종과 적재 기준 수량 (픽업전용 제외)
+  const MOBILE_LOAD = [['P001', 12], ['P005', 10], ['P008', 10], ['P009', 8], ['P021', 12], ['P023', 8], ['P024', 12], ['P026', 10], ['P030', 8], ['P033', 6], ['P044', 6]];
+
+  return { rng, CATEGORIES, CAT_RULE, buildProducts, buildSoldiers, STOPS, VEH_ROUNDS, BARRACKS_STOP, MOBILE_LOAD };
+})();
+
+</script>
+<script>
+/* 스마트 PX 상태 관리와 비즈니스 규칙 (PRD 7장)
+   모든 데이터는 가상 샘플이며 브라우저 localStorage에만 저장된다.
+   시간은 실제 시계가 아닌 '시연 시각(state.now)'을 기준으로 흐른다. */
+const MIN = 60000, DAY = 86400000;
+const STORE_KEY = 'smartpx_demo_v1';
+const ROUNDS = [{ label: '12:30', min: 750 }, { label: '18:00', min: 1080 }, { label: '21:00', min: 1260 }];
+const BARRACKS = ['1생활관', '2생활관', '3생활관', '4생활관'];
+const PICKUP_PLACE = 'PX 픽업대';
+const WAREHOUSES = BARRACKS.map(b => `${b} 무인배송창고`);
+const SCAN_PLACES = [PICKUP_PLACE, ...WAREHOUSES];
+const SHUTTLE_FLOW = ['접수', '준비중', '배송중', '창고도착', '수령완료'];
+const PICKUP_FLOW = ['접수', '준비중', '수령완료'];
+const DISCOUNT_RATE = 0.3;
+const DAILY_CHECK_MIN = 360; // 매일 06:00 자동 점검
+const Binds = {}; // 화면을 다시 그려도 입력 중인 값이 남도록 보관
+
+const U = {
+  pad: n => String(n).padStart(2, '0'),
+  won: n => `${Number(n).toLocaleString('ko-KR')}원`,
+  dateStr(t) { const d = new Date(t); return `${d.getFullYear()}-${U.pad(d.getMonth() + 1)}-${U.pad(d.getDate())}`; },
+  minOf(t) { const d = new Date(t); return d.getHours() * 60 + d.getMinutes(); },
+  at(date, min) { const [y, m, d] = date.split('-').map(Number); return new Date(y, m - 1, d, Math.floor(min / 60), min % 60).getTime(); },
+  addDays(date, n) { const [y, m, d] = date.split('-').map(Number); return U.dateStr(new Date(y, m - 1, d + n).getTime()); },
+  diffDays(from, to) { return Math.round((U.at(to, 0) - U.at(from, 0)) / DAY); },
+  hm: min => `${U.pad(Math.floor(min / 60) % 24)}:${U.pad(min % 60)}`,
+  time: t => U.hm(U.minOf(t)),
+  md(date) { const [, m, d] = date.split('-'); return `${+m}/${+d}`; },
+  dow(date) { return '일월화수목금토'[new Date(U.at(date, 0)).getDay()]; },
+  stamp: t => `${U.md(U.dateStr(t))} ${U.time(t)}`,
+  esc: s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])),
+};
+
+const Store = (() => {
+  let state = null;
+  let quiet = false;       // 샘플 데이터 생성 중에는 알림을 만들지 않음
+  let saver = null;        // 웹 모드: 저장을 실시간 공유 계층(Sync)에 맡김
+  const events = [];       // 화면에 토스트로 띄울 이벤트
+  const flash = {};        // 재고가 바뀐 품목 (관리자 재고표 깜빡임)
+
+  // 웹 모드에서는 알림·토스트를 Sync가 공유 데이터 변화에서 만들어 모든 기기에 똑같이 띄운다
+  function emit(kind, text, extra) { if (!quiet && !saver) events.push(Object.assign({ kind, text }, extra)); }
+  const product = id => state.products.find(p => p.id === id);
+  const soldier = id => state.soldiers.find(s => s.id === id);
+  const order = id => state.orders.find(o => o.id === id);
+  const flowOf = o => o.method === 'shuttle' ? SHUTTLE_FLOW : PICKUP_FLOW;
+
+  /* ---------- 상품 상태 (PRD 7.2) ---------- */
+  function info(p) {
+    const today = U.dateStr(state.now);
+    const dday = p.expiry ? U.diffDays(today, p.expiry) : null;
+    const dispose = dday !== null && p.stock > 0 && dday <= 1;
+    const discount = !dispose && dday !== null && p.stock > 0 && dday <= 7;
+    const soldout = p.stock <= 0;
+    const low = !dispose && p.stock < p.safety;
+    const status = dispose ? '폐기대상' : soldout ? '품절' : discount ? '할인' : low ? '부족' : '정상';
+    const price = discount ? Math.round(p.price * (1 - DISCOUNT_RATE) / 10) * 10 : p.price;
+    return { dday, dispose, discount, soldout, low, status, price };
+  }
+
+  function changeStock(p, delta) { p.stock += delta; flash[p.id] = Date.now(); }
+
+  // 번호는 저장된 데이터에서 이어 붙인다 (여러 기기가 함께 쓰므로 별도 카운터를 두지 않음)
+  function addAction(a) {
+    const n = state.actions.reduce((m, x) => Math.max(m, +x.id.slice(3) || 0), 0);
+    a.id = 'SA-' + String(n + 1).padStart(4, '0');
+    state.actions.push(a);
+    return a;
+  }
+
+  /* ---------- 자동 발주 (PRD 7.1) ---------- */
+  function checkAutoOrder(p, at) {
+    if (p.stock >= p.safety || info(p).dispose) return null;
+    if (state.actions.some(a => a.type === '자동발주' && a.pid === p.id && a.status === '발주중')) return null;
+    const a = addAction({
+      at: at || state.now, type: '자동발주', pid: p.id, name: p.name, qty: p.optimal - p.stock,
+      reason: p.stock === 0 ? `품절 · 안전재고(${p.safety})` : `안전재고(${p.safety}) 미만 · 현재고 ${p.stock}`, status: '발주중',
+    });
+    emit('admin', `🤖 자동 발주 생성 · ${p.name} ${a.qty}개`, { tone: 'warn' });
+    return a;
+  }
+
+  function receivePO(id, at, note) {
+    const a = state.actions.find(x => x.id === id);
+    if (!a || a.status !== '발주중') return;
+    const p = product(a.pid);
+    a.status = '입고완료';
+    a.doneAt = at || state.now;
+    changeStock(p, a.qty);
+    if (p.shelf) p.expiry = U.addDays(U.dateStr(a.doneAt), p.shelf); // 신규 입고분 유통기한
+    addAction({ at: a.doneAt, type: '입고', pid: p.id, name: p.name, qty: a.qty, reason: note || `${a.id} 발주분 입고`, status: '처리완료' });
+    emit('admin', `📦 입고 완료 · ${p.name} +${a.qty}`, { tone: 'ok' });
+    save();
+  }
+
+  function dispose(pid) {
+    const p = product(pid);
+    if (!info(p).dispose) return;
+    const qty = p.stock;
+    let pending = state.actions.filter(a => a.type === '폐기' && a.pid === pid && a.status === '처리대기');
+    if (!pending.length) pending = [addAction({ at: state.now, type: '폐기', pid, name: p.name, qty, reason: '유통기한 임박 · 판매 중지', status: '처리대기' })];
+    pending.forEach(a => { a.status = '처리완료'; a.qty = qty; a.doneAt = state.now; });
+    changeStock(p, -qty);
+    p.expiry = null;
+    emit('admin', `🗑️ 폐기 완료 · ${p.name} ${qty}개`, { tone: 'muted' });
+    checkAutoOrder(p);
+    save();
+  }
+
+  /* ---------- 일일 점검: 익일 입고, 할인·폐기 지정, 자동 발주 ---------- */
+  function runDailyCheck(at) {
+    const today = U.dateStr(at);
+    state.actions
+      .filter(a => a.type === '자동발주' && a.status === '발주중' && U.dateStr(a.at) < today)
+      .forEach(a => receivePO(a.id, at, `${a.id} 발주분 익일 자동 입고`));
+    const has = (type, p) => state.actions.some(a => a.type === type && a.pid === p.id && a.expiry === p.expiry);
+    state.products.forEach(p => {
+      const i = info(p);
+      const dl = i.dday !== null && i.dday <= 0 ? '유통기한 경과' : `유통기한 D-${i.dday}`;
+      if (i.discount && !has('할인', p)) {
+        addAction({ at, type: '할인', pid: p.id, name: p.name, qty: p.stock, reason: `${dl} · 30% 자동 할인`, status: '처리완료', expiry: p.expiry });
+        emit('admin', `🏷️ 자동 할인 적용 · ${p.name} (${dl})`, { tone: 'info' });
+      }
+      if (i.dispose && !has('폐기', p)) {
+        addAction({ at, type: '폐기', pid: p.id, name: p.name, qty: p.stock, reason: `${dl} · 판매 중지(폐기 대상)`, status: '처리대기', expiry: p.expiry });
+        emit('admin', `⛔ 폐기 대상 지정 · ${p.name} (${dl})`, { tone: 'warn' });
+      }
+      checkAutoOrder(p, at);
+    });
+    const s = stats();
+    state.lastCheck = { date: today, at, low: s.low.length, expiring: s.expiring.length };
+  }
+
+  function stats() {
+    const today = U.dateStr(state.now);
+    const orders = state.orders.filter(o => U.dateStr(o.createdAt) === today && o.status !== '취소');
+    const low = [], expiring = [];
+    state.products.forEach(p => { const i = info(p); if (i.low) low.push(p); if (i.discount || i.dispose) expiring.push(p); });
+    return {
+      orders, low, expiring,
+      sales: orders.reduce((s, o) => s + o.amount, 0),
+      pendingPO: state.actions.filter(a => a.type === '자동발주' && a.status === '발주중').length,
+      pendingDispose: state.actions.filter(a => a.type === '폐기' && a.status === '처리대기').length,
+    };
+  }
+
+  /* ---------- 주문 ---------- */
+  function nextOrderId(t) {
+    const prefix = `ORD-${U.dateStr(t).replace(/-/g, '')}-`;
+    const n = state.orders.reduce((m, o) => o.id.startsWith(prefix) ? Math.max(m, +o.id.slice(prefix.length) || 0) : m, 0);
+    return prefix + String(n + 1).padStart(4, '0');
+  }
+  function token() { let s = ''; for (let i = 0; i < 8; i++) s += '0123456789ABCDEF'[Math.floor(Math.random() * 16)]; return s; }
+
+  function makeOrder(o) {
+    const id = nextOrderId(o.createdAt), status = o.status || '접수';
+    const ord = {
+      id, sid: o.sid, items: o.items, amount: o.items.reduce((s, it) => s + it.price * it.qty, 0), pay: o.pay,
+      method: o.method, place: o.place, dlvDate: o.dlvDate, slot: o.slot, status,
+      createdAt: o.createdAt, history: [{ status, at: o.createdAt }],
+      qr: o.method === 'mobile' ? null : `SPX|${id}|${token()}`, // 주문번호 기반 고유 토큰
+      receivedAt: null, payId: o.payId || null, split: !!o.split,
+    };
+    state.orders.push(ord);
+    return ord;
+  }
+
+  function dayLabel(date) {
+    const today = U.dateStr(state.now);
+    if (date === today) return '오늘';
+    if (date === U.addDays(today, 1)) return '내일';
+    if (date === U.addDays(today, -1)) return '어제';
+    return U.md(date);
+  }
+  function placeLabel(o) {
+    if (o.method === 'shuttle') return `${o.place} · ${dayLabel(o.dlvDate)} ${U.hm(o.slot)} 회차`;
+    if (o.method === 'pickup') return `PX 픽업 · ${dayLabel(o.dlvDate)} ${U.hm(o.slot)}`;
+    return `${o.place} · 현장 구매`;
+  }
+  const itemsText = o => o.items.map(it => `${it.name} x${it.qty}`).join(', ');
+
+  function notify(sid, text) {
+    if (quiet || saver) return;
+    state.notices.push({ id: ++state.seq.notice, sid, at: state.now, text, read: false });
+    emit('soldier', text, { sid });
+  }
+
+  function statusNotice(o, s) {
+    if (o.method === 'shuttle' && s === '배송중') return `🚐 ${U.hm(o.slot)} 회차 셔틀이 출발했습니다 · ${o.id}`;
+    if (o.method === 'shuttle' && s === '창고도착') return `📦 ${o.place.replace(' 무인배송창고', ' 창고')} 도착! QR로 수령하세요 · ${o.id}`;
+    if (o.method === 'pickup' && s === '준비중') return `🛍️ PX 픽업대에 상품이 준비되었습니다 · ${o.id}`;
+    if (s === '수령완료') return `✅ 수령이 완료되었습니다 · ${o.id}`;
+    if (s === '취소') return `↩️ 주문이 취소되었습니다 · ${o.id}`;
+    return null;
+  }
+
+  // 주문 이력 한 단계에 해당하는 장병 알림 문구 (웹 모드에서 Sync가 사용)
+  function noticeFor(o, s) {
+    if (o.method === 'mobile') return s === '수령완료' ? `🧾 이동 PX 자동결제 ${U.won(o.amount)} · ${o.id}` : null;
+    if (s === '접수') return `💳 결제 완료 · ${o.id} (${placeLabel(o)})`;
+    return statusNotice(o, s);
+  }
+
+  function setStatus(o, status, at) {
+    o.status = status;
+    o.history.push({ status, at });
+    const msg = statusNotice(o, status);
+    if (msg) notify(o.sid, msg);
+  }
+
+  // 시연 시각에 맞춰 상태 자동 진행 (셔틀: 회차 30분 전 준비, 정시 출발, 10분 후 창고 도착)
+  function autoProgress(o) {
+    if (o.method === 'mobile' || o.status === '수령완료' || o.status === '취소') return;
+    const t = U.at(o.dlvDate, o.slot), flow = flowOf(o);
+    const steps = o.method === 'shuttle'
+      ? [['준비중', t - 30 * MIN], ['배송중', t], ['창고도착', t + 10 * MIN]]
+      : [['준비중', t - 30 * MIN]];
+    steps.forEach(([status, at]) => {
+      if (state.now >= at && flow.indexOf(status) > flow.indexOf(o.status)) setStatus(o, status, Math.max(at, o.createdAt));
+    });
+  }
+  const progressOrders = () => state.orders.forEach(autoProgress);
+
+  function placeOrders(sid, groups, pay) {
+    for (const g of groups) for (const it of g.items) {
+      const p = product(it.pid);
+      if (info(p).dispose || p.stock < it.qty) return { error: `${p.name} 재고가 부족합니다 (남은 수량 ${Math.max(0, p.stock)}개)` };
+    }
+    const payId = 'PAY-' + token();
+    const orders = groups.map(g => makeOrder({
+      sid, pay, payId, method: g.method, place: g.place, dlvDate: g.dlvDate, slot: g.slot, split: g.split, createdAt: state.now,
+      items: g.items.map(it => { const p = product(it.pid); return { pid: p.id, name: p.name, emoji: p.emoji, qty: it.qty, price: info(p).price }; }),
+    }));
+    const sol = soldier(sid);
+    orders.forEach(o => o.items.forEach(it => changeStock(product(it.pid), -it.qty)));
+    orders.forEach(o => emit('admin', `🆕 새 주문 ${o.id} · ${sol.rank} ${sol.name} · ${U.won(o.amount)} → 재고 즉시 차감`, { tone: 'info' }));
+    orders.forEach(o => o.items.forEach(it => checkAutoOrder(product(it.pid))));
+    state.carts[sid] = {};
+    orders.forEach(o => notify(sid, `💳 결제 완료 · ${o.id} (${placeLabel(o)})`));
+    save();
+    return { orders };
+  }
+
+  // "다음 단계로" 시연 버튼. 마지막 수령완료는 QR 스캔으로만 처리
+  function nextStep(id) {
+    const o = order(id);
+    if (!o || o.method === 'mobile') return;
+    const flow = flowOf(o), i = flow.indexOf(o.status);
+    if (i < 0 || i >= flow.length - 2) return;
+    setStatus(o, flow[i + 1], state.now);
+    save();
+  }
+
+  function cancelOrder(id) {
+    const o = order(id);
+    if (!o || o.status !== '접수') return;
+    o.items.forEach(it => changeStock(product(it.pid), it.qty));
+    setStatus(o, '취소', state.now);
+    emit('admin', `↩️ 주문 취소 ${o.id} · 재고 복원`, { tone: 'muted' });
+    save();
+  }
+
+  function scan(raw, place) {
+    const tok = String(raw || '').trim();
+    const o = state.orders.find(x => x.qr && x.qr === tok);
+    if (!o) return { ok: false, title: '인식 실패', msg: '등록되지 않은 QR코드입니다.' };
+    const sol = soldier(o.sid), who = `${sol.rank} ${sol.name}`;
+    const fail = (title, msg) => ({ ok: false, order: o, title, msg });
+    if (o.status === '수령완료') return fail('이미 수령된 주문', `${U.stamp(o.receivedAt)}에 수령 완료된 주문입니다.`);
+    if (o.status === '취소') return fail('취소된 주문', '취소된 주문은 수령할 수 없습니다.');
+    const target = o.method === 'pickup' ? PICKUP_PLACE : o.place;
+    if (target !== place) return fail('수령 장소 불일치', `이 주문은 [${target}]에서 수령합니다.`);
+    if (o.method === 'shuttle' && o.status !== '창고도착') return fail('아직 도착 전', `현재 상태: ${o.status}. 창고에 도착한 뒤 수령할 수 있습니다.`);
+    if (o.method === 'pickup' && o.status === '접수') return fail('상품 준비 전', '픽업대에 상품이 준비되면 수령할 수 있습니다.');
+    o.receivedAt = state.now;
+    setStatus(o, '수령완료', state.now);
+    emit('admin', `✅ 수령완료 ${o.id} · ${who}`, { tone: 'ok' });
+    save();
+    return { ok: true, order: o, title: '수령 완료', msg: `${who} · ${itemsText(o)}` };
+  }
+
+  /* ---------- 장바구니·수령 옵션 ---------- */
+  function cart(sid) { return state.carts[sid] || (state.carts[sid] = {}); }
+  function addToCart(sid, pid, delta) {
+    const c = cart(sid), p = product(pid);
+    const q = info(p).dispose ? 0 : Math.max(0, Math.min(p.stock, (c[pid] || 0) + delta));
+    if (q === 0) delete c[pid]; else c[pid] = q;
+    save();
+  }
+  function removeFromCart(sid, pid) { delete cart(sid)[pid]; save(); }
+  function cartLines(sid) {
+    const c = cart(sid);
+    return Object.keys(c).map(pid => {
+      const p = product(pid), i = info(p);
+      if (i.dispose || p.stock <= 0) { delete c[pid]; return null; }
+      if (c[pid] > p.stock) c[pid] = p.stock;
+      return { p, qty: c[pid], info: i };
+    }).filter(Boolean);
+  }
+
+  // PRD 7.3: 셔틀 3회차, 회차 30분 전 마감
+  function shuttleOptions() {
+    const today = U.dateStr(state.now), tm = U.addDays(today, 1), out = [];
+    ROUNDS.forEach(r => {
+      const closed = state.now >= U.at(today, r.min - 30);
+      out.push({ key: `${today}|${r.min}`, label: `오늘 ${r.label}`, sub: closed ? '마감' : `${U.hm(r.min - 30)} 마감`, disabled: closed, today: true });
+    });
+    ROUNDS.forEach(r => out.push({ key: `${tm}|${r.min}`, label: `내일 ${r.label}`, sub: `${U.hm(r.min - 30)} 마감`, disabled: false, today: false }));
+    return out;
+  }
+  // 픽업: 12:00~21:00, 30분 단위, 지금부터 30분 이후
+  function pickupOptions() {
+    const today = U.dateStr(state.now), out = [];
+    [[today, '오늘'], [U.addDays(today, 1), '내일']].forEach(([d, lbl]) => {
+      for (let m = 720; m <= 1260; m += 30) if (U.at(d, m) >= state.now + 30 * MIN) out.push({ key: `${d}|${m}`, label: `${lbl} ${U.hm(m)}` });
+    });
+    return out;
+  }
+
+  /* ---------- 시연 시각 ---------- */
+  function setNow(t) {
+    if (t <= state.now) return;
+    for (;;) {
+      const d = U.dateStr(state.now), checkAt = U.at(d, DAILY_CHECK_MIN);
+      if (state.lastCheck.date < d && checkAt <= t) {
+        state.now = Math.max(state.now, checkAt);
+        progressOrders();
+        runDailyCheck(state.now);
+        continue;
+      }
+      const nextDay = U.at(U.addDays(d, 1), 0);
+      if (t < nextDay) { state.now = t; progressOrders(); break; }
+      state.now = nextDay;
+      progressOrders();
+    }
+    save();
+  }
+  const addMinutes = n => setNow(state.now + n * MIN);
+  function nextRound() {
+    const today = U.dateStr(state.now);
+    const t = ROUNDS.map(r => U.at(today, r.min + 10)).find(x => x > state.now);
+    setNow(t || U.at(U.addDays(today, 1), ROUNDS[0].min + 10));
+  }
+  const nextDay = () => setNow(U.at(U.addDays(U.dateStr(state.now), 1), 480));
+
+  /* ---------- 이동 PX (PRD 16장) ---------- */
+  const STOPS = () => SPX_DATA.STOPS;
+  function vehEta(stopIdx, round) {
+    const v = state.vehicle;
+    return SPX_DATA.VEH_ROUNDS[round ?? v.round].min + STOPS()[stopIdx].off;
+  }
+  function vehDepart() {
+    const v = state.vehicle;
+    if (v.status === '중지' || v.status === '운행') return null;
+    if (v.status === '복귀') {
+      if (v.round === 0) v.round = 1; else { v.round = 0; v.day = U.addDays(v.day, 1); }
+      v.stopIdx = 0; v.fromIdx = 0; v.status = '대기'; v.battery = 100;
+      emit('admin', `🔋 충전 완료 · ${SPX_DATA.VEH_ROUNDS[v.round].label} 회차 출발 대기`, { tone: 'info' });
+      save();
+      return 'ready';
+    }
+    v.fromIdx = v.stopIdx;
+    v.stopIdx += 1;
+    v.status = '운행';
+    v.movedAt = Date.now(); // 출발시킨 기기가 닫혀도 다른 기기가 도착 처리할 수 있도록
+    v.battery = Math.max(8, v.battery - 6);
+    save();
+    return 'moving';
+  }
+  function vehArrive() {
+    const v = state.vehicle;
+    if (v.status !== '운행') return;
+    v.fromIdx = v.stopIdx;
+    const stop = STOPS()[v.stopIdx];
+    if (v.stopIdx === STOPS().length - 1) {
+      v.status = '복귀';
+      v.auto = false;
+      emit('admin', '🏁 이동 PX 본점 복귀 · 자동 보충 목록 생성', { tone: 'warn' });
+    } else {
+      v.status = '정차';
+      Object.keys(v.alerts).forEach(sid => {
+        const s = soldier(sid);
+        if (v.alerts[sid] && s && SPX_DATA.BARRACKS_STOP[s.barracks] === v.stopIdx) notify(sid, `🚚 이동 PX가 ${stop.name}에 도착했습니다 (10분 정차)`);
+      });
+    }
+    save();
+  }
+  function vehStop() {
+    const v = state.vehicle;
+    if (v.status === '중지') return;
+    if (v.status === '운행') vehArrive();
+    v.prevStatus = v.status;
+    v.status = '중지';
+    v.auto = false;
+    emit('admin', '⛔ 이동 PX 원격 운행 중지', { tone: 'warn' });
+    save();
+  }
+  function vehResume() {
+    const v = state.vehicle;
+    if (v.status !== '중지') return;
+    v.status = v.prevStatus || '정차';
+    v.prevStatus = null;
+    emit('admin', '▶️ 이동 PX 운행 재개', { tone: 'ok' });
+    save();
+  }
+  function vehToggleAuto() { state.vehicle.auto = !state.vehicle.auto; save(); }
+  function vehToggleAlert(sid) { const a = state.vehicle.alerts; a[sid] = !a[sid]; save(); }
+  function replenishList() {
+    return state.vehicle.load.map(l => ({ ...l, need: l.std - l.qty, p: product(l.pid) })).filter(l => l.need > 0);
+  }
+  // 복귀 후 보충: 적재 기준 − 잔량만큼 본점 재고에서 차감 → 안전재고 미만이면 자동 발주
+  function vehReplenish() {
+    const v = state.vehicle;
+    if (v.status !== '복귀' && v.status !== '대기') return;
+    replenishList().forEach(l => {
+      const p = l.p, give = Math.min(l.need, Math.max(0, p.stock));
+      if (!give) return;
+      changeStock(p, -give);
+      v.load.find(x => x.pid === l.pid).qty += give;
+      addAction({ at: state.now, type: '차량보충', pid: p.id, name: p.name, qty: give, reason: `${v.name} 적재 기준 ${l.std} − 잔량 ${l.qty}`, status: '처리완료' });
+      checkAutoOrder(p);
+    });
+    emit('admin', `🚚 ${v.name} 보충 완료 · 본점 재고 차감`, { tone: 'ok' });
+    save();
+  }
+  function mobilePurchase(sid, picks, pay) {
+    const v = state.vehicle;
+    if (v.status !== '정차') return { error: '차량이 정차 중일 때만 결제할 수 있습니다.' };
+    const items = [];
+    for (const [pid, qty] of Object.entries(picks)) {
+      if (qty <= 0) continue;
+      const l = v.load.find(x => x.pid === pid), p = product(pid);
+      if (!l || l.qty < qty) return { error: `${p.name} 적재 수량이 부족합니다.` };
+      items.push({ pid, name: p.name, emoji: p.emoji, qty, price: p.price });
+    }
+    if (!items.length) return { error: '꺼낸 상품이 없습니다.' };
+    items.forEach(it => { v.load.find(x => x.pid === it.pid).qty -= it.qty; });
+    const stop = STOPS()[v.stopIdx];
+    const o = makeOrder({ sid, items, pay, method: 'mobile', place: `이동 PX · ${stop.name}`, dlvDate: U.dateStr(state.now), slot: U.minOf(state.now), status: '수령완료', createdAt: state.now });
+    o.receivedAt = state.now;
+    v.sales.push({ id: o.id, at: state.now, stopIdx: v.stopIdx, sid, amount: o.amount, qty: items.reduce((s, it) => s + it.qty, 0) });
+    const sol = soldier(sid);
+    emit('admin', `🚚 이동 PX 현장 결제 · ${stop.name} · ${sol.rank} ${sol.name} ${U.won(o.amount)}`, { tone: 'info' });
+    notify(sid, `🧾 이동 PX 자동결제 ${U.won(o.amount)} · ${o.id}`);
+    save();
+    return { order: o };
+  }
+
+  /* ---------- 초기 데이터 ---------- */
+  function seedOrders() {
+    const r = SPX_DATA.rng(1102);
+    const today = U.dateStr(state.now), yday = U.addDays(today, -1);
+    const sellable = state.products.filter(p => p.stock > 0 && !info(p).dispose);
+    const pick = (pool, n) => {
+      const out = [];
+      while (out.length < n) {
+        const p = pool[Math.floor(r() * pool.length)];
+        if (!out.some(it => it.pid === p.id)) out.push({ pid: p.id, name: p.name, emoji: p.emoji, qty: 1 + Math.floor(r() * 2), price: info(p).price });
+      }
+      return out;
+    };
+    // 시연 계정의 어제 주문 (수령완료) — "내 주문만 보인다" 확인용
+    const demo = state.soldiers[0];
+    const y = makeOrder({ sid: demo.id, pay: demo.pay, method: 'pickup', place: PICKUP_PLACE, dlvDate: yday, slot: 1230, createdAt: U.at(yday, 1180), items: pick(sellable.filter(p => !p.pickupOnly), 2) });
+    y.history.push({ status: '준비중', at: U.at(yday, 1200) }, { status: '수령완료', at: U.at(yday, 1236) });
+    y.status = '수령완료';
+    y.receivedAt = U.at(yday, 1236);
+    // 오늘 다른 장병들의 주문 36건 (현재고는 이미 차감된 값)
+    const mins = Array.from({ length: 36 }, () => 510 + Math.floor(r() * 515)).sort((a, b) => a - b);
+    mins.forEach(min => {
+      const sol = state.soldiers[1 + Math.floor(r() * 99)];
+      const shuttle = r() < 0.6;
+      const pool = shuttle ? sellable.filter(p => !p.pickupOnly) : sellable;
+      const slot = shuttle ? (min < 720 ? 750 : 1080) : Math.min(1260, Math.max(720, Math.ceil((min + 30) / 30) * 30 + 30 * Math.floor(r() * 4)));
+      makeOrder({
+        sid: sol.id, pay: sol.pay, method: shuttle ? 'shuttle' : 'pickup', place: shuttle ? `${sol.barracks} 무인배송창고` : PICKUP_PLACE,
+        dlvDate: today, slot, createdAt: U.at(today, min), items: pick(pool, 1 + Math.floor(r() * 3)),
+      });
+    });
+    progressOrders();
+    state.orders.forEach(o => {
+      if (o.status === '수령완료') return;
+      const due = U.at(o.dlvDate, o.slot);
+      const ready = o.status === '창고도착' || (o.method === 'pickup' && o.status === '준비중' && due <= state.now);
+      if (ready && r() < 0.75) {
+        const at = Math.min(state.now, due + (15 + Math.floor(r() * 60)) * MIN);
+        o.receivedAt = at;
+        setStatus(o, '수령완료', at);
+      }
+    });
+  }
+
+  function createInitialState() {
+    const today = U.dateStr(Date.now());
+    state = {
+      version: 1,
+      epoch: Date.now(), // 초기화할 때마다 바뀜 (다른 기기가 초기화를 알아차리는 기준)
+      now: U.at(today, DAILY_CHECK_MIN),
+      products: SPX_DATA.buildProducts(today),
+      soldiers: SPX_DATA.buildSoldiers(),
+      orders: [], actions: [], notices: [], carts: {},
+      seq: { order: {}, action: 0, notice: 0 },
+      session: { soldierId: null, admin: false },
+      lastCheck: null,
+      vehicle: {
+        name: '이동PX-01', day: today, round: 0, stopIdx: 0, fromIdx: 0, status: '대기', prevStatus: null,
+        battery: 100, auto: false, alerts: {}, sales: [],
+        load: SPX_DATA.MOBILE_LOAD.map(([pid, std]) => ({ pid, std, qty: std })),
+      },
+    };
+    quiet = true;
+    runDailyCheck(state.now);              // 06:00 일일 점검: 자동 발주·할인·폐기 지정
+    state.now = U.at(today, 17 * 60 + 10); // 시연 시작: 일과 후 17:10
+    seedOrders();
+    quiet = false;
+    events.length = 0;
+  }
+
+  function save() {
+    if (saver) { saver(state); return; }
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { /* 저장 불가 환경에서도 시연은 계속 */ } }
+  function load() {
+    try {
+      const s = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
+      if (s && s.version === 1) {
+        state = s;
+        if (state.vehicle.status === '운행') vehArrive();
+        return;
+      }
+    } catch (e) { /* 손상된 저장값은 무시하고 새로 만든다 */ }
+    reset();
+  }
+  function reset() { createInitialState(); save(); }
+
+  function login(id, pin) {
+    const s = soldier(String(id).trim());
+    if (!s || s.pin !== String(pin).trim()) return false;
+    state.session.soldierId = s.id;
+    save();
+    return true;
+  }
+  function logout() { state.session.soldierId = null; save(); }
+  function adminLogin(id, pin) {
+    if (String(id).trim() !== 'admin' || String(pin).trim() !== '0000') return false;
+    state.session.admin = true;
+    save();
+    return true;
+  }
+  function adminLogout() { state.session.admin = false; save(); }
+  function markNoticesRead(sid) { state.notices.forEach(n => { if (n.sid === sid) n.read = true; }); save(); }
+
+  return {
+    get state() { return state; }, flash,
+    load, save, reset, drain: () => events.splice(0),
+    adopt: s => { state = s; }, setSaver: fn => { saver = fn; },
+    info, product, soldier, order, stats, flowOf, placeLabel, dayLabel, itemsText, noticeFor,
+    login, logout, adminLogin, adminLogout, markNoticesRead,
+    cart, cartLines, addToCart, removeFromCart, shuttleOptions, pickupOptions,
+    placeOrders, nextStep, cancelOrder, scan, receivePO, dispose,
+    addMinutes, nextRound, nextDay,
+    vehEta, vehDepart, vehArrive, vehStop, vehResume, vehToggleAuto, vehToggleAlert, replenishList, vehReplenish, mobilePurchase,
+  };
+})();
+
+</script>
+<script>
+/* 장병용 모바일 화면 (PRD 8.1 U1~U5 + 16장 이동 PX) */
+
+// 장병·관리자 화면이 함께 쓰는 표시 요소
+function statusBadge(s) {
+  const cls = { 접수: 'b-gray', 준비중: 'b-blue', 배송중: 'b-amber', 창고도착: 'b-green', 수령완료: 'b-done', 취소: 'b-red' }[s] || 'b-gray';
+  return `<span class="sbadge ${cls}">${s}</span>`;
+}
+function vehStatusLabel(v) {
+  return { 대기: '출발 대기', 운행: '이동 중', 정차: '정차 중', 복귀: '본점 복귀', 중지: '운행 중지' }[v.status] || v.status;
+}
+function routeMapSVG(mine) {
+  const v = Store.state.vehicle, ST = SPX_DATA.STOPS, pts = ST.slice(0, ST.length - 1);
+  const d = pts.map((p, i) => `${i ? 'L' : 'M'}${p.x} ${p.y}`).join(' ') + ' Z';
+  const from = ST[v.fromIdx], to = ST[v.stopIdx];
+  const here = v.status === '운행' ? -1 : v.stopIdx % pts.length;
+  return `<svg class="route" viewBox="0 0 380 250" role="img" aria-label="이동 PX 노선도">
+    <path d="${d}" class="route-line"/><path d="${d}" class="route-dash"/>
+    ${pts.map((p, i) => `<g class="stop${i === mine ? ' mine' : ''}${i === here ? ' here' : ''}"><circle cx="${p.x}" cy="${p.y}" r="8"/><text x="${p.tx}" y="${p.ty}" text-anchor="${p.anchor}">${i === mine ? '★ ' : ''}${p.short}</text></g>`).join('')}
+    <g class="veh${v.status === '중지' ? ' stopped' : ''}" data-to="${to.x},${to.y}" style="transform:translate(${from.x}px,${from.y}px)"><circle r="16"/><text y="6" text-anchor="middle">🚚</text></g>
+  </svg>`;
+}
+
+const SoldierUI = (() => {
+  const ui = {
+    tab: 'home', cat: '전체', err: '',
+    method: 'shuttle', warehouse: null, roundKey: null, pickupKey: null, pay: null,
+    payStage: 'form', payingLabel: '', lastIds: [],
+    qrId: null, notices: false, mobile: null,
+  };
+  const st = () => Store.state;
+  const me = () => st().session.soldierId ? Store.soldier(st().session.soldierId) : null;
+  const bg = p => SPX_DATA.CAT_RULE[p.cat].bg;
+  const cartCount = s => Object.values(Store.cart(s.id)).reduce((a, b) => a + b, 0);
+  const subHead = (title, back) => `<div class="p-subhead">${back ? `<button class="icon-btn" data-act="s-tab" data-tab="${back}" aria-label="뒤로">‹</button>` : '<span></span>'}<b>${title}</b><span></span></div>`;
+  const stepper = (act, pid, q, max) => `<div class="stepper"><button data-act="${act}" data-pid="${pid}" data-d="-1" aria-label="빼기">−</button><b>${q}</b><button data-act="${act}" data-pid="${pid}" data-d="1" ${q >= max ? 'disabled' : ''} aria-label="더하기">＋</button></div>`;
+
+  function resetCheckout() {
+    Object.assign(ui, { method: 'shuttle', warehouse: null, roundKey: null, pickupKey: null, pay: null, payStage: 'form', err: '' });
+  }
+
+  function render() {
+    const s = me();
+    if (!s) return loginView();
+    const pages = { home: homeView, cart: cartView, pay: payView, orders: ordersView, mobile: mobileView };
+    return `<div class="p-app">
+      <div class="p-status"><b>${U.time(st().now)}</b><span>LTE ▮▮▮ 🔋</span></div>
+      <div class="p-body" data-scroll-key="p-${ui.tab}">${(pages[ui.tab] || homeView)(s)}</div>
+      ${navView(s)}${ui.qrId ? qrModal() : ''}${ui.notices ? noticeModal(s) : ''}${ui.mobile ? mobileModal(s) : ''}
+    </div>`;
+  }
+
+  /* ---------- U1 로그인 ---------- */
+  function loginView() {
+    const samples = st().soldiers.slice(0, 5);
+    return `<div class="p-app"><div class="p-status"><b>${U.time(st().now)}</b><span>LTE ▮▮▮ 🔋</span></div>
+      <div class="p-body p-login">
+        <div class="login-hero"><div class="logo lg">PX</div><h1>스마트 PX</h1><p>국군 복지몰 · 사전주문 무인수령</p></div>
+        <label class="flabel" for="lgId">군번</label>
+        <input id="lgId" class="finput" data-bind="lgId" value="${U.esc(Binds.lgId || '')}" placeholder="예) 26-70001234" autocomplete="off">
+        <label class="flabel" for="lgPin">PIN (4자리)</label>
+        <input id="lgPin" class="finput" data-bind="lgPin" value="${U.esc(Binds.lgPin || '')}" type="password" inputmode="numeric" maxlength="4" placeholder="••••" data-enter="s-login">
+        ${ui.err ? `<div class="err">${ui.err}</div>` : ''}
+        <button class="btn primary block lg" data-act="s-login">로그인</button>
+        <div class="samples"><div class="samples-title">시연용 샘플 계정 (눌러서 입력)</div>
+          ${samples.map(s => `<button class="sample" data-act="s-fill" data-id="${s.id}" data-pin="${s.pin}"><span>${s.rank} ${s.name} · ${s.barracks}</span><small>${s.id} / ${s.pin}</small></button>`).join('')}
+        </div>
+        <p class="fine">모의 인증 · 가상 장병 100명 데이터</p>
+      </div></div>`;
+  }
+
+  /* ---------- U2 복지몰 홈 ---------- */
+  function nextShuttleText() {
+    const today = U.dateStr(st().now);
+    const r = ROUNDS.find(x => st().now < U.at(today, x.min - 30));
+    return r ? `${r.label} (${U.hm(r.min - 30)} 마감)` : '내일 12:30';
+  }
+
+  function homeView(s) {
+    const unread = st().notices.filter(n => n.sid === s.id && !n.read).length;
+    const cats = ['전체', ...SPX_DATA.CATEGORIES];
+    const list = st().products.filter(p => !Store.info(p).dispose && (ui.cat === '전체' || p.cat === ui.cat));
+    const c = cartCount(s);
+    return `<div class="p-head">
+        <div><div class="p-hello">${s.rank} ${s.name}님</div><div class="p-sub">${s.barracks} · ${s.id} <button class="link" data-act="s-logout">로그아웃</button></div></div>
+        <div class="p-icons">
+          <button class="icon-btn" data-act="s-notices" aria-label="알림">🔔${unread ? `<i>${unread}</i>` : ''}</button>
+          <button class="icon-btn" data-act="s-tab" data-tab="cart" aria-label="장바구니">🛒${c ? `<i>${c}</i>` : ''}</button>
+        </div>
+      </div>
+      <div class="p-banner"><b>🌙 판매원 부재 · 무인 운영 중</b><span>미리 주문하고 PX 픽업 또는 무인셔틀로 받으세요</span></div>
+      <div class="p-chips"><span class="chip">🚐 다음 셔틀 ${nextShuttleText()}</span><span class="chip">🛍️ 픽업 12:00~21:00</span></div>
+      <div class="p-cats">${cats.map(k => `<button class="${k === ui.cat ? 'on' : ''}" data-act="s-cat" data-cat="${k}">${k}</button>`).join('')}</div>
+      <div class="p-grid">${list.map(p => productCard(p, s)).join('')}</div>`;
+  }
+
+  function productCard(p, s) {
+    const i = Store.info(p), q = Store.cart(s.id)[p.id] || 0;
+    const badges = (p.pickupOnly ? '<span class="bdg pick">픽업전용</span>' : '') + (i.discount ? '<span class="bdg sale">할인 30%</span>' : '') + (i.soldout ? '<span class="bdg out">품절</span>' : '');
+    const meta = i.soldout ? '품절 · 입고 예정' : `재고 ${p.stock}개${i.discount ? ` · 유통기한 D-${i.dday}` : ''}`;
+    const btn = i.soldout ? '<button class="btn sm block" disabled>품절</button>'
+      : q ? stepper('s-qty', p.id, q, p.stock)
+        : `<button class="btn sm block primary" data-act="s-qty" data-pid="${p.id}" data-d="1">담기</button>`;
+    return `<div class="pcard${i.soldout ? ' soldout' : ''}">
+      <div class="pimg" style="background:${bg(p)}"><span>${p.emoji}</span><div class="bdgs">${badges}</div></div>
+      <div class="pname">${p.name}</div>
+      <div class="pprice">${i.discount ? `<s>${U.won(p.price)}</s>` : ''}<b class="${i.discount ? 'sale' : ''}">${U.won(i.price)}</b></div>
+      <div class="pmeta${!i.soldout && p.stock < 5 ? ' few' : ''}">${meta}</div>
+      ${btn}
+    </div>`;
+  }
+
+  /* ---------- U3 장바구니·수령 방식 ---------- */
+  // 수령 방식에 따라 주문을 나눈다 (PRD F1-8: 픽업전용 상품은 픽업 주문으로 자동 분리)
+  function buildPlan(s, lines) {
+    const shOpts = Store.shuttleOptions(), pickOpts = Store.pickupOptions();
+    if (!ui.warehouse) ui.warehouse = `${s.barracks} 무인배송창고`;
+    const openSh = shOpts.filter(o => !o.disabled);
+    if (!openSh.some(o => o.key === ui.roundKey)) ui.roundKey = openSh[0].key;
+    if (!pickOpts.some(o => o.key === ui.pickupKey)) ui.pickupKey = pickOpts[0].key;
+    const parse = k => { const [d, m] = k.split('|'); return { dlvDate: d, slot: +m }; };
+    const group = (method, ls, split) => ({
+      method, split,
+      place: method === 'shuttle' ? ui.warehouse : PICKUP_PLACE,
+      ...parse(method === 'shuttle' ? ui.roundKey : ui.pickupKey),
+      items: ls.map(l => ({ pid: l.p.id, qty: l.qty, p: l.p, price: l.info.price })),
+      amount: ls.reduce((a, l) => a + l.info.price * l.qty, 0),
+    });
+    const bulky = lines.filter(l => l.p.pickupOnly), normal = lines.filter(l => !l.p.pickupOnly);
+    let groups;
+    if (ui.method === 'pickup') groups = [group('pickup', lines, false)];
+    else if (!normal.length) groups = [group('pickup', lines, true)];
+    else if (bulky.length) groups = [group('shuttle', normal, false), group('pickup', bulky, true)];
+    else groups = [group('shuttle', lines, false)];
+    return { groups, bulky, shOpts, pickOpts, closedToday: shOpts.some(o => o.today && o.disabled), total: groups.reduce((a, g) => a + g.amount, 0) };
+  }
+  const groupLabel = g => `${g.method === 'shuttle' ? g.place : 'PX 픽업대'} · ${Store.dayLabel(g.dlvDate)} ${U.hm(g.slot)}${g.method === 'shuttle' ? ' 회차' : ''}`;
+
+  function cartView(s) {
+    const lines = Store.cartLines(s.id);
+    if (!lines.length) return subHead('장바구니', 'home') + `<div class="empty"><div class="empty-ico">🛒</div><p>장바구니가 비어 있습니다</p><button class="btn primary" data-act="s-tab" data-tab="home">상품 보러 가기</button></div>`;
+    const plan = buildPlan(s, lines);
+    const lineHtml = lines.map(l => `<div class="cline">
+        <div class="cimg" style="background:${bg(l.p)}">${l.p.emoji}</div>
+        <div class="cinfo"><div class="cname">${l.p.name}${l.p.pickupOnly ? ' <span class="bdg pick">픽업전용</span>' : ''}${l.info.discount ? ' <span class="bdg sale">할인</span>' : ''}</div>
+          <div class="cprice">${U.won(l.info.price)} × ${l.qty} = <b>${U.won(l.info.price * l.qty)}</b></div>
+          <div class="cctl">${stepper('s-qty', l.p.id, l.qty, l.p.stock)}<button class="link" data-act="s-remove" data-pid="${l.p.id}">삭제</button></div></div>
+      </div>`).join('');
+    const pickSel = label => `<label class="flabel">${label}</label><select class="fsel" data-change="s-pickup">${plan.pickOpts.map(o => `<option value="${o.key}"${o.key === ui.pickupKey ? ' selected' : ''}>${o.label}</option>`).join('')}</select>`;
+    let opts;
+    if (ui.method === 'shuttle') {
+      const cur = plan.shOpts.find(o => o.key === ui.roundKey);
+      opts = `<label class="flabel">배송지 (생활관별 무인배송창고)</label>
+        <select class="fsel" data-change="s-warehouse">${WAREHOUSES.map(w => `<option${w === ui.warehouse ? ' selected' : ''}>${w}</option>`).join('')}</select>
+        <label class="flabel">배송 회차 <small>회차 30분 전 주문 마감</small></label>
+        <div class="rounds">${plan.shOpts.map(o => `<button class="round${o.key === ui.roundKey ? ' on' : ''}" ${o.disabled ? 'disabled' : ''} data-act="s-round" data-key="${o.key}"><b>${o.label}</b><small>${o.sub}</small></button>`).join('')}</div>
+        ${plan.closedToday ? `<div class="note">⏱️ 마감된 회차는 선택할 수 없어 다음 회차(<b>${cur.label}</b>)로 자동 안내합니다.</div>` : ''}
+        ${plan.bulky.length ? `<div class="warnbox"><b>📦 픽업전용 상품 자동 분리</b><p>${plan.bulky.map(l => l.p.name).join(', ')}은(는) 부피가 커서 셔틀로 배송하지 않습니다. <b>PX 픽업 주문으로 자동 분리</b>됩니다.</p>${pickSel('분리된 픽업 주문 수령 시간')}</div>` : ''}`;
+    } else {
+      opts = pickSel('픽업 희망 시간 (12:00~21:00, 30분 단위)') + '<div class="note">🛍️ 판매원이 없어도 PX 픽업대 QR 단말로 수령합니다.</div>';
+    }
+    return subHead('장바구니', 'home') + `<div class="p-pad">${lineHtml}
+        <h4 class="sec">수령 방식</h4>
+        <div class="seg">
+          <button class="${ui.method === 'shuttle' ? 'on' : ''}" data-act="s-method" data-m="shuttle"><b>🚐 무인셔틀</b><small>생활관 무인배송창고</small></button>
+          <button class="${ui.method === 'pickup' ? 'on' : ''}" data-act="s-method" data-m="pickup"><b>🛍️ PX 픽업</b><small>원하는 시간에 픽업대</small></button>
+        </div>
+        ${opts}
+        <h4 class="sec">주문 요약</h4>${summaryBox(plan)}
+      </div>
+      <div class="p-cta"><button class="btn primary block lg" data-act="s-tab" data-tab="pay">결제하기 · ${U.won(plan.total)}</button></div>`;
+  }
+
+  function summaryBox(plan, detail) {
+    return `<div class="sumbox">${plan.groups.map((g, i) => `<div class="sumrow">
+        <div class="sumtop"><span><span class="tag ${g.method}">${g.method === 'shuttle' ? '셔틀' : '픽업'}</span> 주문 ${i + 1}${g.split ? ' · 자동 분리' : ''}</span><b>${U.won(g.amount)}</b></div>
+        <small>${groupLabel(g)}</small>
+        ${detail ? `<small class="items">${g.items.map(it => `${it.p.emoji} ${it.p.name} x${it.qty}`).join(' · ')}</small>` : ''}
+      </div>`).join('')}<div class="sumtotal"><span>결제 금액</span><b>${U.won(plan.total)}</b></div></div>`;
+  }
+
+  /* ---------- U4 결제 ---------- */
+  function payView(s) {
+    if (ui.payStage === 'done') return payDone();
+    if (ui.payStage === 'paying') return subHead('결제') + `<div class="paying"><div class="spinner"></div><b>${ui.payingLabel} 승인 요청 중…</b><small>모의 결제 · 실제 결제는 이루어지지 않습니다</small></div>`;
+    const lines = Store.cartLines(s.id);
+    if (!lines.length) return cartView(s);
+    const plan = buildPlan(s, lines), pay = ui.pay || s.pay;
+    const methods = [
+      ['나라사랑카드', '💳', `나라사랑카드 ****-${s.id.slice(-4)}`, '본인 명의 등록 카드'],
+      ['간편결제', '📲', '군 복지 간편결제', '휴대폰 간편 인증'],
+    ];
+    return subHead('결제', 'cart') + `<div class="p-pad">
+        <h4 class="sec">주문 내역</h4>${summaryBox(plan, true)}
+        <h4 class="sec">결제 수단</h4>
+        ${methods.map(([k, ico, t, sub]) => `<button class="paym${pay === k ? ' on' : ''}" data-act="s-paymethod" data-m="${k}"><span class="paym-ico">${ico}</span><span class="paym-txt"><b>${t}</b><small>${sub}${s.pay === k ? ' · 기본 결제수단' : ''}</small></span><i class="radio"></i></button>`).join('')}
+        ${ui.err ? `<div class="err">${ui.err}</div>` : ''}
+        <div class="note">🔒 모의 결제 연계 화면입니다. 결제가 끝나면 주문별 수령용 QR코드가 생성됩니다.</div>
+      </div>
+      <div class="p-cta"><button class="btn primary block lg" data-act="s-pay">${U.won(plan.total)} 결제하기</button></div>`;
+  }
+
+  function payDone() {
+    const orders = ui.lastIds.map(Store.order).filter(Boolean);
+    return subHead('결제 완료') + `<div class="p-pad center">
+        <div class="done-ico">✅</div><h3>결제가 완료되었습니다</h3>
+        <p class="muted">${orders.length > 1 ? `픽업전용 상품이 분리되어 주문 ${orders.length}건이 생성되었습니다.` : '수령할 때 아래 QR코드를 단말에 대세요.'}</p>
+        ${orders.map(o => `<div class="qrcard">${QR.svg(o.qr)}<div><b>${o.id}</b><small>${Store.placeLabel(o)}</small><small>${Store.itemsText(o)} · ${U.won(o.amount)}</small></div></div>`).join('')}
+        <button class="btn primary block" data-act="s-tab" data-tab="orders">내 주문에서 확인</button>
+        <button class="btn ghost block" data-act="s-tab" data-tab="home">쇼핑 계속하기</button>
+      </div>`;
+  }
+
+  /* ---------- U5 내 주문·QR ---------- */
+  function ordersView(s) {
+    const list = st().orders.filter(o => o.sid === s.id).sort((a, b) => b.createdAt - a.createdAt);
+    return subHead('내 주문') + `<div class="p-pad">${list.length ? list.map(orderCard).join('') : '<div class="empty"><div class="empty-ico">🧾</div><p>주문 내역이 없습니다</p></div>'}</div>`;
+  }
+
+  function orderCard(o) {
+    const flow = Store.flowOf(o), idx = flow.indexOf(o.status);
+    const canNext = o.method !== 'mobile' && idx >= 0 && idx < flow.length - 2;
+    const ready = (o.method === 'shuttle' && o.status === '창고도착') || (o.method === 'pickup' && o.status === '준비중');
+    const steps = o.method === 'mobile' || o.status === '취소' ? ''
+      : `<div class="steps">${flow.map((f, i) => `<div class="step${i < idx ? ' done' : i === idx ? ' cur' : ''}"><i></i><span>${f}</span></div>`).join('')}</div>`;
+    const tag = o.method === 'shuttle' ? '셔틀' : o.method === 'pickup' ? '픽업' : '현장구매';
+    return `<div class="ocard${ready ? ' ready' : ''}${o.status === '취소' ? ' cancelled' : ''}">
+      <div class="ohead"><span><span class="tag ${o.method}">${tag}</span> <b>${o.id}</b></span>${statusBadge(o.status)}</div>
+      <div class="oitems">${o.items.map(it => `${it.emoji} ${it.name} x${it.qty}`).join(' · ')}</div>
+      <div class="ometa">${U.won(o.amount)} · ${o.pay}<br>${Store.placeLabel(o)}</div>
+      ${steps}
+      ${ready ? `<div class="oready">${o.method === 'shuttle' ? '📦 창고에 도착했습니다. QR로 수령하세요' : '🛍️ 픽업대에 준비되었습니다. QR로 수령하세요'}</div>` : ''}
+      ${o.receivedAt ? `<div class="ometa small">수령 ${U.stamp(o.receivedAt)}</div>` : ''}
+      <div class="oacts">
+        ${o.qr && o.status !== '취소' ? `<button class="btn sm${ready ? ' primary' : ''}" data-act="s-qr" data-id="${o.id}">▦ QR 보기</button>` : ''}
+        ${canNext ? `<button class="btn sm ghost" data-act="s-next" data-id="${o.id}" title="시연용 상태 진행">다음 단계로 ▶</button>` : ''}
+        ${o.status === '접수' ? `<button class="btn sm danger-ghost" data-act="s-cancel" data-id="${o.id}">주문 취소</button>` : ''}
+      </div>
+    </div>`;
+  }
+
+  function qrModal() {
+    const o = Store.order(ui.qrId);
+    if (!o) return '';
+    const used = o.status === '수령완료';
+    return `<div class="p-modal" data-act="s-qr-close"><div class="p-sheet" data-stop>
+      <div class="sheet-head"><b>수령용 QR코드</b><button class="icon-btn" data-act="s-qr-close" aria-label="닫기">✕</button></div>
+      <div class="qr-big${used ? ' used' : ''}">${QR.svg(o.qr)}${used ? '<div class="stamp">수령완료</div>' : ''}</div>
+      <div class="center"><b>${o.id}</b><div class="muted">${Store.placeLabel(o)}</div><div class="mt8">${statusBadge(o.status)}</div>
+        <p class="muted small">${o.method === 'pickup' ? 'PX 픽업대' : o.place} 단말에 QR을 대면 수령이 완료됩니다.</p></div>
+    </div></div>`;
+  }
+
+  function noticeModal(s) {
+    const list = st().notices.filter(n => n.sid === s.id).slice().reverse();
+    return `<div class="p-modal" data-act="s-notices-close"><div class="p-sheet" data-stop>
+      <div class="sheet-head"><b>알림</b><button class="icon-btn" data-act="s-notices-close" aria-label="닫기">✕</button></div>
+      <div class="nlist">${list.length ? list.map(n => `<div class="nitem"><span>${n.text}</span><small>${U.stamp(n.at)}</small></div>`).join('') : '<p class="muted center">새 알림이 없습니다</p>'}</div>
+    </div></div>`;
+  }
+
+  /* ---------- 이동 PX ---------- */
+  function mobileView(s) {
+    const v = st().vehicle, ST = SPX_DATA.STOPS, mine = SPX_DATA.BARRACKS_STOP[s.barracks], myStop = ST[mine];
+    const round = SPX_DATA.VEH_ROUNDS[v.round];
+    let eta;
+    if (v.status === '중지') eta = '운행이 중지되어 도착 시각을 안내할 수 없습니다.';
+    else if (v.status === '정차' && v.stopIdx === mine) eta = `<b>지금 ${myStop.name}에 정차 중!</b> (10분 정차)`;
+    else if (v.status === '운행' && v.stopIdx === mine) eta = `<b>곧 도착</b> · 다음 정차지가 ${myStop.name}입니다`;
+    else if (v.status === '복귀' || v.stopIdx > mine) eta = v.round === 0 ? `이번 회차는 지나갔습니다 · 다음 회차 <b>${U.hm(Store.vehEta(mine, 1))}</b> 도착 예정` : `오늘 운행이 끝났습니다 · 내일 <b>${U.hm(Store.vehEta(mine, 0))}</b> 도착 예정`;
+    else eta = `<b>${mine - v.stopIdx}정거장</b> 남음 · <b>${U.hm(Store.vehEta(mine))}</b> 도착 예정`;
+    const alertOn = !!v.alerts[s.id];
+    const canOpen = v.status === '정차';
+    return subHead('이동 PX') + `<div class="p-pad">
+      <div class="veh-card">
+        <div class="veh-top"><b>🚚 ${v.name}</b><span class="vpill v-${v.status}">${vehStatusLabel(v)}</span></div>
+        <div class="veh-sub">${v.round + 1}회차 ${round.label} 출발 · 현재 <b>${ST[v.stopIdx].name}</b> · 🔋 ${v.battery}%</div>
+        ${routeMapSVG(mine)}
+      </div>
+      ${v.status === '중지' ? '<div class="errbox">⛔ 기상·안전 사유로 운행이 중지되었습니다. 진열장 문 열기가 비활성화됩니다.</div>' : ''}
+      <div class="eta-box"><div>★ 내 생활관 앞 (${myStop.name})</div><div>${eta}</div></div>
+      <button class="toggle-row" data-act="s-alert"><span>🔔 내 생활관 앞 도착 알림</span><i class="switch${alertOn ? ' on' : ''}"></i></button>
+      <h4 class="sec">차량 적재 상품 <small>남은 수량</small></h4>
+      <div class="load-grid">${v.load.map(l => { const p = Store.product(l.pid); return `<div class="load-item${l.qty === 0 ? ' empty' : ''}"><span class="li-emo" style="background:${bg(p)}">${p.emoji}</span><span class="li-name">${p.name}</span><small>${U.won(p.price)}</small><b>${l.qty}개</b></div>`; }).join('')}</div>
+      <div class="note">차량 측면 단말에 개인 QR을 대면 진열장 문이 열립니다. 꺼낸 상품은 문을 닫을 때 자동 결제됩니다.</div>
+    </div>
+    <div class="p-cta"><button class="btn primary block lg" data-act="s-m-open" ${canOpen ? '' : 'disabled'}>${canOpen ? '📱 QR로 진열장 문 열기' : v.status === '중지' ? '운행 중지 · 문 열기 불가' : '차량 정차 시 이용 가능'}</button></div>`;
+  }
+
+  function mobileModal(s) {
+    const m = ui.mobile, v = st().vehicle, stop = SPX_DATA.STOPS[v.stopIdx];
+    let body;
+    if (m.step === 'qr') {
+      body = `<div class="center"><p class="muted">${stop.name} · ${v.name}</p>
+        <div class="qr-big">${QR.svg(`SPX-M|${s.id}|${v.name}`)}</div>
+        <p>차량 측면 단말에 개인 QR을 대세요</p>
+        <button class="btn primary block" data-act="s-m-tag">단말에 태그 (시연)</button></div>`;
+    } else if (m.step === 'open') {
+      const total = Object.entries(m.picks).reduce((a, [pid, q]) => a + Store.product(pid).price * q, 0);
+      body = `<div class="door-open">🔓 진열장 문이 열렸습니다</div>
+        <p class="muted small">꺼낸 상품을 선택하세요 (실제 차량은 무게·카메라 센서로 자동 인식)</p>
+        <div class="pick-list">${v.load.map(l => { const p = Store.product(l.pid), q = m.picks[l.pid] || 0; return `<div class="pick-row${l.qty === 0 ? ' empty' : ''}"><span>${p.emoji} ${p.name}<small>${U.won(p.price)} · 남은 ${l.qty}개</small></span>${l.qty ? stepper('s-m-qty', l.pid, q, l.qty) : '<small>소진</small>'}</div>`; }).join('')}</div>
+        ${m.err ? `<div class="err">${m.err}</div>` : ''}
+        <button class="btn primary block lg" data-act="s-m-pay" ${total ? '' : 'disabled'}>🚪 문 닫기 · ${U.won(total)} 자동결제</button>`;
+    } else if (m.step === 'paying') {
+      body = `<div class="paying"><div class="spinner"></div><b>문 닫힘 · 꺼낸 상품 확인 중…</b><small>${s.pay} 자동결제 (모의)</small></div>`;
+    } else {
+      const o = Store.order(m.orderId);
+      body = `<div class="center"><div class="done-ico">🧾</div><h3>자동결제 완료</h3>
+        <p>${Store.itemsText(o)}</p><p><b>${U.won(o.amount)}</b> · ${o.pay}</p>
+        <p class="muted small">${o.id} · 내 주문에 현장 구매로 기록되었습니다</p>
+        <button class="btn primary block" data-act="s-m-close">확인</button></div>`;
+    }
+    const closable = m.step !== 'paying';
+    return `<div class="p-modal"${closable ? ' data-act="s-m-close"' : ''}><div class="p-sheet tall" data-stop>
+      <div class="sheet-head"><b>이동 PX 무인결제</b>${closable ? '<button class="icon-btn" data-act="s-m-close" aria-label="닫기">✕</button>' : ''}</div>${body}</div></div>`;
+  }
+
+  function navView(s) {
+    const c = cartCount(s);
+    const ready = st().orders.filter(o => o.sid === s.id && ((o.method === 'shuttle' && o.status === '창고도착') || (o.method === 'pickup' && o.status === '준비중'))).length;
+    const items = [['home', '🏠', '홈', 0], ['cart', '🛒', '장바구니', c], ['orders', '🧾', '내 주문', ready], ['mobile', '🚚', '이동 PX', 0]];
+    return `<nav class="p-nav">${items.map(([t, ico, label, n]) => `<button class="${ui.tab === t || (t === 'cart' && ui.tab === 'pay') ? 'on' : ''}" data-act="s-tab" data-tab="${t}"><span>${ico}${n ? `<i>${n}</i>` : ''}</span>${label}</button>`).join('')}</nav>`;
+  }
+
+  /* ---------- 동작 ---------- */
+  const actions = {
+    's-fill': el => { Binds.lgId = el.dataset.id; Binds.lgPin = el.dataset.pin; ui.err = ''; },
+    's-login': () => {
+      if (!Store.login(Binds.lgId || '', Binds.lgPin || '')) { ui.err = '군번 또는 PIN이 올바르지 않습니다.'; return; }
+      Binds.lgPin = '';
+      ui.tab = 'home';
+      resetCheckout();
+    },
+    's-logout': () => { Store.logout(); Object.assign(ui, { tab: 'home', qrId: null, notices: false, mobile: null }); },
+    's-tab': el => {
+      ui.tab = el.dataset.tab;
+      ui.notices = false;
+      if (ui.tab === 'pay' && ui.payStage !== 'paying') ui.payStage = 'form';
+      if (ui.tab !== 'pay') ui.err = '';
+    },
+    's-cat': el => { ui.cat = el.dataset.cat; },
+    's-qty': el => Store.addToCart(me().id, el.dataset.pid, +el.dataset.d),
+    's-remove': el => Store.removeFromCart(me().id, el.dataset.pid),
+    's-method': el => { ui.method = el.dataset.m; },
+    's-round': el => { ui.roundKey = el.dataset.key; },
+    's-paymethod': el => { ui.pay = el.dataset.m; },
+    's-pay': () => {
+      const s = me(), plan = buildPlan(s, Store.cartLines(s.id));
+      const groups = plan.groups.map(g => ({ method: g.method, place: g.place, dlvDate: g.dlvDate, slot: g.slot, split: g.split, items: g.items.map(it => ({ pid: it.pid, qty: it.qty })) }));
+      const pay = ui.pay || s.pay;
+      ui.payStage = 'paying';
+      ui.payingLabel = pay;
+      ui.err = '';
+      setTimeout(() => {
+        const res = Store.placeOrders(s.id, groups, pay);
+        if (res.error) { ui.payStage = 'form'; ui.err = res.error; } else { ui.payStage = 'done'; ui.lastIds = res.orders.map(o => o.id); }
+        App.render();
+      }, 1500);
+    },
+    's-qr': el => { ui.qrId = el.dataset.id; },
+    's-qr-close': () => { ui.qrId = null; },
+    's-next': el => Store.nextStep(el.dataset.id),
+    's-cancel': el => Store.cancelOrder(el.dataset.id),
+    's-notices': () => { ui.notices = true; Store.markNoticesRead(me().id); },
+    's-notices-close': () => { ui.notices = false; },
+    's-alert': () => Store.vehToggleAlert(me().id),
+    's-m-open': () => { ui.mobile = { step: 'qr', picks: {}, err: '' }; },
+    's-m-tag': () => { ui.mobile.step = 'open'; },
+    's-m-qty': el => {
+      const m = ui.mobile, l = st().vehicle.load.find(x => x.pid === el.dataset.pid);
+      m.picks[l.pid] = Math.max(0, Math.min(l.qty, (m.picks[l.pid] || 0) + +el.dataset.d));
+    },
+    's-m-pay': () => {
+      const s = me(), m = ui.mobile;
+      m.step = 'paying';
+      setTimeout(() => {
+        const res = Store.mobilePurchase(s.id, m.picks, s.pay);
+        if (res.error) { m.step = 'open'; m.err = res.error; } else { m.step = 'done'; m.orderId = res.order.id; }
+        App.render();
+      }, 1200);
+    },
+    's-m-close': () => { ui.mobile = null; },
+  };
+  const changes = {
+    's-warehouse': el => { ui.warehouse = el.value; },
+    's-pickup': el => { ui.pickupKey = el.value; },
+  };
+
+  // 시연 가이드 체크 (화면 왼쪽 패널)
+  function progress() {
+    const sid = st().session.soldierId || st().soldiers[0].id;
+    const today = U.dateStr(st().now);
+    const mine = st().orders.filter(o => o.sid === sid && U.dateStr(o.createdAt) === today && o.method !== 'mobile');
+    return {
+      login: !!st().session.soldierId,
+      cart: cartCount({ id: sid }) > 0 || mine.length > 0,
+      shuttle: mine.some(o => o.method === 'shuttle') || (ui.method === 'shuttle' && cartCount({ id: sid }) > 0 && ['cart', 'pay'].includes(ui.tab)),
+      paid: mine.length > 0,
+      arrived: mine.some(o => ['창고도착', '수령완료'].includes(o.status) && o.method === 'shuttle'),
+      received: mine.some(o => o.status === '수령완료'),
+    };
+  }
+
+  return { ui, render, actions, changes, progress, resetCheckout };
+})();
+
+</script>
+<script>
+/* 관리자 콘솔 (PRD 8.2 A1~A5 + 16장 이동 PX 관제) */
+const AdminUI = (() => {
+  const ui = { tab: 'dash', filter: '전체', actType: '전체', roundKey: null, scanSel: null, scanPlace: PICKUP_PLACE, scanning: false, result: null, err: '', cam: null };
+  const st = () => Store.state;
+  const card = (title, body, opts = {}) => `<section class="card ${opts.cls || ''}"><div class="card-head"><h3>${title}</h3>${opts.right || ''}</div>${body}</section>`;
+  const who = sid => { const s = Store.soldier(sid); return s ? `${s.rank} ${s.name}` : sid; };
+  const today = () => U.dateStr(st().now);
+  const readyOrders = () => st().orders.filter(o => (o.method === 'shuttle' && o.status === '창고도착') || (o.method === 'pickup' && o.status === '준비중'));
+
+  function render() {
+    if (!st().session.admin) return loginView();
+    const s = Store.stats();
+    const nav = [
+      ['dash', '📊', '대시보드', 0],
+      ['inv', '📦', '재고 현황', s.low.length],
+      ['act', '🤖', '발주·재고처리', s.pendingPO + s.pendingDispose],
+      ['scan', '📷', 'QR 수령 처리', readyOrders().length],
+      ['mobile', '🚚', '이동 PX', 0],
+    ];
+    const pages = { dash: dashView, inv: invView, act: actView, scan: scanView, mobile: mobileView };
+    return `<div class="admin">
+      <aside class="a-side">
+        <div class="a-brand"><div class="logo">PX</div><div><b>스마트 PX</b><small>관리자 콘솔</small></div></div>
+        <nav>${nav.map(([t, ico, label, n]) => `<button class="${ui.tab === t ? 'on' : ''}" data-act="a-tab" data-tab="${t}"><span>${ico}</span><em>${label}</em>${n ? `<i>${n}</i>` : ''}</button>`).join('')}</nav>
+        <div class="a-user"><b>PX 관리관</b><small>시범부대 ○○대대</small><button class="link" data-act="a-logout">로그아웃</button></div>
+      </aside>
+      <div class="a-main" data-scroll-key="a-${ui.tab}">${pages[ui.tab]()}</div>
+    </div>`;
+  }
+
+  /* ---------- A1 로그인 ---------- */
+  function loginView() {
+    return `<div class="a-login"><div class="a-login-card">
+      <div class="a-brand big"><div class="logo">PX</div><div><b>스마트 PX 관리자</b><small>재고·주문·배송 관리</small></div></div>
+      <label class="flabel" for="alId">관리자 ID</label>
+      <input id="alId" class="finput" data-bind="alId" value="${U.esc(Binds.alId || '')}" placeholder="admin" autocomplete="off">
+      <label class="flabel" for="alPin">PIN</label>
+      <input id="alPin" class="finput" type="password" data-bind="alPin" value="${U.esc(Binds.alPin || '')}" maxlength="4" placeholder="••••" data-enter="a-login">
+      ${ui.err ? `<div class="err">${ui.err}</div>` : ''}
+      <button class="btn primary block lg" data-act="a-login">로그인</button>
+      <button class="sample" data-act="a-fill"><span>시연용 관리자 계정 (눌러서 입력)</span><small>admin / 0000</small></button>
+    </div></div>`;
+  }
+
+  /* ---------- A2 대시보드 ---------- */
+  function dashView() {
+    const s = Store.stats(), lc = st().lastCheck;
+    const byMethod = m => s.orders.filter(o => o.method === m).length;
+    const disc = s.expiring.filter(p => Store.info(p).discount).length;
+    const kpis = [
+      ['🧾', '오늘 주문', `${s.orders.length}건`, `셔틀 ${byMethod('shuttle')} · 픽업 ${byMethod('pickup')} · 이동PX ${byMethod('mobile')}`, ''],
+      ['💰', '오늘 매출', U.won(s.sales), `건당 평균 ${U.won(s.orders.length ? Math.round(s.sales / s.orders.length / 10) * 10 : 0)}`, ''],
+      ['⚠️', '재고 부족', `${s.low.length}건`, `자동 발주 진행 ${s.pendingPO}건`, 'warn'],
+      ['⏰', '유통기한 임박', `${s.expiring.length}건`, `할인 ${disc} · 폐기대상 ${s.expiring.length - disc}`, 'danger'],
+    ];
+    return `<div class="a-title"><h2>대시보드</h2><span class="muted">${U.md(today())}(${U.dow(today())}) ${U.time(st().now)} 기준</span></div>
+      <div class="alert-banner">
+        <div class="ab-icon">📢</div>
+        <div class="ab-text"><div class="ab-title">일일 재고 알림 <small>${U.stamp(lc.at)} 자동 점검 · 실시간 반영</small></div>
+          <div class="ab-body">재고 부족 <b>${s.low.length}건</b> · 유통기한 임박 <b>${s.expiring.length}건</b> · 오늘 주문 <b>${s.orders.length}건</b></div></div>
+        <div class="ab-acts"><button class="btn sm" data-act="a-tab" data-tab="inv" data-filter="부족">부족 품목</button><button class="btn sm" data-act="a-tab" data-tab="inv" data-filter="임박">임박 품목</button></div>
+      </div>
+      <div class="kpis">${kpis.map(([ico, t, v, sub, cls]) => `<div class="kpi ${cls}"><div class="kpi-ico">${ico}</div><div><small>${t}</small><b>${v}</b><span>${sub}</span></div></div>`).join('')}</div>
+      <div class="grid2">
+        ${card('생활관별 셔틀 배송 현황', shuttleBoard(), { right: '<span class="muted small">오늘 · 12:30 / 18:00 / 21:00</span>' })}
+        ${card('자동 처리 알림', feed(), { right: '<button class="link" data-act="a-tab" data-tab="act">전체 내역 ›</button>' })}
+      </div>
+      ${card('회차별 출고 목록', dispatch())}
+      ${card('최근 주문', recentOrders())}`;
+  }
+
+  function roundPhase(min) {
+    const t = U.at(today(), min), now = st().now;
+    if (now < t - 30 * MIN) return `<span class="ph ph-open">${U.hm(min - 30)} 마감</span>`;
+    if (now < t) return '<span class="ph ph-prep">출고 준비</span>';
+    if (now < t + 10 * MIN) return '<span class="ph ph-move">배송중</span>';
+    return '<span class="ph ph-done">도착</span>';
+  }
+
+  function shuttleBoard() {
+    const sh = st().orders.filter(o => o.method === 'shuttle' && o.dlvDate === today() && o.status !== '취소');
+    const short = { 접수: '접수', 준비중: '준비', 배송중: '배송', 창고도착: '도착', 수령완료: '수령' };
+    const rows = BARRACKS.map(b => `<tr><th>${b}</th>${ROUNDS.map(r => {
+      const list = sh.filter(o => o.place.startsWith(b) && o.slot === r.min);
+      if (!list.length) return '<td class="dim">—</td>';
+      const cnt = SHUTTLE_FLOW.map(f => [f, list.filter(o => o.status === f).length]).filter(([, n]) => n);
+      return `<td><b>${list.length}건</b><small>${cnt.map(([f, n]) => `${short[f]} ${n}`).join(' · ')}</small></td>`;
+    }).join('')}</tr>`).join('');
+    return `<div class="tbl-wrap"><table class="tbl board"><thead><tr><th>생활관 창고</th>${ROUNDS.map(r => `<th>${r.label} 회차<br>${roundPhase(r.min)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>`;
+  }
+
+  const ACT_ICON = { 자동발주: '🤖', 입고: '📦', 할인: '🏷️', 폐기: '🗑️', 차량보충: '🚚' };
+  function actPill(a) {
+    const cls = { 발주중: 'b-amber', 입고완료: 'b-done', 처리완료: 'b-done', 처리대기: 'b-red' }[a.status] || 'b-gray';
+    return `<span class="sbadge ${cls}">${a.status}</span>`;
+  }
+  function feed() {
+    const list = st().actions.slice().sort((a, b) => b.at - a.at || b.id.localeCompare(a.id)).slice(0, 7);
+    return `<div class="feed">${list.map(a => `<div class="feed-item"><span class="fi-ico">${ACT_ICON[a.type]}</span><div><b>${a.type} · ${a.name} ${a.qty}개</b><small>${a.reason}</small></div><div class="fi-right">${actPill(a)}<small>${U.stamp(a.at)}</small></div></div>`).join('')}</div>`;
+  }
+
+  function dispatch() {
+    const t = today(), now = st().now;
+    const keys = ROUNDS.map(r => r.min);
+    if (!keys.includes(ui.roundKey)) ui.roundKey = (ROUNDS.find(r => U.at(t, r.min + 10) > now) || ROUNDS[ROUNDS.length - 1]).min;
+    const list = st().orders.filter(o => o.method === 'shuttle' && o.dlvDate === t && o.slot === ui.roundKey && o.status !== '취소');
+    const pickTotal = {};
+    list.forEach(o => o.items.forEach(it => { pickTotal[it.name] = (pickTotal[it.name] || 0) + it.qty; }));
+    const tabs = `<div class="chips">${ROUNDS.map(r => `<button class="chipbtn${r.min === ui.roundKey ? ' on' : ''}" data-act="a-round" data-min="${r.min}">${r.label} 회차 · ${st().orders.filter(o => o.method === 'shuttle' && o.dlvDate === t && o.slot === r.min && o.status !== '취소').length}건</button>`).join('')}</div>`;
+    if (!list.length) return tabs + '<p class="muted pad">이 회차에 배송할 주문이 없습니다.</p>';
+    const byWh = WAREHOUSES.map(w => [w, list.filter(o => o.place === w)]).filter(([, l]) => l.length);
+    return tabs + `<div class="picking"><b>출고 피킹 합계</b> ${Object.entries(pickTotal).map(([n, q]) => `<span class="pk">${n} x${q}</span>`).join('')}</div>
+      <div class="wh-grid">${byWh.map(([w, l]) => `<div class="wh"><div class="wh-head"><b>${w}</b><span>${l.length}건</span></div>${l.map(o => `<div class="wh-row"><span><b>${o.id.slice(-4)}</b> ${who(o.sid)}</span><small>${Store.itemsText(o)}</small>${statusBadge(o.status)}</div>`).join('')}</div>`).join('')}</div>`;
+  }
+
+  function recentOrders() {
+    const list = st().orders.slice().sort((a, b) => b.createdAt - a.createdAt).slice(0, 10);
+    return `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>주문번호</th><th>시각</th><th>장병</th><th>품목</th><th>금액</th><th>수령</th><th>상태</th><th></th></tr></thead><tbody>
+      ${list.map(o => {
+        const flow = Store.flowOf(o), i = flow.indexOf(o.status), canNext = o.method !== 'mobile' && i >= 0 && i < flow.length - 2;
+        return `<tr><td class="mono">${o.id}</td><td>${U.time(o.createdAt)}</td><td>${who(o.sid)}</td><td class="ellipsis">${Store.itemsText(o)}</td><td>${U.won(o.amount)}</td><td class="small">${Store.placeLabel(o)}</td><td>${statusBadge(o.status)}</td><td>${canNext ? `<button class="btn xs" data-act="a-next" data-id="${o.id}">다음 단계 ▶</button>` : ''}</td></tr>`;
+      }).join('')}</tbody></table></div>`;
+  }
+
+  /* ---------- A3 재고 현황 ---------- */
+  const FILTERS = {
+    전체: () => true,
+    부족: (p, i) => i.low,
+    임박: (p, i) => i.discount || i.dispose,
+    품절: (p, i) => i.soldout,
+    정상: (p, i) => i.status === '정상',
+    픽업전용: p => p.pickupOnly,
+  };
+  function stockBadges(p, i) {
+    const cls = { 정상: 'b-green', 부족: 'b-amber', 할인: 'b-blue', 폐기대상: 'b-red', 품절: 'b-red' }[i.status];
+    return `<span class="sbadge ${cls}">${i.status}</span>${i.low && i.status !== '부족' && i.status !== '품절' ? ' <span class="sbadge b-amber">부족</span>' : ''}`;
+  }
+  function invView() {
+    const q = (Binds.invSearch || '').trim();
+    const rows = st().products.filter(p => FILTERS[ui.filter](p, Store.info(p)) && (!q || p.name.includes(q)));
+    const pending = {};
+    st().actions.forEach(a => { if (a.type === '자동발주' && a.status === '발주중') pending[a.pid] = a; });
+    const now = Date.now();
+    return `<div class="a-title"><h2>재고 현황</h2><span class="muted">상품 ${st().products.length}종 · 주문 시 즉시 차감</span></div>
+      <div class="toolbar">
+        <div class="chips">${Object.keys(FILTERS).map(f => `<button class="chipbtn${f === ui.filter ? ' on' : ''}" data-act="a-filter" data-filter="${f}">${f} <small>${st().products.filter(p => FILTERS[f](p, Store.info(p))).length}</small></button>`).join('')}</div>
+        <input id="invSearch" class="finput sm" data-bind="invSearch" value="${U.esc(Binds.invSearch || '')}" placeholder="상품명 검색">
+      </div>
+      <section class="card"><div class="tbl-wrap"><table class="tbl inv"><thead><tr><th>상품</th><th>카테고리</th><th>판매가</th><th>현재고</th><th>안전 / 적정</th><th>유통기한</th><th>상태</th><th>작업</th></tr></thead><tbody>
+      ${rows.map(p => {
+        const i = Store.info(p), po = pending[p.id];
+        const pct = Math.min(100, p.stock / p.optimal * 100), safePct = p.safety / p.optimal * 100;
+        const act = i.dispose ? `<button class="btn xs danger" data-act="a-dispose" data-pid="${p.id}">폐기 완료</button>`
+          : po ? `<button class="btn xs primary" data-act="a-receive" data-id="${po.id}">입고 처리 +${po.qty}</button>` : '<span class="muted">—</span>';
+        return `<tr class="${now - (Store.flash[p.id] || 0) < 3000 ? 'flash' : ''}${i.dispose ? ' row-dispose' : ''}">
+          <td><span class="emo" style="background:${SPX_DATA.CAT_RULE[p.cat].bg}">${p.emoji}</span><b>${p.name}</b> <small class="muted">${p.id}</small>${p.pickupOnly ? ' <span class="bdg pick">픽업전용</span>' : ''}</td>
+          <td>${p.cat}</td>
+          <td>${i.discount ? `<s class="muted">${U.won(p.price)}</s><br><b class="sale">${U.won(i.price)}</b>` : U.won(p.price)}</td>
+          <td><div class="stockcell"><b class="${i.low ? 'warn-t' : ''}">${p.stock}</b><div class="bar"><i class="${i.low ? 'low' : ''}" style="width:${pct}%"></i><em style="left:${safePct}%"></em></div></div></td>
+          <td>${p.safety} / ${p.optimal}</td>
+          <td>${p.expiry ? `${U.md(p.expiry)} <span class="dd ${i.dday <= 1 ? 'dd-red' : i.dday <= 7 ? 'dd-amber' : ''}">D-${Math.max(0, i.dday)}</span>` : '<span class="muted">—</span>'}</td>
+          <td>${stockBadges(p, i)}${po ? '<br><small class="muted">발주중</small>' : ''}</td>
+          <td>${act}</td></tr>`;
+      }).join('')}</tbody></table>${rows.length ? '' : '<p class="muted pad">조건에 맞는 상품이 없습니다.</p>'}</div></section>`;
+  }
+
+  /* ---------- A4 자동 발주·재고처리 내역 ---------- */
+  function actView() {
+    const s = Store.stats();
+    const all = st().actions.slice().sort((a, b) => b.at - a.at || b.id.localeCompare(a.id));
+    const pos = all.filter(a => a.type === '자동발주');
+    const types = ['전체', '할인', '폐기', '입고', '차량보충'];
+    const logs = all.filter(a => a.type !== '자동발주' && (ui.actType === '전체' || a.type === ui.actType));
+    const t = today();
+    return `<div class="a-title"><h2>자동 발주·재고처리</h2><span class="muted">규칙 기반 자동 처리 · 외부 발주 전송 없음(시연)</span></div>
+      <div class="kpis small">
+        <div class="kpi warn"><div class="kpi-ico">🤖</div><div><small>발주중</small><b>${s.pendingPO}건</b></div></div>
+        <div class="kpi"><div class="kpi-ico">📦</div><div><small>오늘 입고</small><b>${all.filter(a => a.type === '입고' && U.dateStr(a.at) === t).length}건</b></div></div>
+        <div class="kpi"><div class="kpi-ico">🏷️</div><div><small>할인 적용 중</small><b>${st().products.filter(p => Store.info(p).discount).length}종</b></div></div>
+        <div class="kpi danger"><div class="kpi-ico">🗑️</div><div><small>폐기 대기</small><b>${s.pendingDispose}건</b></div></div>
+      </div>
+      ${card('자동 발주 목록', `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>처리ID</th><th>일시</th><th>품목</th><th>수량</th><th>사유</th><th>상태</th><th>작업</th></tr></thead><tbody>
+        ${pos.map(a => `<tr><td class="mono">${a.id}</td><td>${U.stamp(a.at)}</td><td>${a.name}</td><td>${a.qty}</td><td class="small">${a.reason}</td><td>${actPill(a)}${a.doneAt ? `<br><small class="muted">${U.stamp(a.doneAt)}</small>` : ''}</td><td>${a.status === '발주중' ? `<button class="btn xs primary" data-act="a-receive" data-id="${a.id}">입고 처리</button>` : ''}</td></tr>`).join('')}
+      </tbody></table></div>`, { right: '<span class="muted small">발주 수량 = 적정재고 − 현재고 · 같은 품목 중복 발주 방지</span>' })}
+      ${card('할인·폐기·입고 처리 내역', `<div class="chips pad-b">${types.map(k => `<button class="chipbtn${k === ui.actType ? ' on' : ''}" data-act="a-act-type" data-type="${k}">${k}</button>`).join('')}</div>
+        <div class="tbl-wrap"><table class="tbl"><thead><tr><th>처리ID</th><th>일시</th><th>유형</th><th>품목</th><th>수량</th><th>사유</th><th>상태</th><th>작업</th></tr></thead><tbody>
+        ${logs.map(a => `<tr><td class="mono">${a.id}</td><td>${U.stamp(a.at)}</td><td>${ACT_ICON[a.type]} ${a.type}</td><td>${a.name}</td><td>${a.qty}</td><td class="small">${a.reason}</td><td>${actPill(a)}</td><td>${a.type === '폐기' && a.status === '처리대기' ? `<button class="btn xs danger" data-act="a-dispose" data-pid="${a.pid}">폐기 완료</button>` : ''}</td></tr>`).join('')}
+        </tbody></table>${logs.length ? '' : '<p class="muted pad">내역이 없습니다.</p>'}</div>`)}
+      ${card('자동 처리 규칙', `<div class="rules">
+        <div><b>자동 발주</b><p>현재고가 안전재고 미만이 되는 즉시 1건 생성 · 수량 = 적정재고 − 현재고 · 발주중인 품목은 중복 생성 안 함 · 익일 06:00 자동 입고</p></div>
+        <div><b>안전 / 적정재고</b><p>식품·간식 15/50 · 음료 20/60 · 생활용품 5/20 · 기타 5/15</p></div>
+        <div><b>유통기한</b><p>D-7 ~ D-2: 30% 자동 할인 · D-1 이하: 판매 중지(복지몰 비노출), 폐기 대상</p></div>
+      </div>`)}`;
+  }
+
+  /* ---------- A5 QR 수령 처리 ---------- */
+  function scanView() {
+    const ready = readyOrders().sort((a, b) => a.createdAt - b.createdAt);
+    const coming = st().orders.filter(o => o.method === 'shuttle' && ['접수', '준비중', '배송중'].includes(o.status)).sort((a, b) => U.at(a.dlvDate, a.slot) - U.at(b.dlvDate, b.slot));
+    const pickWait = st().orders.filter(o => o.method === 'pickup' && o.status === '접수');
+    const row = (o, dim) => `<button class="srow${ui.scanSel === o.id ? ' on' : ''}${dim ? ' dim' : ''}" data-act="a-scan-select" data-id="${o.id}">
+        <span><b>${o.id}</b> ${who(o.sid)}</span><small>${o.method === 'pickup' ? 'PX 픽업대' : o.place} · ${Store.dayLabel(o.dlvDate)} ${U.hm(o.slot)}</small>${statusBadge(o.status)}</button>`;
+    const sel = ui.scanSel ? Store.order(ui.scanSel) : null;
+    const r = ui.result;
+    const camOk = 'BarcodeDetector' in window && navigator.mediaDevices;
+    return `<div class="a-title"><h2>QR 수령 처리</h2><span class="muted">픽업대·생활관 창고 단말 역할</span></div>
+      <div class="scan-grid">
+        ${card('수령 대기 주문', `<div class="slist">
+          <div class="sgroup">수령 가능 (${ready.length})</div>${ready.map(o => row(o)).join('') || '<p class="muted pad">수령 가능한 주문이 없습니다.</p>'}
+          <div class="sgroup">셔틀 도착 전 (${coming.length})</div>${coming.slice(0, 12).map(o => row(o, true)).join('')}
+          <div class="sgroup">픽업 준비 전 (${pickWait.length})</div>${pickWait.slice(0, 8).map(o => row(o, true)).join('')}
+        </div>`, { right: '<span class="muted small">주문을 고르면 해당 단말 QR이 대기합니다</span>' })}
+        <section class="terminal">
+          <div class="term-head"><span>📟 무인 수령 단말</span>
+            <select class="fsel dark" data-change="a-scan-place">${SCAN_PLACES.map(p => `<option${p === ui.scanPlace ? ' selected' : ''}>${p}</option>`).join('')}</select></div>
+          <div class="viewfinder${ui.scanning ? ' scanning' : ''}">
+            ${ui.cam ? '<video id="camVideo" playsinline muted></video>'
+              : sel && sel.qr ? `<div class="vf-qr">${QR.svg(sel.qr)}</div>` : '<div class="vf-empty">QR을 단말에 대세요</div>'}
+            <i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i><div class="scanline"></div>
+          </div>
+          <div class="term-acts">
+            <button class="btn primary lg" data-act="a-scan-go" ${sel && !ui.scanning ? '' : 'disabled'}>${ui.scanning ? '인식 중…' : sel ? `${sel.id.slice(-4)}번 QR 스캔` : '왼쪽에서 주문 선택'}</button>
+            ${camOk ? `<button class="btn ghost-dark" data-act="a-scan-cam">${ui.cam ? '카메라 끄기' : '📷 카메라로 스캔'}</button>` : ''}
+          </div>
+          <div class="term-token"><input id="scanToken" class="finput dark" data-bind="scanToken" value="${U.esc(Binds.scanToken || '')}" placeholder="QR 값 직접 입력 (예: SPX|ORD-…)" data-enter="a-scan-token"><button class="btn ghost-dark" data-act="a-scan-token">인식</button></div>
+          ${r ? `<div class="term-result ${r.ok ? 'ok' : 'fail'}"><div class="tr-ico">${r.ok ? '✅' : '⚠️'}</div><div><b>${r.title}</b><p>${r.msg}</p>${r.order ? `<small>${r.order.id} · ${Store.placeLabel(r.order)}</small>` : ''}</div></div>` : ''}
+          ${ui.err ? `<div class="term-result fail"><div class="tr-ico">⚠️</div><div><p>${ui.err}</p></div></div>` : ''}
+        </section>
+      </div>`;
+  }
+
+  function runScan(raw) {
+    ui.result = Store.scan(raw, ui.scanPlace);
+    if (ui.result.ok) ui.scanSel = null;
+  }
+
+  async function startCam() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      const det = new BarcodeDetector({ formats: ['qr_code'] });
+      ui.cam = { stream };
+      ui.err = '';
+      App.render();
+      const loop = async () => {
+        if (!ui.cam) return;
+        const video = document.getElementById('camVideo');
+        try {
+          if (video && video.readyState >= 2) {
+            const codes = await det.detect(video);
+            if (codes.length) { stopCam(); runScan(codes[0].rawValue); App.render(); return; }
+          }
+        } catch (e) { /* 프레임 인식 실패는 다음 프레임에서 재시도 */ }
+        requestAnimationFrame(loop);
+      };
+      loop();
+    } catch (e) {
+      ui.cam = null;
+      ui.err = '카메라를 사용할 수 없습니다. 주문 선택 또는 QR 값 입력으로 처리하세요.';
+      App.render();
+    }
+  }
+  function stopCam() {
+    if (ui.cam) ui.cam.stream.getTracks().forEach(t => t.stop());
+    ui.cam = null;
+  }
+  // 화면을 다시 그리면 video 요소가 새로 만들어지므로 스트림을 다시 연결
+  function afterRender() {
+    const video = document.getElementById('camVideo');
+    if (ui.cam && video && video.srcObject !== ui.cam.stream) { video.srcObject = ui.cam.stream; video.play().catch(() => {}); }
+  }
+
+  /* ---------- 이동 PX 관제 ---------- */
+  function mobileView() {
+    const v = st().vehicle, ST = SPX_DATA.STOPS, round = SPX_DATA.VEH_ROUNDS[v.round];
+    const sales = v.sales.filter(x => U.dateStr(x.at) === today());
+    const total = sales.reduce((a, x) => a + x.amount, 0);
+    const next = v.stopIdx < ST.length - 1 ? ST[v.stopIdx + 1] : null;
+    const stopRows = ST.slice(1, ST.length - 1).map((p, k) => {
+      const i = k + 1, list = sales.filter(x => x.stopIdx === i);
+      return `<tr><td>${p.name}</td><td>${U.hm(Store.vehEta(i))}</td><td>${list.length}건</td><td>${U.won(list.reduce((a, x) => a + x.amount, 0))}</td></tr>`;
+    }).join('');
+    const rep = Store.replenishList();
+    const canRep = (v.status === '복귀' || v.status === '대기') && rep.length;
+    const nextLabel = v.status === '복귀' ? '다음 회차 준비 (충전) ▶' : v.status === '대기' ? '출발 ▶' : '다음 정차지로 ▶';
+    return `<div class="a-title"><h2>이동 PX 관제</h2><span class="muted">자율주행 이동 PX · 정해진 노선 순회 (확장 구상)</span></div>
+      <div class="grid2 wide-left">
+        ${card('노선 관제', `<div class="map-wrap">${routeMapSVG(-1)}</div>
+          <div class="ctrl-row">
+            <button class="btn primary" data-act="a-veh-next" ${v.status === '운행' || v.status === '중지' ? 'disabled' : ''}>${nextLabel}</button>
+            <button class="btn${v.auto ? ' on' : ''}" data-act="a-veh-auto" ${v.status === '중지' || v.status === '복귀' ? 'disabled' : ''}>자동 운행 ${v.auto ? 'ON · 12초 간격' : 'OFF'}</button>
+            ${v.status === '중지' ? '<button class="btn ok" data-act="a-veh-resume">▶ 운행 재개</button>' : '<button class="btn danger" data-act="a-veh-stop">⛔ 원격 운행 중지</button>'}
+          </div>`)}
+        ${card('차량 상태', `<div class="vstat">
+            <div><small>차량</small><b>🚚 ${v.name}</b></div>
+            <div><small>운행 상태</small><b><span class="vpill v-${v.status}">${vehStatusLabel(v)}</span></b></div>
+            <div><small>회차</small><b>${v.round + 1}회차 · ${round.label} 출발</b></div>
+            <div><small>현재 위치</small><b>${ST[v.stopIdx].name}</b></div>
+            <div><small>다음 정차지</small><b>${next ? `${next.name} (${U.hm(Store.vehEta(v.stopIdx + 1))})` : '—'}</b></div>
+            <div><small>배터리</small><b><span class="batt"><i style="width:${v.battery}%" class="${v.battery < 30 ? 'low' : ''}"></i></span> ${v.battery}%</b></div>
+            <div><small>오늘 현장 판매</small><b>${sales.length}건 · ${U.won(total)}</b></div>
+          </div>`)}
+      </div>
+      <div class="grid2">
+        ${card('정차 지점별 판매', `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>정차 지점</th><th>도착 예정</th><th>판매 건수</th><th>금액</th></tr></thead><tbody>${stopRows}</tbody></table></div>`)}
+        ${card('차량 적재 재고', `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>상품</th><th>적재 기준</th><th>잔량</th><th>판매</th><th></th></tr></thead><tbody>
+          ${v.load.map(l => { const p = Store.product(l.pid); return `<tr><td>${p.emoji} ${p.name}</td><td>${l.std}</td><td><b>${l.qty}</b></td><td>${l.std - l.qty}</td><td><div class="bar mini"><i class="${l.qty / l.std < 0.3 ? 'low' : ''}" style="width:${l.qty / l.std * 100}%"></i></div></td></tr>`; }).join('')}
+        </tbody></table></div>`)}
+      </div>
+      <div class="grid2">
+        ${card('복귀 시 자동 보충 목록', rep.length ? `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>상품</th><th>보충 수량</th><th>본점 재고</th><th>보충 후 본점</th></tr></thead><tbody>
+            ${rep.map(l => { const after = l.p.stock - Math.min(l.need, l.p.stock); return `<tr><td>${l.p.emoji} ${l.p.name}</td><td>${l.need}</td><td>${l.p.stock}</td><td class="${after < l.p.safety ? 'warn-t' : ''}">${after}${after < l.p.safety ? ' · 자동 발주' : ''}</td></tr>`; }).join('')}
+          </tbody></table></div>
+          <div class="ctrl-row"><button class="btn primary" data-act="a-veh-replenish" ${canRep ? '' : 'disabled'}>보충 완료 처리</button><span class="muted small">${canRep ? '본점 재고에서 차감되고 안전재고 미만이면 자동 발주됩니다' : '차량이 본점에 복귀하면 처리할 수 있습니다'}</span></div>`
+          : '<p class="muted pad">보충할 품목이 없습니다. 적재 기준 수량을 모두 채웠습니다.</p>')}
+        ${card('운행 규칙', `<div class="rules">
+          <div><b>노선</b><p>PX 본점 → 1생활관 → 2생활관 → 연병장 → 3생활관 → 정비고 → 4생활관 → PX 본점</p></div>
+          <div><b>회차·정차</b><p>하루 2회 (18:00, 20:00 출발) · 1회 약 100분 · 지점마다 10분 정차</p></div>
+          <div><b>안전</b><p>최고 10km/h · 보행자·장애물 감지 시 자동 정지 · 탄약고·위병소 등 보안구역 노선 제외</p></div>
+          <div><b>운행 중지</b><p>우천·결빙·시야 불량, 관리자 원격 정지 · 복귀 후 적재 재고 자동 보충 및 충전</p></div>
+        </div>`)}
+      </div>`;
+  }
+
+  /* ---------- 동작 ---------- */
+  const actions = {
+    'a-fill': () => { Binds.alId = 'admin'; Binds.alPin = '0000'; ui.err = ''; },
+    'a-login': () => {
+      if (!Store.adminLogin(Binds.alId || '', Binds.alPin || '')) { ui.err = 'ID 또는 PIN이 올바르지 않습니다.'; return; }
+      ui.err = '';
+      Binds.alPin = '';
+    },
+    'a-logout': () => { stopCam(); Store.adminLogout(); },
+    'a-tab': el => {
+      if (ui.tab === 'scan' && el.dataset.tab !== 'scan') stopCam();
+      ui.tab = el.dataset.tab;
+      if (el.dataset.filter) ui.filter = el.dataset.filter;
+      ui.err = '';
+    },
+    'a-filter': el => { ui.filter = el.dataset.filter; },
+    'a-act-type': el => { ui.actType = el.dataset.type; },
+    'a-round': el => { ui.roundKey = +el.dataset.min; },
+    'a-receive': el => Store.receivePO(el.dataset.id),
+    'a-dispose': el => Store.dispose(el.dataset.pid),
+    'a-next': el => Store.nextStep(el.dataset.id),
+    'a-scan-select': el => {
+      const o = Store.order(el.dataset.id);
+      ui.scanSel = o.id;
+      ui.scanPlace = o.method === 'pickup' ? PICKUP_PLACE : o.place;
+      ui.result = null;
+      ui.err = '';
+    },
+    'a-scan-go': () => {
+      const o = Store.order(ui.scanSel);
+      if (!o) return;
+      ui.scanning = true;
+      ui.result = null;
+      setTimeout(() => { ui.scanning = false; runScan(o.qr); App.render(); }, 1100);
+    },
+    'a-scan-token': () => { ui.err = ''; runScan(Binds.scanToken || ''); if (ui.result.ok) Binds.scanToken = ''; },
+    'a-scan-cam': () => { if (ui.cam) stopCam(); else startCam(); },
+    'a-veh-next': () => App.vehicleStep(),
+    'a-veh-auto': () => Store.vehToggleAuto(),
+    'a-veh-stop': () => Store.vehStop(),
+    'a-veh-resume': () => Store.vehResume(),
+    'a-veh-replenish': () => Store.vehReplenish(),
+  };
+  const changes = {
+    'a-scan-place': el => { ui.scanPlace = el.value; ui.result = null; },
+  };
+
+  return { ui, render, actions, changes, afterRender, stopCam };
+})();
+
+</script>
+<script>
+/* 웹(claude.ai) 실시간 공유 계층
+   공유 상태를 db 문서(시각·차량·상품·주문·처리 내역)로 나눠 저장하고, 다른 기기의 변경을 받아 화면과 알림에 반영한다.
+   로그인·장바구니·알림 목록은 기기마다 따로 둔다. db를 쓸 수 없으면(로컬 파일, 로그아웃 상태 등) 기존 저장 방식으로 동작한다. */
+const Sync = (() => {
+  const LOCAL_KEY = 'smartpx_device_v1';
+  const COLLECTIONS = ['meta', 'products', 'orders', 'actions'];
+  const MAX_INFLIGHT = 6;
+  const SOLDIERS = SPX_DATA.buildSoldiers();
+  let db = null;
+  let status = 'local';             // local | connecting | empty | live | offline
+  let writeErr = '';
+  const remote = new Map();         // path -> 확인된 원격 값 (정렬된 JSON)
+  const pending = new Map();        // path -> 아직 보내지 않은 값 (null = 삭제)
+  const inflight = new Map();       // path -> 보내는 중인 값
+  const delivered = new Set();
+  let basePaths = new Set();        // 마지막으로 반영·저장한 상태의 문서 경로
+  let applyQueued = false;
+  let primed = false, epoch = null;
+  const seenHistory = new Map(), seenActions = new Map(), seenStock = new Map();
+  let seenVehicle = null;
+  let local = loadLocal();
+
+  function loadLocal() {
+    try { const v = JSON.parse(localStorage.getItem(LOCAL_KEY) || 'null'); if (v && v.session) return v; } catch (e) { /* 기기 저장소를 못 쓰면 새로 시작 */ }
+    return { session: { soldierId: null, admin: false }, carts: {}, notices: [] };
+  }
+  function saveLocal() { try { localStorage.setItem(LOCAL_KEY, JSON.stringify(local)); } catch (e) { /* 저장 불가 무시 */ } }
+
+  // 키 순서와 관계없이 같은 내용이면 같은 문자열
+  function stable(v) {
+    if (Array.isArray(v)) return '[' + v.map(stable).join(',') + ']';
+    if (v && typeof v === 'object') return '{' + Object.keys(v).filter(k => v[k] !== undefined).sort().map(k => JSON.stringify(k) + ':' + stable(v[k])).join(',') + '}';
+    return JSON.stringify(v === undefined ? null : v);
+  }
+
+  function docsOf(s) {
+    const m = new Map();
+    m.set('meta/clock', stable({ now: s.now, lastCheck: s.lastCheck, epoch: s.epoch }));
+    m.set('meta/vehicle', stable(s.vehicle));
+    s.products.forEach(p => m.set('products/' + p.id, stable(p)));
+    s.orders.forEach(o => m.set('orders/' + o.id, stable(o)));
+    s.actions.forEach(a => m.set('actions/' + a.id, stable(a)));
+    return m;
+  }
+  const current = path => pending.has(path) ? pending.get(path) : inflight.has(path) ? inflight.get(path) : remote.has(path) ? remote.get(path) : null;
+  const knownPaths = () => new Set([...remote.keys(), ...inflight.keys(), ...pending.keys()]);
+
+  /* ---------- 저장: 바뀐 문서만, 문서마다 한 번에 하나씩 ---------- */
+  function push(s) {
+    local.session = s.session; local.carts = s.carts; local.notices = s.notices;
+    saveLocal();
+    const docs = docsOf(s);
+    docs.forEach((j, path) => { if (current(path) !== j) pending.set(path, j); });
+    basePaths.forEach(path => { if (!docs.has(path) && current(path) !== null) pending.set(path, null); });
+    basePaths = new Set(docs.keys());
+    if (s.epoch !== epoch) resetSeen(s);
+    pump();
+  }
+
+  function pump() {
+    for (const [path, j] of pending) {
+      if (inflight.size >= MAX_INFLIGHT) break;
+      if (inflight.has(path)) continue;
+      pending.delete(path);
+      inflight.set(path, j);
+      const ref = db.doc(path);
+      (j === null ? ref.delete() : ref.set(JSON.parse(j))).then(() => done(path, j), e => fail(path, j, e));
+    }
+    App.renderSync();
+  }
+  function done(path, j) {
+    inflight.delete(path);
+    if (j === null) remote.delete(path); else remote.set(path, j);
+    pump();
+  }
+  function fail(path, j, e) {
+    inflight.delete(path);
+    const code = e && e.code;
+    if (code === 'unavailable' || code === 'resource_exhausted') {
+      if (!pending.has(path)) pending.set(path, j);
+      setTimeout(pump, 600 + Math.random() * 900);
+      return;
+    }
+    writeErr = code === 'invalid_argument' ? '이 계정은 시연 데이터를 바꿀 수 없습니다. 공유 설정에서 Contributor 이상으로 초대받아야 합니다.'
+      : code === 'quota_exceeded' ? '저장 공간 한도에 도달했습니다. 데이터 초기화로 정리하세요.'
+        : '변경 내용을 저장하지 못했습니다. 잠시 후 다시 시도하세요.';
+    App.toast('all', '⚠️ ' + writeErr, 'warn');
+    scheduleApply(); // 저장되지 않은 변경은 공유 데이터 기준으로 되돌림
+    pump();
+  }
+
+  /* ---------- 수신: 다른 기기의 변경을 상태로 반영 ---------- */
+  function subscribe() {
+    COLLECTIONS.forEach(col => {
+      db.collection(col).onSnapshot(snap => {
+        const prefix = col + '/';
+        [...remote.keys()].forEach(k => { if (k.startsWith(prefix)) remote.delete(k); });
+        snap.docs.forEach(d => remote.set(prefix + d.id, stable(d.data())));
+        delivered.add(col);
+        scheduleApply();
+      }, () => { status = 'offline'; App.render(); });
+    });
+  }
+  function scheduleApply() {
+    if (applyQueued) return;
+    applyQueued = true;
+    queueMicrotask(apply);
+  }
+
+  function apply() {
+    applyQueued = false;
+    if (COLLECTIONS.some(c => !delivered.has(c))) return;
+    const paths = [...knownPaths()];
+    const get = path => { const j = current(path); return j === null ? null : JSON.parse(j); };
+    const pick = prefix => paths.filter(p => p.startsWith(prefix)).map(get).filter(Boolean);
+    const clock = get('meta/clock'), vehicle = get('meta/vehicle'), products = pick('products/');
+    if (!clock || !vehicle || !products.length) {
+      status = 'empty';
+      App.render();
+      return;
+    }
+    const s = {
+      version: 1, epoch: clock.epoch, now: clock.now, lastCheck: clock.lastCheck, vehicle,
+      products: products.sort((a, b) => a.id.localeCompare(b.id)),
+      orders: pick('orders/').sort((a, b) => a.createdAt - b.createdAt || a.id.localeCompare(b.id)),
+      actions: pick('actions/').sort((a, b) => a.id.localeCompare(b.id)),
+      soldiers: SOLDIERS, seq: { order: {}, action: 0, notice: 0 },
+      session: local.session, carts: local.carts, notices: local.notices,
+    };
+    if (primed && s.epoch === epoch) detect(s); else resetSeen(s);
+    basePaths = new Set(docsOf(s).keys());
+    Store.adopt(s);
+    status = 'live';
+    // 출발시킨 기기가 도착 처리를 못 하고 닫힌 경우
+    if (vehicle.status === '운행' && Date.now() - (vehicle.movedAt || 0) > 5000) Store.vehArrive();
+    App.render();
+  }
+
+  // 초기화(또는 첫 연결) 직후에는 기존 데이터를 '본 것'으로만 기록하고 알림을 띄우지 않는다
+  function resetSeen(s) {
+    if (epoch !== null && s.epoch !== epoch) { local.notices = []; s.notices = local.notices; saveLocal(); }
+    epoch = s.epoch;
+    seenHistory.clear(); seenActions.clear(); seenStock.clear();
+    s.orders.forEach(o => seenHistory.set(o.id, o.history.length));
+    s.actions.forEach(a => seenActions.set(a.id, a.status));
+    s.products.forEach(p => seenStock.set(p.id, p.stock));
+    seenVehicle = { stopIdx: s.vehicle.stopIdx, status: s.vehicle.status };
+    primed = true;
+  }
+
+  const ACTION_TEXT = {
+    자동발주: a => [`🤖 자동 발주 생성 · ${a.name} ${a.qty}개`, 'warn'],
+    입고: a => [`📦 입고 완료 · ${a.name} +${a.qty}`, 'ok'],
+    할인: a => [`🏷️ 자동 할인 적용 · ${a.name}`, 'info'],
+    폐기: a => a.status === '처리대기' ? [`⛔ 폐기 대상 지정 · ${a.name}`, 'warn'] : [`🗑️ 폐기 완료 · ${a.name} ${a.qty}개`, 'muted'],
+    차량보충: a => [`🚚 이동 PX 보충 · ${a.name} ${a.qty}개`, 'ok'],
+  };
+
+  // 공유 데이터의 변화에서 장병 알림과 관리자 토스트를 만든다 (어느 기기에서 바꿨든 똑같이)
+  function detect(s) {
+    const sid = s.session.soldierId, mine = [], admin = [];
+    const who = id => { const x = SOLDIERS.find(y => y.id === id); return x ? `${x.rank} ${x.name}` : ''; };
+    s.orders.forEach(o => {
+      const from = seenHistory.has(o.id) ? seenHistory.get(o.id) : 0;
+      for (let i = from; i < o.history.length; i++) {
+        const st = o.history[i].status;
+        if (o.sid === sid) { const t = Store.noticeFor(o, st); if (t) mine.push(t); }
+        if (i === 0) admin.push(o.method === 'mobile' ? [`🚚 이동 PX 현장 결제 · ${who(o.sid)} ${U.won(o.amount)}`, 'info'] : [`🆕 새 주문 ${o.id} · ${who(o.sid)} · ${U.won(o.amount)} → 재고 즉시 차감`, 'info']);
+        else if (st === '수령완료') admin.push([`✅ 수령완료 ${o.id} · ${who(o.sid)}`, 'ok']);
+        else if (st === '취소') admin.push([`↩️ 주문 취소 ${o.id} · 재고 복원`, 'muted']);
+      }
+      seenHistory.set(o.id, o.history.length);
+    });
+    s.actions.forEach(a => {
+      const prev = seenActions.get(a.id);
+      if (prev === undefined || (a.type === '폐기' && prev !== a.status)) admin.push(ACTION_TEXT[a.type](a));
+      seenActions.set(a.id, a.status);
+    });
+    s.products.forEach(p => {
+      if (seenStock.has(p.id) && seenStock.get(p.id) !== p.stock) Store.flash[p.id] = Date.now();
+      seenStock.set(p.id, p.stock);
+    });
+    const v = s.vehicle, pv = seenVehicle;
+    if (pv && (pv.stopIdx !== v.stopIdx || pv.status !== v.status)) {
+      const me = sid && SOLDIERS.find(x => x.id === sid);
+      if (v.status === '정차' && me && v.alerts[sid] && SPX_DATA.BARRACKS_STOP[me.barracks] === v.stopIdx) mine.push(`🚚 이동 PX가 ${SPX_DATA.STOPS[v.stopIdx].name}에 도착했습니다 (10분 정차)`);
+      if (v.status === '복귀') admin.push(['🏁 이동 PX 본점 복귀 · 자동 보충 목록 생성', 'warn']);
+      if (v.status === '중지' && pv.status !== '중지') admin.push(['⛔ 이동 PX 원격 운행 중지', 'warn']);
+      if (pv.status === '중지' && v.status !== '중지') admin.push(['▶️ 이동 PX 운행 재개', 'ok']);
+    }
+    seenVehicle = { stopIdx: v.stopIdx, status: v.status };
+
+    if (mine.length) {
+      mine.forEach(text => local.notices.push({ id: Date.now() + Math.random(), sid, at: s.now, text, read: false }));
+      local.notices = local.notices.slice(-60);
+      s.notices = local.notices;
+      saveLocal();
+    }
+    mine.forEach(t => App.toast('soldier', t, 'info'));
+    admin.forEach(([t, tone]) => App.toast('admin', t, tone));
+  }
+
+  /* ---------- 시작 ---------- */
+  async function start() {
+    status = 'connecting';
+    try { db = await window.claude.use('db'); } catch (e) { db = null; }
+    if (!db) { status = 'local'; Store.load(); App.render(); return; }
+    Store.setSaver(push);
+    subscribe();
+    setTimeout(() => { if (status === 'connecting') { status = 'offline'; App.render(); } }, 10000);
+  }
+
+  function label() {
+    if (status === 'local') return { text: db === null && window.claude ? '개인 모드 · 실시간 공유 꺼짐' : '오프라인 파일', tone: 'muted' };
+    if (status === 'offline') return { text: '연결 확인 중…', tone: 'warn' };
+    const n = pending.size + inflight.size;
+    if (n) return { text: `저장 중 ${n}건`, tone: 'busy' };
+    return { text: '실시간 공유 중', tone: 'live' };
+  }
+
+  return {
+    start, label,
+    get status() { return status; },
+    get web() { return status !== 'local'; },
+    get busy() { return pending.size + inflight.size; },
+  };
+})();
+
+</script>
+<script>
+/* 앱 셸: 상단 시연 바, 화면 전환(장병/관리자/동시 보기), 이벤트 연결 */
+const App = (() => {
+  const $ = id => document.getElementById(id);
+  let mode = 'soldier';
+  try { mode = localStorage.getItem('smartpx_mode') || 'soldier'; } catch (e) { /* 기본값 사용 */ }
+  let resetArmed = false, resetTimer = null, moving = false;
+
+  function syncBadge() {
+    const l = Sync.label();
+    return `<span id="syncStatus" class="sync sync-${l.tone}"><i></i>${l.text}</span>`;
+  }
+
+  function topbar() {
+    const now = Store.state.now, d = U.dateStr(now);
+    const modes = [['soldier', '📱 장병 화면'], ['admin', '🖥️ 관리자 화면'], ['split', '⇆ 동시 보기']];
+    return `<div class="tb-brand"><div class="logo">PX</div><div><b>스마트 PX</b><small>사전주문 · 무인수령 시연</small></div></div>
+      <div class="tb-modes">${modes.map(([m, l]) => `<button class="${mode === m ? 'on' : ''}" data-act="mode" data-mode="${m}">${l}</button>`).join('')}</div>
+      <div class="tb-right">
+        ${syncBadge()}
+        <div class="tb-clock"><small>시연 시각</small><b>${U.md(d)}(${U.dow(d)}) ${U.time(now)}</b></div>
+        <button class="tb-btn" data-act="t-30" title="시연 시각을 30분 진행">+30분</button>
+        <button class="tb-btn" data-act="t-round" title="다음 셔틀 회차의 창고 도착 시각(회차+10분)으로 이동">다음 회차 ▶</button>
+        <button class="tb-btn" data-act="t-day" title="다음 날 08:00으로 이동 (06:00 일일 점검·익일 입고 실행)">다음 날 ▶▶</button>
+        <button class="tb-btn reset${resetArmed ? ' armed' : ''}" data-act="t-reset" title="${Sync.web ? '모든 기기의 시연 데이터를 처음 상태로 되돌림' : '모든 데이터를 처음 상태로 되돌림'}">${resetArmed ? '한 번 더 누르면 초기화' : '↺ 데이터 초기화'}</button>
+      </div>`;
+  }
+
+  function guide() {
+    const p = SoldierUI.progress();
+    const steps = [
+      [p.login, '로그인', '샘플 계정 26-70001234 / 1234'],
+      [p.cart, '라면·음료 담기', '생수 묶음의 "픽업전용" 배지 확인'],
+      [p.shuttle, '무인셔틀 선택', '3생활관 무인배송창고 · 18:00 회차'],
+      [p.paid, '결제 → QR 생성', '나라사랑카드 (모의 결제)'],
+      [p.arrived, '상단 [다음 회차 ▶]', '"3생활관 창고 도착" 알림 확인'],
+      [p.received, '관리자 QR 수령 처리', '단말 스캔 → 수령완료'],
+    ];
+    const tip = Sync.web
+      ? '💡 <b>같은 링크를 휴대폰으로 여세요.</b> 휴대폰에서 주문하면 이 노트북의 관리자 화면 재고와 알림이 바로 바뀝니다.'
+      : '💡 <b>동시 보기</b>로 바꾸면 주문하는 순간 관리자 재고가 줄고 자동 발주가 생기는 장면을 함께 보여줄 수 있습니다.';
+    return `<h3>시연 시나리오 · 장병</h3>
+      <ol class="g-steps">${steps.map(([done, t, s], i) => `<li class="${done ? 'done' : ''}"><i>${done ? '✓' : i + 1}</i><div><b>${t}</b><small>${s}</small></div></li>`).join('')}</ol>
+      <div class="g-box"><b>운영 규칙</b><ul>
+        <li>셔틀 12:30 · 18:00 · 21:00 (회차 30분 전 마감)</li>
+        <li>PX 픽업 12:00~21:00, 30분 단위</li>
+        <li>유통기한 D-7~D-2 30% 할인 · D-1 판매 중지</li>
+        <li>안전재고 미만이 되면 즉시 자동 발주</li></ul></div>
+      <div class="g-tip">${tip}</div>`;
+  }
+
+  // 실시간 데이터에 연결 중이거나 데이터가 아직 없을 때의 화면
+  function gateView() {
+    if (Sync.status === 'connecting' || (Sync.status === 'offline' && !Store.state)) {
+      return `<div class="gate"><div class="gate-card"><div class="logo lg">PX</div><h2>실시간 데이터에 연결하는 중</h2>
+        <p>${Sync.status === 'offline' ? '공유 데이터에 아직 연결되지 않았습니다. 네트워크를 확인하면 자동으로 이어집니다.' : '장병 화면과 관리자 화면이 같은 데이터를 함께 쓰도록 연결합니다.'}</p><div class="spinner"></div></div></div>`;
+    }
+    return `<div class="gate"><div class="gate-card"><div class="logo lg">PX</div><h2>시연 데이터가 아직 없습니다</h2>
+      <p>가상 장병 100명, 상품 50종, 오늘 주문 36건과 자동 발주·할인 내역을 만들어 모든 기기가 함께 씁니다. 한 번만 만들면 되고, 나중에 상단 [데이터 초기화]로 다시 처음 상태로 돌릴 수 있습니다.</p>
+      <button class="btn primary lg" data-act="sync-init">시연 데이터 만들기</button>
+      <small class="muted">실제 장병 정보가 아닌 가상 데이터입니다</small></div></div>`;
+  }
+
+  /* ---------- 렌더 ---------- */
+  function captureFocus() {
+    const a = document.activeElement;
+    if (!a || !a.id || a.tagName !== 'INPUT') return null;
+    return { id: a.id, s: a.selectionStart, e: a.selectionEnd };
+  }
+  function restoreFocus(f) {
+    const el = f && $(f.id);
+    if (!el) return;
+    el.focus();
+    try { el.setSelectionRange(f.s, f.e); } catch (e) { /* password 등 선택 범위 미지원 */ }
+  }
+  function captureScroll() {
+    const m = {};
+    document.querySelectorAll('[data-scroll-key]').forEach(el => { m[el.dataset.scrollKey] = el.scrollTop; });
+    return m;
+  }
+  function restoreScroll(m) {
+    document.querySelectorAll('[data-scroll-key]').forEach(el => { if (m[el.dataset.scrollKey]) el.scrollTop = m[el.dataset.scrollKey]; });
+  }
+  // 노선도 차량 아이콘을 이전 정차지에서 새 정차지로 이동시키는 애니메이션
+  function animateVehicles() {
+    document.querySelectorAll('.veh[data-to]').forEach(g => {
+      const [x, y] = g.dataset.to.split(',');
+      requestAnimationFrame(() => requestAnimationFrame(() => { g.style.transform = `translate(${x}px,${y}px)`; }));
+    });
+  }
+
+  function render() {
+    const gated = Sync.status === 'connecting' || Sync.status === 'empty' || !Store.state;
+    document.body.dataset.mode = mode;
+    document.body.classList.toggle('gated', gated);
+    if (gated) {
+      $('topbar').innerHTML = `<div class="tb-brand"><div class="logo">PX</div><div><b>스마트 PX</b><small>사전주문 · 무인수령 시연</small></div></div><div class="tb-right">${syncBadge()}</div>`;
+      $('gate').innerHTML = gateView();
+      return;
+    }
+    const focus = captureFocus(), scroll = captureScroll();
+    $('topbar').innerHTML = topbar();
+    if (mode !== 'admin') { $('phoneApp').innerHTML = SoldierUI.render(); $('guide').innerHTML = guide(); }
+    if (mode !== 'soldier') { $('adminPane').innerHTML = AdminUI.render(); AdminUI.afterRender(); }
+    restoreScroll(scroll);
+    restoreFocus(focus);
+    animateVehicles();
+    flushEvents();
+  }
+  // 저장 진행 상태만 바꿀 때 (전체 화면을 다시 그리지 않음)
+  function renderSync() {
+    const el = $('syncStatus');
+    if (el) el.outerHTML = syncBadge();
+  }
+
+  function addToast(layer, text, tone) {
+    const box = $(layer);
+    while (box.children.length >= 4) box.firstChild.remove();
+    const el = document.createElement('div');
+    el.className = `toast t-${tone || 'info'}`;
+    el.textContent = text;
+    box.appendChild(el);
+    setTimeout(() => el.classList.add('out'), 3800);
+    setTimeout(() => el.remove(), 4200);
+  }
+  // kind: soldier(로그인한 장병 휴대폰 화면) · admin(관리자 화면) · all
+  function toast(kind, text, tone) {
+    const s = Store.state && Store.state.session;
+    if ((kind === 'soldier' || kind === 'all') && mode !== 'admin' && (kind === 'all' || (s && s.soldierId))) addToast('phoneToasts', text, tone);
+    if ((kind === 'admin' && s && s.admin && mode !== 'soldier') || (kind === 'all' && mode === 'admin')) addToast('pageToasts', text, tone);
+  }
+  function flushEvents() {
+    const s = Store.state.session;
+    Store.drain().forEach(e => {
+      if (e.kind === 'soldier' && e.sid === s.soldierId && mode !== 'admin') addToast('phoneToasts', e.text, 'info');
+      if (e.kind === 'admin' && s.admin && mode !== 'soldier') addToast('pageToasts', e.text, e.tone);
+    });
+  }
+
+  /* ---------- 이동 PX 진행 ---------- */
+  function vehicleStep() {
+    if (moving) return;
+    if (Store.vehDepart() === 'moving') {
+      moving = true;
+      setTimeout(() => { moving = false; Store.vehArrive(); render(); }, 1500);
+    }
+  }
+  // 자동 운행은 관리자 화면을 띄운 기기에서만 진행 (여러 기기가 동시에 움직이지 않도록)
+  setInterval(() => {
+    if (!Store.state || mode === 'soldier' || !Store.state.session.admin) return;
+    const v = Store.state.vehicle;
+    if (v.auto && (v.status === '정차' || v.status === '대기')) { vehicleStep(); render(); }
+  }, 12000);
+
+  /* ---------- 상단 바 동작 ---------- */
+  function doReset() {
+    AdminUI.stopCam();
+    Store.reset();
+    Object.keys(Binds).forEach(k => delete Binds[k]);
+    SoldierUI.resetCheckout();
+    Object.assign(SoldierUI.ui, { tab: 'home', cat: '전체', qrId: null, notices: false, mobile: null, lastIds: [] });
+    Object.assign(AdminUI.ui, { tab: 'dash', filter: '전체', actType: '전체', roundKey: null, scanSel: null, scanPlace: PICKUP_PLACE, scanning: false, result: null, err: '' });
+    $('phoneToasts').innerHTML = '';
+    $('pageToasts').innerHTML = '';
+  }
+  const TOP = {
+    mode: el => {
+      mode = el.dataset.mode;
+      if (mode === 'soldier') AdminUI.stopCam();
+      try { localStorage.setItem('smartpx_mode', mode); } catch (e) { /* 저장 불가 무시 */ }
+    },
+    't-30': () => Store.addMinutes(30),
+    't-round': () => Store.nextRound(),
+    't-day': () => Store.nextDay(),
+    't-reset': () => {
+      clearTimeout(resetTimer);
+      if (!resetArmed) {
+        resetArmed = true;
+        resetTimer = setTimeout(() => { resetArmed = false; render(); }, 3000);
+        return;
+      }
+      resetArmed = false;
+      doReset();
+    },
+    'sync-init': () => doReset(),
+  };
+  const findAction = k => TOP[k] || SoldierUI.actions[k] || AdminUI.actions[k];
+
+  document.addEventListener('click', e => {
+    const el = e.target.closest('[data-act],[data-stop]');
+    if (!el || !el.dataset.act || el.disabled) return;
+    const fn = findAction(el.dataset.act);
+    if (!fn) return;
+    fn(el, e);
+    render();
+  });
+  document.addEventListener('change', e => {
+    const el = e.target.closest('[data-change]');
+    if (!el) return;
+    const k = el.dataset.change;
+    (SoldierUI.changes[k] || AdminUI.changes[k])(el);
+    render();
+  });
+  document.addEventListener('input', e => {
+    const el = e.target;
+    if (!el.dataset || !el.dataset.bind) return;
+    Binds[el.dataset.bind] = el.value;
+    if (el.id === 'invSearch') render();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Enter' || !e.target.dataset || !e.target.dataset.enter) return;
+    const fn = findAction(e.target.dataset.enter);
+    if (!fn) return;
+    fn(e.target, e);
+    render();
+  });
+
+  // claude.ai에서 열면 실시간 공유 데이터에, 로컬 파일로 열면 이 브라우저 저장소에 연결
+  setTimeout(() => {
+    if (window.claude && typeof window.claude.use === 'function') Sync.start();
+    else Store.load();
+    render();
+  });
+
+  return { render, renderSync, toast, vehicleStep };
+})();
+
+</script>

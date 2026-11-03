@@ -1,0 +1,981 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>스마트 PX 프로토타입</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<script>var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this.parsedData=[];for(var b=[],d=0,e=this.data.length;e>d;d++){var f=this.data.charCodeAt(d);f>65536?(b[0]=240|(1835008&f)>>>18,b[1]=128|(258048&f)>>>12,b[2]=128|(4032&f)>>>6,b[3]=128|63&f):f>2048?(b[0]=224|(61440&f)>>>12,b[1]=128|(4032&f)>>>6,b[2]=128|63&f):f>128?(b[0]=192|(1984&f)>>>6,b[1]=128|63&f):b[0]=f,this.parsedData=this.parsedData.concat(b)}this.parsedData.length!=this.data.length&&(this.parsedData.unshift(191),this.parsedData.unshift(187),this.parsedData.unshift(239))}function b(a,b){this.typeNumber=a,this.errorCorrectLevel=b,this.modules=null,this.moduleCount=0,this.dataCache=null,this.dataList=[]}function i(a,b){if(void 0==a.length)throw new Error(a.length+"/"+b);for(var c=0;c<a.length&&0==a[c];)c++;this.num=new Array(a.length-c+b);for(var d=0;d<a.length-c;d++)this.num[d]=a[d+c]}function j(a,b){this.totalCount=a,this.dataCount=b}function k(){this.buffer=[],this.length=0}function m(){return"undefined"!=typeof CanvasRenderingContext2D}function n(){var a=!1,b=navigator.userAgent;return/android/i.test(b)&&(a=!0,aMat=b.toString().match(/android ([0-9]\.[0-9])/i),aMat&&aMat[1]&&(a=parseFloat(aMat[1]))),a}function r(a,b){for(var c=1,e=s(a),f=0,g=l.length;g>=f;f++){var h=0;switch(b){case d.L:h=l[f][0];break;case d.M:h=l[f][1];break;case d.Q:h=l[f][2];break;case d.H:h=l[f][3]}if(h>=e)break;c++}if(c>l.length)throw new Error("Too long data");return c}function s(a){var b=encodeURI(a).toString().replace(/\%[0-9a-fA-F]{2}/g,"a");return b.length+(b.length!=a?3:0)}a.prototype={getLength:function(){return this.parsedData.length},write:function(a){for(var b=0,c=this.parsedData.length;c>b;b++)a.put(this.parsedData[b],8)}},b.prototype={addData:function(b){var c=new a(b);this.dataList.push(c),this.dataCache=null},isDark:function(a,b){if(0>a||this.moduleCount<=a||0>b||this.moduleCount<=b)throw new Error(a+","+b);return this.modules[a][b]},getModuleCount:function(){return this.moduleCount},make:function(){this.makeImpl(!1,this.getBestMaskPattern())},makeImpl:function(a,c){this.moduleCount=4*this.typeNumber+17,this.modules=new Array(this.moduleCount);for(var d=0;d<this.moduleCount;d++){this.modules[d]=new Array(this.moduleCount);for(var e=0;e<this.moduleCount;e++)this.modules[d][e]=null}this.setupPositionProbePattern(0,0),this.setupPositionProbePattern(this.moduleCount-7,0),this.setupPositionProbePattern(0,this.moduleCount-7),this.setupPositionAdjustPattern(),this.setupTimingPattern(),this.setupTypeInfo(a,c),this.typeNumber>=7&&this.setupTypeNumber(a),null==this.dataCache&&(this.dataCache=b.createData(this.typeNumber,this.errorCorrectLevel,this.dataList)),this.mapData(this.dataCache,c)},setupPositionProbePattern:function(a,b){for(var c=-1;7>=c;c++)if(!(-1>=a+c||this.moduleCount<=a+c))for(var d=-1;7>=d;d++)-1>=b+d||this.moduleCount<=b+d||(this.modules[a+c][b+d]=c>=0&&6>=c&&(0==d||6==d)||d>=0&&6>=d&&(0==c||6==c)||c>=2&&4>=c&&d>=2&&4>=d?!0:!1)},getBestMaskPattern:function(){for(var a=0,b=0,c=0;8>c;c++){this.makeImpl(!0,c);var d=f.getLostPoint(this);(0==c||a>d)&&(a=d,b=c)}return b},createMovieClip:function(a,b,c){var d=a.createEmptyMovieClip(b,c),e=1;this.make();for(var f=0;f<this.modules.length;f++)for(var g=f*e,h=0;h<this.modules[f].length;h++){var i=h*e,j=this.modules[f][h];j&&(d.beginFill(0,100),d.moveTo(i,g),d.lineTo(i+e,g),d.lineTo(i+e,g+e),d.lineTo(i,g+e),d.endFill())}return d},setupTimingPattern:function(){for(var a=8;a<this.moduleCount-8;a++)null==this.modules[a][6]&&(this.modules[a][6]=0==a%2);for(var b=8;b<this.moduleCount-8;b++)null==this.modules[6][b]&&(this.modules[6][b]=0==b%2)},setupPositionAdjustPattern:function(){for(var a=f.getPatternPosition(this.typeNumber),b=0;b<a.length;b++)for(var c=0;c<a.length;c++){var d=a[b],e=a[c];if(null==this.modules[d][e])for(var g=-2;2>=g;g++)for(var h=-2;2>=h;h++)this.modules[d+g][e+h]=-2==g||2==g||-2==h||2==h||0==g&&0==h?!0:!1}},setupTypeNumber:function(a){for(var b=f.getBCHTypeNumber(this.typeNumber),c=0;18>c;c++){var d=!a&&1==(1&b>>c);this.modules[Math.floor(c/3)][c%3+this.moduleCount-8-3]=d}for(var c=0;18>c;c++){var d=!a&&1==(1&b>>c);this.modules[c%3+this.moduleCount-8-3][Math.floor(c/3)]=d}},setupTypeInfo:function(a,b){for(var c=this.errorCorrectLevel<<3|b,d=f.getBCHTypeInfo(c),e=0;15>e;e++){var g=!a&&1==(1&d>>e);6>e?this.modules[e][8]=g:8>e?this.modules[e+1][8]=g:this.modules[this.moduleCount-15+e][8]=g}for(var e=0;15>e;e++){var g=!a&&1==(1&d>>e);8>e?this.modules[8][this.moduleCount-e-1]=g:9>e?this.modules[8][15-e-1+1]=g:this.modules[8][15-e-1]=g}this.modules[this.moduleCount-8][8]=!a},mapData:function(a,b){for(var c=-1,d=this.moduleCount-1,e=7,g=0,h=this.moduleCount-1;h>0;h-=2)for(6==h&&h--;;){for(var i=0;2>i;i++)if(null==this.modules[d][h-i]){var j=!1;g<a.length&&(j=1==(1&a[g]>>>e));var k=f.getMask(b,d,h-i);k&&(j=!j),this.modules[d][h-i]=j,e--,-1==e&&(g++,e=7)}if(d+=c,0>d||this.moduleCount<=d){d-=c,c=-c;break}}}},b.PAD0=236,b.PAD1=17,b.createData=function(a,c,d){for(var e=j.getRSBlocks(a,c),g=new k,h=0;h<d.length;h++){var i=d[h];g.put(i.mode,4),g.put(i.getLength(),f.getLengthInBits(i.mode,a)),i.write(g)}for(var l=0,h=0;h<e.length;h++)l+=e[h].dataCount;if(g.getLengthInBits()>8*l)throw new Error("code length overflow. ("+g.getLengthInBits()+">"+8*l+")");for(g.getLengthInBits()+4<=8*l&&g.put(0,4);0!=g.getLengthInBits()%8;)g.putBit(!1);for(;;){if(g.getLengthInBits()>=8*l)break;if(g.put(b.PAD0,8),g.getLengthInBits()>=8*l)break;g.put(b.PAD1,8)}return b.createBytes(g,e)},b.createBytes=function(a,b){for(var c=0,d=0,e=0,g=new Array(b.length),h=new Array(b.length),j=0;j<b.length;j++){var k=b[j].dataCount,l=b[j].totalCount-k;d=Math.max(d,k),e=Math.max(e,l),g[j]=new Array(k);for(var m=0;m<g[j].length;m++)g[j][m]=255&a.buffer[m+c];c+=k;var n=f.getErrorCorrectPolynomial(l),o=new i(g[j],n.getLength()-1),p=o.mod(n);h[j]=new Array(n.getLength()-1);for(var m=0;m<h[j].length;m++){var q=m+p.getLength()-h[j].length;h[j][m]=q>=0?p.get(q):0}}for(var r=0,m=0;m<b.length;m++)r+=b[m].totalCount;for(var s=new Array(r),t=0,m=0;d>m;m++)for(var j=0;j<b.length;j++)m<g[j].length&&(s[t++]=g[j][m]);for(var m=0;e>m;m++)for(var j=0;j<b.length;j++)m<h[j].length&&(s[t++]=h[j][m]);return s};for(var c={MODE_NUMBER:1,MODE_ALPHA_NUM:2,MODE_8BIT_BYTE:4,MODE_KANJI:8},d={L:1,M:0,Q:3,H:2},e={PATTERN000:0,PATTERN001:1,PATTERN010:2,PATTERN011:3,PATTERN100:4,PATTERN101:5,PATTERN110:6,PATTERN111:7},f={PATTERN_POSITION_TABLE:[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],[6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],[6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],[6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],[6,32,58,84,110,136,162],[6,26,54,82,110,138,166],[6,30,58,86,114,142,170]],G15:1335,G18:7973,G15_MASK:21522,getBCHTypeInfo:function(a){for(var b=a<<10;f.getBCHDigit(b)-f.getBCHDigit(f.G15)>=0;)b^=f.G15<<f.getBCHDigit(b)-f.getBCHDigit(f.G15);return(a<<10|b)^f.G15_MASK},getBCHTypeNumber:function(a){for(var b=a<<12;f.getBCHDigit(b)-f.getBCHDigit(f.G18)>=0;)b^=f.G18<<f.getBCHDigit(b)-f.getBCHDigit(f.G18);return a<<12|b},getBCHDigit:function(a){for(var b=0;0!=a;)b++,a>>>=1;return b},getPatternPosition:function(a){return f.PATTERN_POSITION_TABLE[a-1]},getMask:function(a,b,c){switch(a){case e.PATTERN000:return 0==(b+c)%2;case e.PATTERN001:return 0==b%2;case e.PATTERN010:return 0==c%3;case e.PATTERN011:return 0==(b+c)%3;case e.PATTERN100:return 0==(Math.floor(b/2)+Math.floor(c/3))%2;case e.PATTERN101:return 0==b*c%2+b*c%3;case e.PATTERN110:return 0==(b*c%2+b*c%3)%2;case e.PATTERN111:return 0==(b*c%3+(b+c)%2)%2;default:throw new Error("bad maskPattern:"+a)}},getErrorCorrectPolynomial:function(a){for(var b=new i([1],0),c=0;a>c;c++)b=b.multiply(new i([1,g.gexp(c)],0));return b},getLengthInBits:function(a,b){if(b>=1&&10>b)switch(a){case c.MODE_NUMBER:return 10;case c.MODE_ALPHA_NUM:return 9;case c.MODE_8BIT_BYTE:return 8;case c.MODE_KANJI:return 8;default:throw new Error("mode:"+a)}else if(27>b)switch(a){case c.MODE_NUMBER:return 12;case c.MODE_ALPHA_NUM:return 11;case c.MODE_8BIT_BYTE:return 16;case c.MODE_KANJI:return 10;default:throw new Error("mode:"+a)}else{if(!(41>b))throw new Error("type:"+b);switch(a){case c.MODE_NUMBER:return 14;case c.MODE_ALPHA_NUM:return 13;case c.MODE_8BIT_BYTE:return 16;case c.MODE_KANJI:return 12;default:throw new Error("mode:"+a)}}},getLostPoint:function(a){for(var b=a.getModuleCount(),c=0,d=0;b>d;d++)for(var e=0;b>e;e++){for(var f=0,g=a.isDark(d,e),h=-1;1>=h;h++)if(!(0>d+h||d+h>=b))for(var i=-1;1>=i;i++)0>e+i||e+i>=b||(0!=h||0!=i)&&g==a.isDark(d+h,e+i)&&f++;f>5&&(c+=3+f-5)}for(var d=0;b-1>d;d++)for(var e=0;b-1>e;e++){var j=0;a.isDark(d,e)&&j++,a.isDark(d+1,e)&&j++,a.isDark(d,e+1)&&j++,a.isDark(d+1,e+1)&&j++,(0==j||4==j)&&(c+=3)}for(var d=0;b>d;d++)for(var e=0;b-6>e;e++)a.isDark(d,e)&&!a.isDark(d,e+1)&&a.isDark(d,e+2)&&a.isDark(d,e+3)&&a.isDark(d,e+4)&&!a.isDark(d,e+5)&&a.isDark(d,e+6)&&(c+=40);for(var e=0;b>e;e++)for(var d=0;b-6>d;d++)a.isDark(d,e)&&!a.isDark(d+1,e)&&a.isDark(d+2,e)&&a.isDark(d+3,e)&&a.isDark(d+4,e)&&!a.isDark(d+5,e)&&a.isDark(d+6,e)&&(c+=40);for(var k=0,e=0;b>e;e++)for(var d=0;b>d;d++)a.isDark(d,e)&&k++;var l=Math.abs(100*k/b/b-50)/5;return c+=10*l}},g={glog:function(a){if(1>a)throw new Error("glog("+a+")");return g.LOG_TABLE[a]},gexp:function(a){for(;0>a;)a+=255;for(;a>=256;)a-=255;return g.EXP_TABLE[a]},EXP_TABLE:new Array(256),LOG_TABLE:new Array(256)},h=0;8>h;h++)g.EXP_TABLE[h]=1<<h;for(var h=8;256>h;h++)g.EXP_TABLE[h]=g.EXP_TABLE[h-4]^g.EXP_TABLE[h-5]^g.EXP_TABLE[h-6]^g.EXP_TABLE[h-8];for(var h=0;255>h;h++)g.LOG_TABLE[g.EXP_TABLE[h]]=h;i.prototype={get:function(a){return this.num[a]},getLength:function(){return this.num.length},multiply:function(a){for(var b=new Array(this.getLength()+a.getLength()-1),c=0;c<this.getLength();c++)for(var d=0;d<a.getLength();d++)b[c+d]^=g.gexp(g.glog(this.get(c))+g.glog(a.get(d)));return new i(b,0)},mod:function(a){if(this.getLength()-a.getLength()<0)return this;for(var b=g.glog(this.get(0))-g.glog(a.get(0)),c=new Array(this.getLength()),d=0;d<this.getLength();d++)c[d]=this.get(d);for(var d=0;d<a.getLength();d++)c[d]^=g.gexp(g.glog(a.get(d))+b);return new i(c,0).mod(a)}},j.RS_BLOCK_TABLE=[[1,26,19],[1,26,16],[1,26,13],[1,26,9],[1,44,34],[1,44,28],[1,44,22],[1,44,16],[1,70,55],[1,70,44],[2,35,17],[2,35,13],[1,100,80],[2,50,32],[2,50,24],[4,25,9],[1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],[2,86,68],[4,43,27],[4,43,19],[4,43,15],[2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],[2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],[2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],[2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16],[4,101,81],[1,80,50,4,81,51],[4,50,22,4,51,23],[3,36,12,8,37,13],[2,116,92,2,117,93],[6,58,36,2,59,37],[4,46,20,6,47,21],[7,42,14,4,43,15],[4,133,107],[8,59,37,1,60,38],[8,44,20,4,45,21],[12,33,11,4,34,12],[3,145,115,1,146,116],[4,64,40,5,65,41],[11,36,16,5,37,17],[11,36,12,5,37,13],[5,109,87,1,110,88],[5,65,41,5,66,42],[5,54,24,7,55,25],[11,36,12],[5,122,98,1,123,99],[7,73,45,3,74,46],[15,43,19,2,44,20],[3,45,15,13,46,16],[1,135,107,5,136,108],[10,74,46,1,75,47],[1,50,22,15,51,23],[2,42,14,17,43,15],[5,150,120,1,151,121],[9,69,43,4,70,44],[17,50,22,1,51,23],[2,42,14,19,43,15],[3,141,113,4,142,114],[3,70,44,11,71,45],[17,47,21,4,48,22],[9,39,13,16,40,14],[3,135,107,5,136,108],[3,67,41,13,68,42],[15,54,24,5,55,25],[15,43,15,10,44,16],[4,144,116,4,145,117],[17,68,42],[17,50,22,6,51,23],[19,46,16,6,47,17],[2,139,111,7,140,112],[17,74,46],[7,54,24,16,55,25],[34,37,13],[4,151,121,5,152,122],[4,75,47,14,76,48],[11,54,24,14,55,25],[16,45,15,14,46,16],[6,147,117,4,148,118],[6,73,45,14,74,46],[11,54,24,16,55,25],[30,46,16,2,47,17],[8,132,106,4,133,107],[8,75,47,13,76,48],[7,54,24,22,55,25],[22,45,15,13,46,16],[10,142,114,2,143,115],[19,74,46,4,75,47],[28,50,22,6,51,23],[33,46,16,4,47,17],[8,152,122,4,153,123],[22,73,45,3,74,46],[8,53,23,26,54,24],[12,45,15,28,46,16],[3,147,117,10,148,118],[3,73,45,23,74,46],[4,54,24,31,55,25],[11,45,15,31,46,16],[7,146,116,7,147,117],[21,73,45,7,74,46],[1,53,23,37,54,24],[19,45,15,26,46,16],[5,145,115,10,146,116],[19,75,47,10,76,48],[15,54,24,25,55,25],[23,45,15,25,46,16],[13,145,115,3,146,116],[2,74,46,29,75,47],[42,54,24,1,55,25],[23,45,15,28,46,16],[17,145,115],[10,74,46,23,75,47],[10,54,24,35,55,25],[19,45,15,35,46,16],[17,145,115,1,146,116],[14,74,46,21,75,47],[29,54,24,19,55,25],[11,45,15,46,46,16],[13,145,115,6,146,116],[14,74,46,23,75,47],[44,54,24,7,55,25],[59,46,16,1,47,17],[12,151,121,7,152,122],[12,75,47,26,76,48],[39,54,24,14,55,25],[22,45,15,41,46,16],[6,151,121,14,152,122],[6,75,47,34,76,48],[46,54,24,10,55,25],[2,45,15,64,46,16],[17,152,122,4,153,123],[29,74,46,14,75,47],[49,54,24,10,55,25],[24,45,15,46,46,16],[4,152,122,18,153,123],[13,74,46,32,75,47],[48,54,24,14,55,25],[42,45,15,32,46,16],[20,147,117,4,148,118],[40,75,47,7,76,48],[43,54,24,22,55,25],[10,45,15,67,46,16],[19,148,118,6,149,119],[18,75,47,31,76,48],[34,54,24,34,55,25],[20,45,15,61,46,16]],j.getRSBlocks=function(a,b){var c=j.getRsBlockTable(a,b);if(void 0==c)throw new Error("bad rs block @ typeNumber:"+a+"/errorCorrectLevel:"+b);for(var d=c.length/3,e=[],f=0;d>f;f++)for(var g=c[3*f+0],h=c[3*f+1],i=c[3*f+2],k=0;g>k;k++)e.push(new j(h,i));return e},j.getRsBlockTable=function(a,b){switch(b){case d.L:return j.RS_BLOCK_TABLE[4*(a-1)+0];case d.M:return j.RS_BLOCK_TABLE[4*(a-1)+1];case d.Q:return j.RS_BLOCK_TABLE[4*(a-1)+2];case d.H:return j.RS_BLOCK_TABLE[4*(a-1)+3];default:return void 0}},k.prototype={get:function(a){var b=Math.floor(a/8);return 1==(1&this.buffer[b]>>>7-a%8)},put:function(a,b){for(var c=0;b>c;c++)this.putBit(1==(1&a>>>b-c-1))},getLengthInBits:function(){return this.length},putBit:function(a){var b=Math.floor(this.length/8);this.buffer.length<=b&&this.buffer.push(0),a&&(this.buffer[b]|=128>>>this.length%8),this.length++}};var l=[[17,14,11,7],[32,26,20,14],[53,42,32,24],[78,62,46,34],[106,84,60,44],[134,106,74,58],[154,122,86,64],[192,152,108,84],[230,180,130,98],[271,213,151,119],[321,251,177,137],[367,287,203,155],[425,331,241,177],[458,362,258,194],[520,412,292,220],[586,450,322,250],[644,504,364,280],[718,560,394,310],[792,624,442,338],[858,666,482,382],[929,711,509,403],[1003,779,565,439],[1091,857,611,461],[1171,911,661,511],[1273,997,715,535],[1367,1059,751,593],[1465,1125,805,625],[1528,1190,868,658],[1628,1264,908,698],[1732,1370,982,742],[1840,1452,1030,790],[1952,1538,1112,842],[2068,1628,1168,898],[2188,1722,1228,958],[2303,1809,1283,983],[2431,1911,1351,1051],[2563,1989,1423,1093],[2699,2099,1499,1139],[2809,2213,1579,1219],[2953,2331,1663,1273]],o=function(){var a=function(a,b){this._el=a,this._htOption=b};return a.prototype.draw=function(a){function g(a,b){var c=document.createElementNS("http://www.w3.org/2000/svg",a);for(var d in b)b.hasOwnProperty(d)&&c.setAttribute(d,b[d]);return c}var b=this._htOption,c=this._el,d=a.getModuleCount();Math.floor(b.width/d),Math.floor(b.height/d),this.clear();var h=g("svg",{viewBox:"0 0 "+String(d)+" "+String(d),width:"100%",height:"100%",fill:b.colorLight});h.setAttributeNS("http://www.w3.org/2000/xmlns/","xmlns:xlink","http://www.w3.org/1999/xlink"),c.appendChild(h),h.appendChild(g("rect",{fill:b.colorDark,width:"1",height:"1",id:"template"}));for(var i=0;d>i;i++)for(var j=0;d>j;j++)if(a.isDark(i,j)){var k=g("use",{x:String(i),y:String(j)});k.setAttributeNS("http://www.w3.org/1999/xlink","href","#template"),h.appendChild(k)}},a.prototype.clear=function(){for(;this._el.hasChildNodes();)this._el.removeChild(this._el.lastChild)},a}(),p="svg"===document.documentElement.tagName.toLowerCase(),q=p?o:m()?function(){function a(){this._elImage.src=this._elCanvas.toDataURL("image/png"),this._elImage.style.display="block",this._elCanvas.style.display="none"}function d(a,b){var c=this;if(c._fFail=b,c._fSuccess=a,null===c._bSupportDataURI){var d=document.createElement("img"),e=function(){c._bSupportDataURI=!1,c._fFail&&_fFail.call(c)},f=function(){c._bSupportDataURI=!0,c._fSuccess&&c._fSuccess.call(c)};return d.onabort=e,d.onerror=e,d.onload=f,d.src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==",void 0}c._bSupportDataURI===!0&&c._fSuccess?c._fSuccess.call(c):c._bSupportDataURI===!1&&c._fFail&&c._fFail.call(c)}if(this._android&&this._android<=2.1){var b=1/window.devicePixelRatio,c=CanvasRenderingContext2D.prototype.drawImage;CanvasRenderingContext2D.prototype.drawImage=function(a,d,e,f,g,h,i,j){if("nodeName"in a&&/img/i.test(a.nodeName))for(var l=arguments.length-1;l>=1;l--)arguments[l]=arguments[l]*b;else"undefined"==typeof j&&(arguments[1]*=b,arguments[2]*=b,arguments[3]*=b,arguments[4]*=b);c.apply(this,arguments)}}var e=function(a,b){this._bIsPainted=!1,this._android=n(),this._htOption=b,this._elCanvas=document.createElement("canvas"),this._elCanvas.width=b.width,this._elCanvas.height=b.height,a.appendChild(this._elCanvas),this._el=a,this._oContext=this._elCanvas.getContext("2d"),this._bIsPainted=!1,this._elImage=document.createElement("img"),this._elImage.style.display="none",this._el.appendChild(this._elImage),this._bSupportDataURI=null};return e.prototype.draw=function(a){var b=this._elImage,c=this._oContext,d=this._htOption,e=a.getModuleCount(),f=d.width/e,g=d.height/e,h=Math.round(f),i=Math.round(g);b.style.display="none",this.clear();for(var j=0;e>j;j++)for(var k=0;e>k;k++){var l=a.isDark(j,k),m=k*f,n=j*g;c.strokeStyle=l?d.colorDark:d.colorLight,c.lineWidth=1,c.fillStyle=l?d.colorDark:d.colorLight,c.fillRect(m,n,f,g),c.strokeRect(Math.floor(m)+.5,Math.floor(n)+.5,h,i),c.strokeRect(Math.ceil(m)-.5,Math.ceil(n)-.5,h,i)}this._bIsPainted=!0},e.prototype.makeImage=function(){this._bIsPainted&&d.call(this,a)},e.prototype.isPainted=function(){return this._bIsPainted},e.prototype.clear=function(){this._oContext.clearRect(0,0,this._elCanvas.width,this._elCanvas.height),this._bIsPainted=!1},e.prototype.round=function(a){return a?Math.floor(1e3*a)/1e3:a},e}():function(){var a=function(a,b){this._el=a,this._htOption=b};return a.prototype.draw=function(a){for(var b=this._htOption,c=this._el,d=a.getModuleCount(),e=Math.floor(b.width/d),f=Math.floor(b.height/d),g=['<table style="border:0;border-collapse:collapse;">'],h=0;d>h;h++){g.push("<tr>");for(var i=0;d>i;i++)g.push('<td style="border:0;border-collapse:collapse;padding:0;margin:0;width:'+e+"px;height:"+f+"px;background-color:"+(a.isDark(h,i)?b.colorDark:b.colorLight)+';"></td>');g.push("</tr>")}g.push("</table>"),c.innerHTML=g.join("");var j=c.childNodes[0],k=(b.width-j.offsetWidth)/2,l=(b.height-j.offsetHeight)/2;k>0&&l>0&&(j.style.margin=l+"px "+k+"px")},a.prototype.clear=function(){this._el.innerHTML=""},a}();QRCode=function(a,b){if(this._htOption={width:256,height:256,typeNumber:4,colorDark:"#000000",colorLight:"#ffffff",correctLevel:d.H},"string"==typeof b&&(b={text:b}),b)for(var c in b)this._htOption[c]=b[c];"string"==typeof a&&(a=document.getElementById(a)),this._android=n(),this._el=a,this._oQRCode=null,this._oDrawing=new q(this._el,this._htOption),this._htOption.text&&this.makeCode(this._htOption.text)},QRCode.prototype.makeCode=function(a){this._oQRCode=new b(r(a,this._htOption.correctLevel),this._htOption.correctLevel),this._oQRCode.addData(a),this._oQRCode.make(),this._el.title=a,this._oDrawing.draw(this._oQRCode),this.makeImage()},QRCode.prototype.makeImage=function(){"function"==typeof this._oDrawing.makeImage&&(!this._android||this._android>=3)&&this._oDrawing.makeImage()},QRCode.prototype.clear=function(){this._oDrawing.clear()},QRCode.CorrectLevel=d}();</script>
+<style>
+/* Layout: 상단 바 + (장병 모드) 시연 가이드 | 스마트폰 프레임, (관리자 모드) 좌측 내비 | 작업 영역 */
+:root{
+  --bg:#F2F4F1; --surface:#FFFFFF; --surface-2:#E8ECE6; --ink:#17201B; --muted:#5D6A62; --line:#D3DAD3;
+  --accent:#2D6849; --accent-ink:#FFFFFF; --accent-soft:#DCEAE1;
+  --amber:#A86A12; --amber-soft:#FAEFD8; --red:#B42318; --red-soft:#FBE4E1; --blue:#1F5DA8; --blue-soft:#E1EAF6;
+  --shadow:0 1px 2px rgba(20,30,24,.06),0 8px 24px rgba(20,30,24,.08);
+  --f-body:"IBM Plex Sans KR",system-ui,-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#101512; --surface:#18201B; --surface-2:#222B25; --ink:#E6ECE8; --muted:#9AA79F; --line:#2E3931;
+  --accent:#62B98C; --accent-ink:#0C1A12; --accent-soft:#1D3A2A;
+  --amber:#E2A94A; --amber-soft:#3A2D13; --red:#F0786C; --red-soft:#3C1C19; --blue:#7DAAE8; --blue-soft:#17263B;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35); color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#101512; --surface:#18201B; --surface-2:#222B25; --ink:#E6ECE8; --muted:#9AA79F; --line:#2E3931;
+  --accent:#62B98C; --accent-ink:#0C1A12; --accent-soft:#1D3A2A;
+  --amber:#E2A94A; --amber-soft:#3A2D13; --red:#F0786C; --red-soft:#3C1C19; --blue:#7DAAE8; --blue-soft:#17263B;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35); color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.top-in{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.mark{width:34px;height:34px;border-radius:8px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:700;font-size:13px;letter-spacing:.02em;flex:none}
+.brand b{font-size:16px;display:block;line-height:1.2}
+.brand small{color:var(--muted);font-size:12px}
+.seg{display:inline-flex;background:var(--surface-2);border-radius:10px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;padding:7px 14px;border-radius:8px;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.top .spacer{flex:1}
+.ghost{border:1px solid var(--line);background:transparent;border-radius:8px;padding:7px 12px;font-size:13px;color:var(--muted)}
+.ghost.warn{border-color:var(--red);color:var(--red)}
+.clock{font-size:12px;color:var(--muted)}
+
+.wrap{padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));max-width:1280px;margin:0 auto}
+
+/* user mode */
+.user-stage{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:32px;align-items:start}
+.guide{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;min-width:0}
+.guide h2{margin:0 0 4px;font-size:20px;text-wrap:balance}
+.guide p{margin:0 0 16px;color:var(--muted);max-width:60ch}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.steps li{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;padding:10px 12px;border-radius:10px;background:var(--surface-2)}
+.steps li.on{background:var(--accent-soft)}
+.steps li.done{opacity:.6}
+.steps .n{width:24px;height:24px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font-size:12px;font-weight:700}
+.steps li.on .n{background:var(--accent);color:var(--accent-ink)}
+.steps b{display:block;font-size:14px}
+.steps span{font-size:12.5px;color:var(--muted)}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px}
+.fact{border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.fact small{display:block;color:var(--muted);font-size:11.5px;letter-spacing:.03em}
+.fact b{font-size:15px}
+
+.phone{width:400px;max-width:100%;height:800px;max-height:calc(100vh - 110px);min-height:620px;border-radius:40px;background:#0E1310;padding:12px;box-shadow:var(--shadow);position:sticky;top:76px}
+.screen{background:var(--bg);border-radius:30px;height:100%;overflow:hidden;display:flex;flex-direction:column;position:relative}
+.notch{height:26px;display:flex;justify-content:space-between;align-items:center;padding:0 22px;font-size:11.5px;font-weight:600;background:var(--surface)}
+.app-head{background:var(--surface);padding:6px 16px 12px;border-bottom:1px solid var(--line)}
+.app-head .row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.app-head h3{margin:0;font-size:17px}
+.app-head small{color:var(--muted);font-size:12px}
+.app-body{flex:1;overflow-y:auto;padding:14px}
+.tabbar{display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border-top:1px solid var(--line);padding:6px 6px 10px}
+.tabbar button{border:0;background:transparent;padding:6px 0;font-size:11.5px;color:var(--muted);display:grid;gap:2px;justify-items:center;position:relative}
+.tabbar button svg{width:22px;height:22px}
+.tabbar button[aria-current="page"]{color:var(--accent);font-weight:600}
+.badge-n{position:absolute;top:2px;left:calc(50% + 6px);background:var(--red);color:#fff;border-radius:9px;font-size:10px;min-width:17px;height:17px;display:grid;place-items:center;padding:0 4px;font-weight:700}
+
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px;scrollbar-width:none}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:12.5px;white-space:nowrap;color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.pcard.out{opacity:.55}
+.illu{aspect-ratio:4/3;border-radius:10px;display:grid;place-items:center;font-size:44px;position:relative;overflow:hidden;max-width:100%}
+.illu::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.55),transparent 55%)}
+.illu span{position:relative;z-index:1;filter:drop-shadow(0 3px 4px rgba(0,0,0,.15))}
+.t-food{background:var(--amber-soft)} .t-drink{background:var(--blue-soft)} .t-living{background:var(--accent-soft)} .t-etc{background:var(--surface-2)}
+.tags{display:flex;gap:4px;flex-wrap:wrap;min-height:18px}
+.tag{font-size:10.5px;font-weight:600;padding:1px 6px;border-radius:5px;letter-spacing:.02em}
+.tag.pick{background:var(--blue-soft);color:var(--blue)}
+.tag.sale{background:var(--amber-soft);color:var(--amber)}
+.tag.out{background:var(--red-soft);color:var(--red)}
+.tag.low{background:var(--surface-2);color:var(--muted)}
+.pname{font-size:13px;font-weight:600;line-height:1.3;min-height:34px}
+.price{display:flex;align-items:baseline;gap:6px}
+.price b{font-size:14px}
+.price s{font-size:11.5px;color:var(--muted)}
+.stock{font-size:11.5px;color:var(--muted)}
+.add{border:0;background:var(--accent);color:var(--accent-ink);border-radius:8px;padding:7px;font-weight:600;font-size:12.5px}
+.add:disabled{background:var(--surface-2);color:var(--muted);cursor:not-allowed}
+.add.in{background:var(--accent-soft);color:var(--accent)}
+
+.btn{border:0;background:var(--accent);color:var(--accent-ink);border-radius:10px;padding:12px 16px;font-weight:700;font-size:15px;width:100%}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.sec{background:var(--surface-2);color:var(--ink)}
+.btn.sm{width:auto;padding:7px 12px;font-size:12.5px;border-radius:8px;font-weight:600}
+.field{display:grid;gap:5px;margin-bottom:12px}
+.field label{font-size:12.5px;font-weight:600;color:var(--muted)}
+.field input,.field select{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;width:100%}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.box h4{margin:0 0 10px;font-size:14px}
+.line{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.line:first-of-type{border-top:0}
+.mini{width:42px;height:42px;border-radius:10px;display:grid;place-items:center;font-size:22px;flex:none}
+.line .grow{flex:1;min-width:0}
+.line .grow b{font-size:13px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qty{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.qty button{border:0;background:var(--surface-2);width:26px;height:26px;font-weight:700}
+.qty span{min-width:26px;text-align:center;font-size:13px}
+.opt{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.opt button{border:1.5px solid var(--line);background:var(--surface);border-radius:12px;padding:12px 10px;text-align:left;display:grid;gap:2px}
+.opt button b{font-size:14px}
+.opt button span{font-size:11.5px;color:var(--muted)}
+.opt button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.notice{border-radius:10px;padding:10px 12px;font-size:12.5px;margin-bottom:12px;display:grid;gap:2px}
+.notice.blue{background:var(--blue-soft);color:var(--blue)}
+.notice.amber{background:var(--amber-soft);color:var(--amber)}
+.notice.green{background:var(--accent-soft);color:var(--accent)}
+.notice b{font-size:13px}
+.total{display:flex;justify-content:space-between;align-items:baseline;margin:6px 0 12px}
+.total b{font-size:20px}
+.empty{text-align:center;padding:40px 10px;color:var(--muted)}
+.empty .e{font-size:40px;margin-bottom:8px}
+
+.paycard{border-radius:14px;padding:16px;color:#fff;background:linear-gradient(135deg,#2D6849,#1C4430);display:grid;gap:18px;margin-bottom:10px}
+.paycard.easy{background:linear-gradient(135deg,#3D4F8C,#252F57)}
+.paycard small{opacity:.8;font-size:11.5px}
+.paycard .mono{font-size:15px;letter-spacing:.08em}
+
+.ocard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.ocard.new{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.ohead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.pill{font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.p-wait{background:var(--surface-2);color:var(--muted)}
+.p-prep{background:var(--amber-soft);color:var(--amber)}
+.p-move{background:var(--blue-soft);color:var(--blue)}
+.p-ready{background:var(--accent-soft);color:var(--accent)}
+.p-done{background:var(--surface-2);color:var(--muted)}
+.p-bad{background:var(--red-soft);color:var(--red)}
+.track{display:flex;gap:3px;margin:8px 0 4px}
+.track i{flex:1;height:4px;border-radius:2px;background:var(--surface-2)}
+.track i.on{background:var(--accent)}
+.tlabels{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted)}
+.meta{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;font-size:12.5px;margin:10px 0}
+.meta dt{color:var(--muted)} .meta dd{margin:0}
+.qrwrap{display:grid;justify-items:center;gap:6px;background:var(--surface-2);border-radius:12px;padding:14px;margin:8px 0}
+.qr{background:#fff;padding:10px;border-radius:10px;line-height:0}
+.qr img,.qr canvas{display:block}
+.qrwrap small{font-size:11.5px;color:var(--muted);text-align:center}
+.actions{display:flex;gap:6px;flex-wrap:wrap}
+
+/* overlay / modal */
+.overlay{position:absolute;inset:0;background:rgba(8,12,10,.55);display:grid;place-items:center;z-index:40;padding:20px}
+.overlay.page{position:fixed}
+.modal{background:var(--surface);border-radius:18px;padding:22px;width:100%;max-width:340px;text-align:center;box-shadow:var(--shadow)}
+.modal h4{margin:8px 0 4px;font-size:17px}
+.modal p{margin:0 0 14px;color:var(--muted);font-size:13px}
+.spin{width:44px;height:44px;border-radius:50%;border:4px solid var(--surface-2);border-top-color:var(--accent);margin:6px auto;animation:sp 0.9s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.kiosk{background:#0E1310;color:#DDE6E0;border-radius:14px;padding:16px;margin-bottom:14px;text-align:center}
+.kiosk small{font-size:11px;letter-spacing:.06em;opacity:.7;display:block;margin-bottom:8px}
+.scanbox{position:relative;width:150px;height:150px;margin:0 auto;border-radius:10px;overflow:hidden;background:#fff;display:grid;place-items:center}
+.scanbox .bar{position:absolute;left:0;right:0;height:3px;background:#62B98C;box-shadow:0 0 12px #62B98C;animation:scan 1.1s ease-in-out infinite alternate}
+@keyframes scan{from{top:4%}to{top:94%}}
+.ok{width:54px;height:54px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;margin:4px auto;font-size:28px;font-weight:700}
+.locker{font-size:34px;font-weight:700;color:var(--accent)}
+
+/* mobile PX map */
+.map{width:100%;height:auto;display:block}
+.map .road{fill:none;stroke:var(--surface-2);stroke-width:12;stroke-linejoin:round}
+.map .road2{fill:none;stroke:var(--accent);stroke-width:1.6;stroke-dasharray:4 5;opacity:.55}
+.map .zone{fill:url(#hatch);stroke:var(--red);stroke-width:1;stroke-dasharray:3 3}
+.map .hl{stroke:var(--red);stroke-width:1.2;opacity:.35}
+.map .stop{fill:var(--surface);stroke:var(--muted);stroke-width:2}
+.map .stop.mine{stroke:var(--blue);stroke-width:3}
+.map .stop.on{fill:var(--accent);stroke:var(--accent)}
+.map text{fill:var(--ink);font-size:10.5px;font-family:var(--f-body)}
+.map .sm{fill:var(--muted);font-size:9px}
+.map .zt{fill:var(--red);font-size:9.5px;font-weight:600}
+.map .veh rect{fill:var(--accent)}
+.map .veh text{fill:var(--accent-ink);font-size:8.5px;font-weight:700}
+.map .pulse{fill:var(--accent);opacity:.18}
+.mstat{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.mstat div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-width:0}
+.mstat small{display:block;color:var(--muted);font-size:11px;font-weight:600}
+.mstat b{display:block;font-size:14px;line-height:1.3}
+.mstat span{font-size:11.5px;color:var(--muted)}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 12px;margin-bottom:12px;text-align:left}
+.toggle i{width:38px;height:22px;border-radius:11px;background:var(--surface-2);position:relative;flex:none}
+.toggle i::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--muted)}
+.toggle[aria-pressed="true"] i{background:var(--accent)}
+.toggle[aria-pressed="true"] i::after{left:19px;background:var(--accent-ink)}
+.modal.tall{max-height:100%;overflow-y:auto;text-align:left}
+.modal.tall h4,.modal.tall>p{text-align:center}
+.ctrl{display:flex;gap:8px;flex-wrap:wrap}
+.notice.red{background:var(--red-soft);color:var(--red)}
+
+/* admin */
+.admin{display:grid;grid-template-columns:210px minmax(0,1fr);gap:24px;align-items:start}
+.nav{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:8px;display:grid;gap:2px;position:sticky;top:76px}
+.nav button{border:0;background:transparent;text-align:left;padding:10px 12px;border-radius:9px;font-weight:600;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+.nav button[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}
+.nav .cnt{font-size:11px;background:var(--red);color:#fff;border-radius:9px;padding:0 6px;min-width:18px;text-align:center}
+.nav .who{padding:10px 12px;border-top:1px solid var(--line);margin-top:6px;font-size:12px;color:var(--muted)}
+.ph{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.ph h2{margin:0;font-size:22px;text-wrap:balance}
+.ph p{margin:2px 0 0;color:var(--muted)}
+.alert{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--amber);border-radius:12px;padding:14px 16px;margin-bottom:16px}
+.alert .ic{width:38px;height:38px;border-radius:10px;background:var(--amber-soft);color:var(--amber);display:grid;place-items:center}
+.alert b{font-size:15px}
+.alert .items{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:4px;font-size:13px}
+.alert .items span strong{font-size:15px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.kpi small{color:var(--muted);font-size:12px;font-weight:600}
+.kpi b{display:block;font-size:26px;line-height:1.2;margin-top:4px}
+.kpi span{font-size:12px;color:var(--muted)}
+.cols{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:16px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0;margin-bottom:16px}
+.panel h3{margin:0 0 12px;font-size:15px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.panel h3 small{font-weight:500;color:var(--muted);font-size:12px}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-size:11.5px;color:var(--muted);font-weight:600;letter-spacing:.03em;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right}
+.pn{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.pn .mini{width:30px;height:30px;font-size:16px;border-radius:8px}
+.sbar{position:relative;width:110px;height:8px;background:var(--surface-2);border-radius:4px}
+.sbar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--accent)}
+.sbar i.low{background:var(--amber)} .sbar i.zero{background:var(--red)}
+.sbar u{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);opacity:.5}
+.dgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.wh{border:1px solid var(--line);border-radius:12px;padding:12px}
+.wh b{font-size:13.5px}
+.wh .rows{display:grid;gap:5px;margin-top:8px;font-size:12px}
+.wh .rows div{display:flex;justify-content:space-between}
+.feed{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.feed li{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--line);font-size:13px}
+.feed li:first-child{border-top:0}
+.ftype{font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px;white-space:nowrap}
+.ft-order{background:var(--blue-soft);color:var(--blue)} .ft-sale{background:var(--amber-soft);color:var(--amber)} .ft-dis{background:var(--red-soft);color:var(--red)} .ft-in{background:var(--accent-soft);color:var(--accent)}
+.login{max-width:380px;margin:40px auto;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px}
+.login h2{margin:0 0 4px;font-size:20px}
+.login p{margin:0 0 18px;color:var(--muted)}
+.scanrow{display:flex;gap:8px;flex-wrap:wrap}
+.scanrow input{flex:1;min-width:180px;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px}
+
+.toasts{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));display:grid;gap:8px;z-index:60;max-width:min(360px,calc(100vw - 32px))}
+.toast{background:var(--ink);color:var(--bg);padding:11px 14px;border-radius:10px;font-size:13px;box-shadow:var(--shadow);animation:tin .25s ease-out}
+.toast b{display:block}
+@keyframes tin{from{transform:translateY(8px);opacity:0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+@media (max-width:1000px){
+  .user-stage{grid-template-columns:1fr}
+  .phone{position:static;margin:0 auto;order:-1}
+  .admin{grid-template-columns:1fr}
+  .nav{position:static;grid-template-columns:repeat(5,auto);overflow-x:auto}
+  .nav .who{display:none}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cols{grid-template-columns:1fr}
+  .dgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:480px){
+  .phone{width:100%;height:auto;min-height:0;max-height:none;border-radius:0;padding:0;background:transparent;box-shadow:none}
+  .screen{border-radius:14px;border:1px solid var(--line);height:760px}
+  .facts{grid-template-columns:1fr}
+  .alert{grid-template-columns:1fr}
+  .alert .ic{display:none}
+}
+</style>
+
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <div class="brand"><div class="mark">PX</div><div><b>스마트 PX</b><small>○○대대 시범운영 · 시연용 프로토타입</small></div></div>
+  <div class="seg" role="group" aria-label="화면 전환">
+    <button id="m-user" data-act="mode" data-v="user">장병 화면</button>
+    <button id="m-admin" data-act="mode" data-v="admin">관리자 화면</button>
+  </div>
+  <div class="spacer"></div>
+  <span class="clock" id="clock"></span>
+  <button class="ghost" id="reset" data-act="reset">시연 데이터 초기화</button>
+</div></header>
+<main class="wrap" id="app"></main>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+/* ---------- 기본 설정 ---------- */
+const KEY="smartpx-demo-v1";
+const CAT={
+  food:{name:"식품·간식",safe:15,target:50,t:"t-food"},
+  drink:{name:"음료",safe:20,target:60,t:"t-drink"},
+  living:{name:"생활용품",safe:5,target:20,t:"t-living"},
+  etc:{name:"기타",safe:5,target:15,t:"t-etc"}
+};
+const WH=["1생활관","2생활관","3생활관","4생활관"];
+const ROUNDS=["12:30","18:00","21:00"];
+// 자율주행 이동 PX 노선 (정해진 노선 순회, 회차 시작 기준 분)
+const STOPS=[
+  {name:"PX 본점",sub:"출발·복귀",x:200,y:214,off:0},
+  {name:"1생활관 앞",x:52,y:168,off:10},
+  {name:"2생활관 앞",x:52,y:72,off:25},
+  {name:"연병장",x:150,y:26,off:40},
+  {name:"3생활관 앞",x:250,y:26,off:55},
+  {name:"정비고",x:348,y:72,off:70},
+  {name:"4생활관 앞",x:348,y:168,off:85}
+];
+const LAPS=["18:00","20:00"];
+// 차량 적재 기준 [상품ID, 적재 기준 수량]
+const MLOAD=[["P001",8],["P007",6],["P009",10],["P010",6],["P021",10],["P022",8],["P024",10],["P028",12],["P031",6],["P039",4],["P045",4]];
+// [이름, 일러스트, 분류, 가격, 현재고, 유통기한(D-), 유통기간(일), 픽업전용]
+const PDEF=[
+ ["컵라면(대)","🍜","food",1300,16,120,180,0],["컵라면 박스 12입","📦","food",13500,22,150,180,1],["즉석밥","🍚","food",1500,40,160,180,0],
+ ["참치캔","🐟","food",2200,35,300,365,0],["소시지","🌭","food",1000,44,40,60,0],["초코파이 12입","🍫","food",4800,8,90,120,0],
+ ["감자칩","🥔","food",1700,30,100,150,0],["새우과자","🦐","food",1300,28,100,150,0],["초코바","🍫","food",1000,46,120,180,0],
+ ["젤리","🍬","food",1200,33,150,200,0],["견과류 한줌","🥜","food",1500,25,110,150,0],["삼각김밥","🍙","food",1200,12,1,2,0],
+ ["샌드위치","🥪","food",2500,9,3,4,0],["냉동만두","🥟","food",4500,20,200,270,0],["냉동피자","🍕","food",5900,16,200,270,0],
+ ["아이스크림","🍦","food",1000,48,300,365,0],["단팥빵","🍞","food",1200,14,6,10,0],["바나나 2입","🍌","food",2000,18,10,7,0],
+ ["구운란 2입","🥚","food",1500,26,12,14,0],["닭가슴살","🍗","food",2300,38,60,90,0],
+ ["콜라","🥤","drink",1200,52,200,365,0],["사이다","🥤","drink",1200,47,200,365,0],["이온음료","🧃","drink",1100,12,180,365,0],
+ ["캔커피","☕","drink",900,58,150,365,0],["컵 아메리카노","☕","drink",1500,31,60,120,0],["흰우유","🥛","drink",1100,22,5,10,0],
+ ["바나나우유","🥛","drink",1300,27,9,12,0],["생수 500ml","💧","drink",400,60,300,365,0],["생수 2L 6입","💧","drink",4500,24,300,365,1],
+ ["탄산수","🫧","drink",1000,29,250,365,0],["에너지드링크","⚡","drink",1600,36,200,365,0],["프로틴음료","💪","drink",2800,25,90,180,0],
+ ["치약","🪥","living",2500,14,null,null,0],["칫솔","🪥","living",1500,3,null,null,0],["샴푸","🧴","living",5500,11,null,null,0],
+ ["바디워시","🧴","living",5000,9,null,null,0],["폼클렌징","🧼","living",4000,12,null,null,0],["면도기","🪒","living",6000,10,null,null,0],
+ ["물티슈","🧻","living",1500,18,null,null,0],["화장지 30롤","🧻","living",9900,7,null,null,1],["세탁세제 대용량","🧺","living",8900,8,null,null,1],
+ ["섬유유연제","🫙","living",6500,6,null,null,1],["선크림","☀️","living",7000,13,null,null,0],["립밤","💋","living",2500,15,null,null,0],
+ ["양말 3족","🧦","etc",3000,12,null,null,0],["기능성 깔창","👟","etc",4000,9,null,null,0],["핫팩 10입","🔥","etc",5000,2,null,null,0],
+ ["충전 케이블","🔌","etc",6000,8,null,null,0],["보조배터리","🔋","etc",15000,0,null,null,0],["운동용 매트","🧘","etc",19000,6,null,null,1]
+];
+const SUR="김이박최정강조윤장임한오서신권황안송류홍".split("");
+const GIV=["민준","서준","도윤","예준","시우","하준","주원","지호","지후","준우","준서","건우","도현","현우","우진","선우","연우","유준","정우","승우","승현","시윤","준혁","은우","지환","승민","지우","유찬","윤우","민재","이준","민성","재윤","태윤","한결","지훈","성민","동현","태현","예성"];
+
+/* ---------- 유틸 ---------- */
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const pad=(n,l=2)=>String(n).padStart(l,"0");
+const won=n=>n.toLocaleString("ko-KR")+"원";
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function ymd(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
+function startOfDay(d){const x=new Date(d);x.setHours(0,0,0,0);return x}
+function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x}
+function hm(d){return pad(d.getHours())+":"+pad(d.getMinutes())}
+const DOW="일월화수목금토";
+function korDate(d){return (d.getMonth()+1)+"월 "+d.getDate()+"일 ("+DOW[d.getDay()]+")"}
+function dday(p){if(!p.expiry)return null;const e=new Date(p.expiry+"T00:00:00");return Math.round((e-startOfDay(new Date()))/864e5)}
+function isToday(ts){return ymd(new Date(ts))===ymd(new Date())}
+function salePrice(p){return p.discount?Math.round(p.price*0.7/10)*10:p.price}
+
+/* ---------- 상태 ---------- */
+let S=null;
+const V={mode:"user",user:"login",admin:"dash",cat:"all",method:"pickup",pickSlot:"",wh:"",round:"",pay:"card",stockFilter:"all",newIds:[],resetArm:false,overlay:null,loginErr:"",adminErr:""};
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function load(){try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);if(o&&o.v===1&&o.mobile&&o.day===ymd(new Date()))return o}}catch(e){}return null}
+
+function seed(){
+  const R=rng(20261102),now=new Date(),today=startOfDay(now);
+  const products=PDEF.map((d,i)=>({id:"P"+pad(i+1,3),name:d[0],emoji:d[1],cat:d[2],price:d[3],stock:d[4],
+    expiry:d[5]==null?null:ymd(addDays(today,d[5])),shelf:d[6],pickupOnly:!!d[7],safe:CAT[d[2]].safe,target:CAT[d[2]].target,discount:false,disposed:false}));
+  const soldiers=[];
+  for(let i=0;i<100;i++){
+    const yr=i<45?"26":"25";
+    const rank=yr==="26"?(i<20?"이병":"일병"):(i<75?"상병":"병장");
+    const num=yr+"-7"+pad(Math.floor(1000000+R()*8999999),7);
+    const name=i===0?"김민준":SUR[Math.floor(R()*SUR.length)]+GIV[Math.floor(R()*GIV.length)];
+    soldiers.push({id:num,name,rank,wh:i===0?"3생활관":WH[i%4],pin:num.slice(-4),pay:R()<.6?"card":"easy",card:pad(Math.floor(R()*9999),4)});
+  }
+  S={v:1,day:ymd(now),products,soldiers,orders:[],actions:[],seq:{o:0,a:0},session:null,admin:false,cart:{}};
+  // 오늘 앞서 들어온 주문 (재고는 이미 반영된 현재고 기준)
+  const okP=products.filter(p=>p.stock>3&&!(p.expiry&&dday(p)<=7));
+  const startH=7,endMin=Math.max(startH*60+30,now.getHours()*60+now.getMinutes()-10);
+  const N=34;
+  for(let k=0;k<N;k++){
+    const s=soldiers[1+Math.floor(R()*99)];
+    const t=new Date(today.getTime()+(startH*60+Math.floor(R()*(endMin-startH*60)))*6e4);
+    const items=[];const cnt=1+Math.floor(R()*3);
+    for(let j=0;j<cnt;j++){const p=okP[Math.floor(R()*okP.length)];if(items.some(x=>x.pid===p.id))continue;items.push({pid:p.id,qty:1+Math.floor(R()*2),price:p.price})}
+    const hasBig=items.some(x=>products.find(p=>p.id===x.pid).pickupOnly);
+    const shuttle=!hasBig&&R()<.6;
+    const r=R();
+    let status=r<.45?"done":r<.6?"wait":r<.75?"prep":(shuttle?(r<.88?"move":"ready"):"ready");
+    const o={id:"",sid:s.id,items,total:items.reduce((a,x)=>a+x.price*x.qty,0),pay:s.pay,method:shuttle?"shuttle":"pickup",
+      place:shuttle?s.wh+" 무인배송창고":"PX 픽업대",slot:shuttle?("오늘 "+ROUNDS[Math.floor(R()*3)]+" 회차"):("오늘 "+pad(12+Math.floor(R()*9))+":"+(R()<.5?"00":"30")),
+      status,created:t.getTime(),received:status==="done"?t.getTime()+36e5:null,locker:status==="done"?1+Math.floor(R()*12):null};
+    S.orders.push(o);
+  }
+  S.orders.sort((a,b)=>a.created-b.created).forEach(o=>{o.id=nextOrderId(o.created)});
+  // 자율주행 이동 PX 1호: 1회차 운행 중, 연병장 정차
+  const load={},target={};MLOAD.forEach(([pid,q])=>{load[pid]=q;target[pid]=q});
+  S.mobile={name:"이동 PX 1호",stop:3,lap:1,auto:false,halted:false,battery:82,load,target,sales:[]};
+  [[1,["P021","P009"]],[1,["P028"]],[2,["P001","P024"]],[2,["P007"]],[2,["P031","P022"]],[3,["P010"]]].forEach(([st,ps],k)=>{
+    const s=soldiers[10+k*7];const items=ps.map(pid=>({pid,qty:1,price:products.find(p=>p.id===pid).price}));
+    items.forEach(x=>load[x.pid]-=x.qty);
+    const t=Date.now()-(30-k*4)*6e4;const total=items.reduce((a,x)=>a+x.price,0);
+    S.mobile.sales.push({time:t,stop:st,sid:s.id,items,total});
+  });
+  const check=new Date(today.getTime()+7*36e5);
+  evaluate(check.getTime());
+  save();
+}
+function nextOrderId(ts){S.seq.o++;return "ORD-"+ymd(new Date(ts)).replace(/-/g,"")+"-"+pad(S.seq.o,4)}
+function addAction(a,ts){S.seq.a++;a.id="SA-"+pad(S.seq.a,4);a.time=ts||Date.now();S.actions.push(a);return a}
+function P(id){return S.products.find(p=>p.id===id)}
+function me(){return S.soldiers.find(s=>s.id===S.session)}
+
+/* ---------- 자동 발주·재고처리 규칙 ---------- */
+function evaluate(ts){
+  const made=[];
+  for(const p of S.products){
+    const d=dday(p);
+    if(d!==null&&d<=1&&!p.disposed&&p.stock>0){
+      made.push(addAction({type:"dispose",pid:p.id,qty:p.stock,reason:"유통기한 D-"+Math.max(d,0)+" · 판매 중지",status:"처리완료"},ts));
+      p.stock=0;p.disposed=true;p.discount=false;
+    }else if(d!==null&&d>=2&&d<=7&&!p.discount&&!p.disposed){
+      p.discount=true;
+      made.push(addAction({type:"sale",pid:p.id,qty:p.stock,reason:"유통기한 D-"+d+" · 30% 할인",status:"적용중"},ts));
+    }
+    if(p.stock<p.safe&&!S.actions.some(a=>a.type==="order"&&a.pid===p.id&&a.status==="발주중")){
+      made.push(addAction({type:"order",pid:p.id,qty:p.target-p.stock,reason:p.stock===0?"품절 (안전재고 "+p.safe+")":"안전재고("+p.safe+") 미만 · 현재고 "+p.stock,status:"발주중"},ts));
+    }
+  }
+  return made;
+}
+function status(p){
+  if(p.disposed)return["폐기","p-bad"];
+  if(p.stock===0)return["품절","p-bad"];
+  if(p.stock<p.safe)return["부족","p-prep"];
+  if(p.discount)return["할인","p-move"];
+  return["정상","p-ready"];
+}
+
+/* ---------- 시간대 ---------- */
+function pickupSlots(){
+  const now=new Date(),out=[];
+  for(const dOff of [0,1]){
+    const base=addDays(startOfDay(now),dOff);
+    for(let m=12*60;m<=21*60;m+=30){
+      const t=new Date(base.getTime()+m*6e4);
+      if(t.getTime()-now.getTime()<30*6e4)continue;
+      out.push({v:(dOff?"내일 ":"오늘 ")+hm(t),label:(dOff?"내일 ":"오늘 ")+hm(t)});
+    }
+    if(out.length>=6&&dOff===0)break;
+  }
+  return out;
+}
+function shuttleRounds(){
+  const now=new Date(),out=[];
+  for(const dOff of [0,1]){
+    const base=addDays(startOfDay(now),dOff);
+    for(const r of ROUNDS){
+      const [h,mi]=r.split(":").map(Number);
+      const t=new Date(base.getTime()+(h*60+mi)*6e4);
+      const closed=t.getTime()-now.getTime()<30*6e4;
+      const pre=dOff?"내일 ":"오늘 ";
+      out.push({v:pre+r+" 회차",label:pre+r+" 회차"+(closed?" · 마감":" · "+hm(new Date(t.getTime()-30*6e4))+" 마감"),closed});
+    }
+    if(dOff===0&&out.some(x=>!x.closed))break;
+  }
+  return out;
+}
+
+/* ---------- 아이콘 ---------- */
+const I={
+  shop:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h16l-1.2 10.2a2 2 0 0 1-2 1.8H7.2a2 2 0 0 1-2-1.8z"/><path d="M8.5 9V7a3.5 3.5 0 0 1 7 0v2"/></svg>',
+  cart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2.5 3.5h3l2.4 11.5h11l2-8H6.6"/></svg>',
+  qr:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="3.5" width="6.5" height="6.5" rx="1"/><rect x="14" y="3.5" width="6.5" height="6.5" rx="1"/><rect x="3.5" y="14" width="6.5" height="6.5" rx="1"/><path d="M14 14h2.5v2.5M20.5 14v.01M14 20.5h.01M17.5 17.5h3v3h-3z"/></svg>',
+  truck:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6.5h11v9h-11z"/><path d="M13.5 9.5h4l3 3v3h-7"/><circle cx="6.5" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>',
+  bell:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>'
+};
+
+/* ---------- 렌더: 공통 ---------- */
+const app=document.getElementById("app");
+function render(){
+  document.getElementById("m-user").setAttribute("aria-pressed",V.mode==="user");
+  document.getElementById("m-admin").setAttribute("aria-pressed",V.mode==="admin");
+  const rb=document.getElementById("reset");rb.textContent=V.resetArm?"한 번 더 누르면 초기화":"시연 데이터 초기화";rb.classList.toggle("warn",V.resetArm);
+  app.innerHTML=V.mode==="user"?userView():adminView();
+  drawQR();
+}
+function drawQR(){
+  document.querySelectorAll("[data-qr]").forEach(el=>{
+    if(el.dataset.done)return;el.dataset.done="1";
+    const size=+el.dataset.size||150;
+    if(window.QRCode){try{new QRCode(el,{text:el.dataset.qr,width:size,height:size,colorDark:"#17201B",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});return}catch(e){}}
+    el.innerHTML='<div class="mono" style="width:'+size+'px;height:'+size+'px;display:grid;place-items:center;color:#17201B;font-size:12px;line-height:1.3;text-align:center">'+esc(el.dataset.qr)+'</div>';
+  });
+}
+function toast(title,body){
+  const t=document.createElement("div");t.className="toast";t.innerHTML="<b>"+esc(title)+"</b>"+(body?esc(body):"");
+  const box=document.getElementById("toasts");box.appendChild(t);
+  while(box.children.length>3)box.firstChild.remove();
+  setTimeout(()=>t.remove(),4200);
+}
+function illu(p,cls){return '<div class="'+(cls||"illu")+' '+CAT[p.cat].t+'"><span>'+p.emoji+'</span></div>'}
+function stPill(o){
+  const m={wait:["접수","p-wait"],prep:["준비중","p-prep"],move:["배송중","p-move"],ready:[o.method==="shuttle"?"창고도착":"픽업대기","p-ready"],done:["수령완료","p-done"]};
+  const x=m[o.status];return '<span class="pill '+x[1]+'">'+x[0]+'</span>';
+}
+function placeLabel(o){return o.method==="shuttle"?esc(o.place.replace(" 무인배송창고"," 창고")):o.method==="mobile"?"이동 PX":"PX 픽업"}
+function flow(o){if(o.method==="mobile")return["done"];return o.method==="shuttle"?["wait","prep","move","ready","done"]:["wait","prep","ready","done"]}
+function flowLabels(o){if(o.method==="mobile")return["현장 구매"];return o.method==="shuttle"?["접수","준비중","배송중","창고도착","수령"]:["접수","준비중","픽업대기","수령"]}
+
+/* ---------- 렌더: 장병 ---------- */
+const STEPS=[
+  ["개인 로그인","군번과 PIN으로 접속합니다."],
+  ["복지몰에서 상품 담기","픽업전용·할인·품절 표시를 확인합니다."],
+  ["수령 방식 선택","PX 픽업 시간 또는 무인셔틀 회차·생활관 창고를 고릅니다."],
+  ["나라사랑카드·간편결제","결제하면 주문별 수령 QR이 생성됩니다."],
+  ["QR 스캔으로 수령","창고·픽업대 단말에 QR을 대면 보관함이 열립니다."]
+];
+const MSTEPS=[
+  ["차량 위치 확인","노선도에서 이동 PX가 지금 어느 정차 지점에 있는지 봅니다."],
+  ["도착 알림 받기","내 생활관 앞에 도착하면 알림이 옵니다."],
+  ["QR로 차량 문 열기","차량 측면 단말에 QR을 대면 진열장 문이 열립니다."],
+  ["상품 꺼내기","무게 센서가 꺼낸 상품을 인식합니다."],
+  ["문 닫으면 자동 결제","나라사랑카드·간편결제로 바로 결제됩니다."]
+];
+function stepIndex(){
+  if(!S.session)return 0;
+  if(V.user==="mall")return 1;
+  if(V.user==="cart")return 2;
+  if(V.user==="pay")return 3;
+  if(V.user==="orders")return 4;
+  return 1;
+}
+function userView(){
+  const si=stepIndex();
+  const lowCnt=S.products.filter(p=>!p.disposed&&p.stock>0).length;
+  if(S.session&&V.user==="mobile"){
+    const ov=V.overlay,mi=ov&&ov.kind==="mobile"?(ov.step==="scan"?2:ov.step==="open"?3:4):(V.notify?1:0);
+    const m=S.mobile;
+    return '<div class="user-stage"><section class="guide"><h2>자율주행 이동 PX가 생활관 앞으로 옵니다</h2>'+
+    '<p>정해진 노선을 저속으로 자율주행하며 정차 지점마다 10분씩 머뭅니다. 차량 앞에서 QR로 문을 열고, 꺼낸 상품은 문을 닫는 순간 자동 결제됩니다.</p>'+
+    '<ol class="steps">'+MSTEPS.map((s,i)=>'<li class="'+(i===mi?"on":i<mi?"done":"")+'"><div class="n">'+(i+1)+'</div><div><b>'+s[0]+'</b><span>'+s[1]+'</span></div></li>').join("")+'</ol>'+
+    '<div class="facts"><div class="fact"><small>운행 회차</small><b>'+LAPS.join(" · ")+' 출발</b></div><div class="fact"><small>정차 지점</small><b>'+STOPS.length+'곳 · 10분씩</b></div><div class="fact"><small>최고 속도</small><b>10km/h 저속</b></div></div>'+
+    '</section><div class="phone"><div class="screen">'+phone()+'</div></div></div>';
+  }
+  return '<div class="user-stage"><section class="guide"><h2>장병이 복지몰에서 주문하고 QR로 받아가는 흐름</h2>'+
+  '<p>판매원이 없어도, 생활관을 나서지 않아도 PX 물품을 받을 수 있는지 오른쪽 휴대폰 화면에서 직접 눌러 보세요. 진행 중인 단계가 아래에 표시됩니다.</p>'+
+  '<ol class="steps">'+STEPS.map((s,i)=>'<li class="'+(i===si?"on":i<si?"done":"")+'"><div class="n">'+(i+1)+'</div><div><b>'+s[0]+'</b><span>'+s[1]+'</span></div></li>').join("")+'</ol>'+
+  '<div class="facts"><div class="fact"><small>판매 중 상품</small><b class="num">'+lowCnt+' / 50종</b></div><div class="fact"><small>셔틀 회차</small><b>12:30 · 18:00 · 21:00</b></div><div class="fact"><small>배송지</small><b>생활관 창고 4곳</b></div></div>'+
+  '<div class="notice green" style="margin:16px 0 0"><b>확장 기능: 자율주행 이동 PX</b>로그인 후 휴대폰 하단의 "이동 PX" 탭이나 복지몰 맨 위 카드를 누르면 노선도, 도착 알림, QR 문 열기와 자동 결제를 볼 수 있습니다. 관리자 화면에는 "이동 PX" 메뉴가 있습니다.</div>'+
+  '</section><div class="phone"><div class="screen">'+phone()+'</div></div></div>';
+}
+function phone(){
+  const now=new Date();
+  let h='<div class="notch"><span class="num">'+hm(now)+'</span><span>스마트 PX</span></div>';
+  if(!S.session)return h+userLogin()+(V.overlay?overlay():"");
+  const s=me(),cartN=Object.values(S.cart).reduce((a,b)=>a+b,0);
+  const titles={mall:"복지몰",cart:"장바구니",pay:"결제",orders:"내 주문",mobile:"이동 PX"};
+  h+='<div class="app-head"><div class="row"><div><h3>'+titles[V.user]+'</h3><small>'+esc(s.rank+" "+s.name)+' · '+esc(s.wh)+'</small></div><button class="ghost" data-act="logout" style="padding:5px 10px;font-size:12px">로그아웃</button></div></div>';
+  h+='<div class="app-body" id="appbody">'+(V.user==="mall"?mall():V.user==="cart"?cart():V.user==="pay"?pay():V.user==="mobile"?mobileUser():orders())+'</div>';
+  const myActive=S.orders.filter(o=>o.sid===s.id&&o.status!=="done").length;
+  h+='<nav class="tabbar">'+
+    '<button data-act="go" data-v="mall" '+(V.user==="mall"?'aria-current="page"':'')+'>'+I.shop+'상품</button>'+
+    '<button data-act="go" data-v="cart" '+(V.user==="cart"||V.user==="pay"?'aria-current="page"':'')+'>'+I.cart+'장바구니'+(cartN?'<span class="badge-n">'+cartN+'</span>':'')+'</button>'+
+    '<button data-act="go" data-v="mobile" '+(V.user==="mobile"?'aria-current="page"':'')+'>'+I.truck+'이동 PX</button>'+
+    '<button data-act="go" data-v="orders" '+(V.user==="orders"?'aria-current="page"':'')+'>'+I.qr+'내 주문·QR'+(myActive?'<span class="badge-n">'+myActive+'</span>':'')+'</button></nav>';
+  return h+(V.overlay?overlay():"");
+}
+function userLogin(){
+  const opts=S.soldiers.slice(0,12).map(s=>'<option value="'+s.id+'">'+esc(s.rank+" "+s.name)+' · '+s.id+' (PIN '+s.pin+')</option>').join("");
+  return '<div class="app-body" style="display:flex;flex-direction:column;justify-content:center">'+
+  '<div style="text-align:center;margin-bottom:18px"><div class="mark" style="width:56px;height:56px;margin:0 auto 10px;font-size:18px;border-radius:14px">PX</div><h3 style="margin:0;font-size:20px">스마트 PX 복지몰</h3><small class="muted">○○대대 시범운영</small></div>'+
+  '<div class="field"><label for="lg-id">군번</label><input id="lg-id" class="mono" placeholder="예: 26-71234567" autocomplete="off"></div>'+
+  '<div class="field"><label for="lg-pin">PIN (4자리)</label><input id="lg-pin" class="mono" type="password" inputmode="numeric" maxlength="4" placeholder="••••"></div>'+
+  (V.loginErr?'<div class="notice amber">'+esc(V.loginErr)+'</div>':'')+
+  '<button class="btn" data-act="login">로그인</button>'+
+  '<div class="box" style="margin-top:16px"><h4 style="font-size:12.5px;margin-bottom:6px">시연용 계정 빠른 입력</h4><select id="lg-pick" style="width:100%;border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--surface);font-size:12px"><option value="">계정 선택…</option>'+opts+'</select><small class="muted" style="display:block;margin-top:6px;font-size:11.5px">가상 장병 100명 · PIN은 군번 끝 4자리</small></div></div>';
+}
+function mall(){
+  const cats=[["all","전체"],["food","식품·간식"],["drink","음료"],["living","생활용품"],["etc","기타"],["sale","할인"]];
+  let list=S.products.filter(p=>!p.disposed);
+  if(V.cat==="sale")list=list.filter(p=>p.discount);else if(V.cat!=="all")list=list.filter(p=>p.cat===V.cat);
+  const sale=S.products.filter(p=>p.discount&&!p.disposed).length;
+  const mv=S.mobile,mcur=STOPS[mv.stop];
+  return '<button class="toggle" data-act="go" data-v="mobile" style="background:var(--accent-soft);border-color:var(--accent)"><span style="display:flex;gap:10px;align-items:center"><span style="color:var(--accent);width:26px;height:26px;display:inline-block">'+I.truck+'</span><span><b style="display:block;font-size:13px;color:var(--accent)">자율주행 이동 PX 1호</b><small class="muted">'+(mv.halted?"운행 일시 중지":"지금 "+esc(mcur.name)+" 정차 중")+' · 노선도 보기</small></span></span><span style="color:var(--accent);font-weight:700">→</span></button>'+
+  (sale&&V.cat!=="sale"?'<div class="notice amber" style="cursor:pointer" data-act="cat" data-v="sale"><b>유통기한 임박 상품 '+sale+'종 30% 할인 중</b>할인 상품 모아보기 →</div>':'')+
+  '<div class="chips">'+cats.map(c=>'<button class="chip" data-act="cat" data-v="'+c[0]+'" aria-pressed="'+(V.cat===c[0])+'">'+c[1]+'</button>').join("")+'</div>'+
+  '<div class="grid2">'+list.map(p=>{
+    const inCart=S.cart[p.id]||0,out=p.stock===0;
+    const tags=(p.pickupOnly?'<span class="tag pick">픽업전용</span>':'')+(p.discount?'<span class="tag sale">30% 할인</span>':'')+(out?'<span class="tag out">품절</span>':p.stock<p.safe?'<span class="tag low">재고 적음</span>':'');
+    return '<article class="pcard'+(out?" out":"")+'">'+illu(p)+'<div class="tags">'+tags+'</div><div class="pname">'+esc(p.name)+'</div>'+
+      '<div class="price"><b class="num">'+won(salePrice(p))+'</b>'+(p.discount?'<s class="num">'+won(p.price)+'</s>':'')+'</div>'+
+      '<div class="stock num">'+(out?"입고 예정":"재고 "+p.stock+"개")+'</div>'+
+      '<button class="add'+(inCart?" in":"")+'" data-act="add" data-v="'+p.id+'" '+(out||inCart>=p.stock?"disabled":"")+'>'+(out?"품절":inCart?"담김 "+inCart+" · 더 담기":"담기")+'</button></article>';
+  }).join("")+'</div>';
+}
+function cartLines(){return Object.entries(S.cart).map(([pid,q])=>({p:P(pid),q})).filter(x=>x.p)}
+function cart(){
+  const lines=cartLines();
+  if(!lines.length)return '<div class="empty"><div class="e">🛒</div><b>장바구니가 비어 있습니다</b><p>복지몰에서 필요한 물품을 담아 주세요.</p><button class="btn sm" data-act="go" data-v="mall">상품 보러 가기</button></div>';
+  const big=lines.filter(x=>x.p.pickupOnly),small=lines.filter(x=>!x.p.pickupOnly);
+  const s=me();if(!V.wh)V.wh=s.wh;
+  const ps=pickupSlots(),rs=shuttleRounds();
+  if(!ps.some(x=>x.v===V.pickSlot))V.pickSlot=ps[0]?ps[0].v:"";
+  if(!rs.some(x=>x.v===V.round&&!x.closed)){const f=rs.find(x=>!x.closed);V.round=f?f.v:""}
+  const total=lines.reduce((a,x)=>a+salePrice(x.p)*x.q,0);
+  let h='<div class="box"><h4>담은 상품 '+lines.length+'종</h4>'+lines.map(x=>'<div class="line">'+illu(x.p,"mini")+'<div class="grow"><b>'+esc(x.p.name)+'</b><small class="muted num">'+won(salePrice(x.p))+(x.p.pickupOnly?' · <span style="color:var(--blue)">픽업전용</span>':'')+'</small></div><div class="qty"><button data-act="qty" data-v="'+x.p.id+'" data-d="-1" aria-label="빼기">−</button><span class="num">'+x.q+'</span><button data-act="qty" data-v="'+x.p.id+'" data-d="1" aria-label="더하기" '+(x.q>=x.p.stock?"disabled":"")+'>+</button></div></div>').join("")+'</div>';
+  h+='<h4 style="margin:4px 0 8px;font-size:14px">수령 방식</h4><div class="opt">'+
+    '<button data-act="method" data-v="pickup" aria-pressed="'+(V.method==="pickup")+'"><b>PX 픽업</b><span>원하는 시간에 픽업대에서 QR 수령</span></button>'+
+    '<button data-act="method" data-v="shuttle" aria-pressed="'+(V.method==="shuttle")+'" '+(small.length?"":"disabled")+'><b>무인셔틀 배송</b><span>생활관 무인배송창고로 배송</span></button></div>';
+  const pickSel='<div class="field"><label for="sel-pick">픽업 희망 시간</label><select id="sel-pick" data-bind="pickSlot">'+ps.map(x=>'<option '+(x.v===V.pickSlot?"selected":"")+'>'+x.v+'</option>').join("")+'</select></div>';
+  if(V.method==="pickup"||!small.length){V.method="pickup";h+=pickSel}
+  else{
+    h+='<div class="field"><label for="sel-wh">배송지</label><select id="sel-wh" data-bind="wh">'+WH.map(w=>'<option value="'+w+'" '+(w===V.wh?"selected":"")+'>'+w+' 무인배송창고'+(w===s.wh?" (내 생활관)":"")+'</option>').join("")+'</select></div>'+
+       '<div class="field"><label for="sel-round">셔틀 회차</label><select id="sel-round" data-bind="round">'+rs.map(x=>'<option value="'+x.v+'" '+(x.closed?"disabled":"")+' '+(x.v===V.round?"selected":"")+'>'+x.label+'</option>').join("")+'</select></div>';
+    if(big.length)h+='<div class="notice blue"><b>픽업전용 상품 '+big.length+'종은 PX 픽업 주문으로 분리됩니다</b>'+big.map(x=>esc(x.p.name)).join(", ")+'는 부피가 커서 셔틀로 배송하지 않습니다. 픽업 시간을 골라 주세요.</div>'+pickSel;
+  }
+  h+='<div class="total"><span class="muted">결제 예정 금액</span><b class="num">'+won(total)+'</b></div><button class="btn" data-act="go" data-v="pay">결제하기</button>';
+  return h;
+}
+function plan(){
+  const lines=cartLines(),big=lines.filter(x=>x.p.pickupOnly),small=lines.filter(x=>!x.p.pickupOnly);
+  const mk=(ls,method)=>({items:ls.map(x=>({pid:x.p.id,qty:x.q,price:salePrice(x.p)})),method,
+    place:method==="shuttle"?V.wh+" 무인배송창고":"PX 픽업대",slot:method==="shuttle"?V.round:V.pickSlot});
+  if(V.method==="shuttle"&&small.length){const r=[mk(small,"shuttle")];if(big.length)r.push(mk(big,"pickup"));return r}
+  return [mk(lines,"pickup")];
+}
+function pay(){
+  const s=me(),pl=plan();
+  if(!pl[0].items.length){V.user="cart";return cart()}
+  const total=pl.reduce((a,o)=>a+o.items.reduce((b,x)=>b+x.price*x.qty,0),0);
+  return '<div class="box"><h4>주문 요약'+(pl.length>1?' · 2건으로 분리':'')+'</h4>'+pl.map(o=>'<div class="line"><div class="grow"><b>'+(o.method==="shuttle"?"무인셔틀":"PX 픽업")+' · '+esc(o.slot)+'</b><small class="muted">'+esc(o.place)+' · '+o.items.length+'종</small></div><b class="num">'+won(o.items.reduce((b,x)=>b+x.price*x.qty,0))+'</b></div>').join("")+'</div>'+
+  '<h4 style="margin:4px 0 8px;font-size:14px">결제 수단</h4><div class="opt">'+
+  '<button data-act="pay" data-v="card" aria-pressed="'+(V.pay==="card")+'"><b>나라사랑카드</b><span>등록된 카드로 결제</span></button>'+
+  '<button data-act="pay" data-v="easy" aria-pressed="'+(V.pay==="easy")+'"><b>간편결제</b><span>휴대폰 간편결제 연동</span></button></div>'+
+  (V.pay==="card"?'<div class="paycard"><small>나라사랑카드 · 연동됨</small><div class="mono">9410 •••• •••• '+s.card+'</div><small>'+esc(s.name)+' · 군 복지 결제 연계 (시연용 모의 연동)</small></div>'
+    :'<div class="paycard easy"><small>간편결제 · 연동됨</small><div class="mono">010 •••• '+s.card+'</div><small>휴대폰 인증 후 결제 (시연용 모의 연동)</small></div>')+
+  '<div class="total"><span class="muted">총 결제 금액</span><b class="num">'+won(total)+'</b></div>'+
+  '<button class="btn" data-act="checkout">'+won(total)+' 결제하고 QR 받기</button>'+
+  '<button class="btn sec" style="margin-top:8px" data-act="go" data-v="cart">장바구니로 돌아가기</button>';
+}
+function orderCard(o,admin){
+  const f=flow(o),idx=f.indexOf(o.status),lb=flowLabels(o);
+  const items=o.items.map(x=>{const p=P(x.pid);return esc(p.name)+" ×"+x.qty}).join(", ");
+  const isNew=V.newIds.includes(o.id);
+  return '<article class="ocard'+(isNew?" new":"")+'"><div class="ohead"><span class="mono" style="font-size:12px">'+o.id+'</span>'+stPill(o)+'</div>'+
+  '<div class="track">'+f.map((_,i)=>'<i class="'+(i<=idx?"on":"")+'"></i>').join("")+'</div><div class="tlabels">'+lb.map(l=>'<span>'+l+'</span>').join("")+'</div>'+
+  '<dl class="meta"><dt>수령</dt><dd>'+(o.method==="shuttle"?"무인셔틀 · ":"")+esc(o.place)+'</dd><dt>시간</dt><dd>'+esc(o.slot)+'</dd><dt>상품</dt><dd>'+items+'</dd><dt>결제</dt><dd class="num">'+won(o.total)+' · '+(o.pay==="card"?"나라사랑카드":"간편결제")+'</dd>'+(o.locker?'<dt>보관함</dt><dd>'+o.locker+'번 칸</dd>':'')+'</dl>'+
+  (o.status!=="done"?'<div class="qrwrap"><div class="qr" data-qr="SMARTPX|'+o.id+'|'+o.sid+'" data-size="150"></div><small>'+(o.status==="ready"?(o.method==="shuttle"?esc(o.place)+" 단말에 QR을 대 주세요":"PX 픽업대 단말에 QR을 대 주세요"):"상품이 도착하면 이 QR로 수령합니다")+'</small></div>'+
+    '<div class="actions"><button class="btn sm sec" data-act="advance" data-v="'+o.id+'">다음 단계로 (시연)</button><button class="btn sm" data-act="scan" data-v="'+o.id+'">QR 스캔해서 수령 (시연)</button></div>'
+    :'<div class="notice green" style="margin:0"><b>수령 완료</b>'+(o.received?hm(new Date(o.received))+" 수령":"")+'</div>')+'</article>';
+}
+function orders(){
+  const mine=S.orders.filter(o=>o.sid===S.session).sort((a,b)=>b.created-a.created);
+  if(!mine.length)return '<div class="empty"><div class="e">🧾</div><b>아직 주문이 없습니다</b><p>결제하면 이곳에 수령용 QR이 생성됩니다.</p><button class="btn sm" data-act="go" data-v="mall">상품 보러 가기</button></div>';
+  const active=mine.filter(o=>o.status!=="done"),done=mine.filter(o=>o.status==="done");
+  return (V.newIds.length?'<div class="notice green"><b>결제가 완료되었습니다</b>주문 '+V.newIds.length+'건의 수령 QR이 생성되었습니다.</div>':'')+
+    active.map(o=>orderCard(o)).join("")+(done.length?'<h4 style="font-size:13px;color:var(--muted);margin:14px 0 8px">지난 주문</h4>'+done.map(o=>orderCard(o)).join(""):"");
+}
+function overlay(){
+  const ov=V.overlay;
+  if(ov.kind==="mobile")return mobileOverlay(ov);
+  if(ov.kind==="paying")return '<div class="overlay'+(ov.page?" page":"")+'"><div class="modal"><div class="spin"></div><h4>'+(V.pay==="card"?"나라사랑카드 승인 요청 중":"간편결제 인증 중")+'</h4><p>군 복지 결제 시스템과 연동하고 있습니다 (모의)</p></div></div>';
+  if(ov.kind==="scan"){
+    const o=S.orders.find(x=>x.id===ov.id);
+    if(ov.step==="scanning")return '<div class="overlay'+(ov.page?" page":"")+'"><div class="modal"><div class="kiosk"><small>'+esc(o.place)+' 수령 단말</small><div class="scanbox"><div data-qr="SMARTPX|'+o.id+'|'+o.sid+'" data-size="120"></div><div class="bar"></div></div></div><h4>QR 인식 중</h4><p class="mono">'+o.id+'</p></div></div>';
+    if(ov.step==="notready")return '<div class="overlay'+(ov.page?" page":"")+'"><div class="modal"><div class="ok" style="background:var(--amber-soft);color:var(--amber)">!</div><h4>아직 수령할 수 없습니다</h4><p>현재 상태: '+stPill(o)+'<br>'+(o.method==="shuttle"?"셔틀이 창고에 도착하면":"픽업대에 준비되면")+' 다시 스캔해 주세요.</p><button class="btn" data-act="close">확인</button></div></div>';
+    return '<div class="overlay'+(ov.page?" page":"")+'"><div class="modal"><div class="ok">✓</div><h4>수령 완료</h4><p>'+esc(o.place)+'</p><div class="locker">'+o.locker+'번 보관함</div><p style="margin-top:6px">보관함 문이 열렸습니다. 물품을 꺼내 주세요.</p><button class="btn" data-act="close">닫기</button></div></div>';
+  }
+  return "";
+}
+
+/* ---------- 렌더: 자율주행 이동 PX ---------- */
+function myStopIdx(){const s=me();return s?STOPS.findIndex(x=>x.name.startsWith(s.wh)):-1}
+function schedTime(i){
+  const m=S.mobile;let lap=m.lap-1;if(i<m.stop)lap++;
+  const base=LAPS[Math.min(lap,LAPS.length-1)]||LAPS[0];const [h,mi]=base.split(":").map(Number);
+  const t=h*60+mi+STOPS[i].off+(lap>=LAPS.length?24*60:0);
+  return (lap>=LAPS.length?"내일 ":"")+pad(Math.floor(t/60)%24)+":"+pad(t%60);
+}
+function mapSVG(myIdx){
+  const m=S.mobile,c=STOPS[m.stop];
+  let h='<svg class="map" viewBox="0 0 400 256" role="img" aria-label="이동 PX 노선도. 현재 '+esc(c.name)+' 정차 중"><defs><pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line class="hl" x1="0" y1="0" x2="0" y2="7"/></pattern></defs>';
+  const route="M200,214 H70 Q52,214 52,196 V44 Q52,26 70,26 H330 Q348,26 348,44 V196 Q348,214 330,214 Z";
+  h+='<path class="road" d="'+route+'"/><path class="road2" d="'+route+'"/>';
+  h+='<rect class="zone" x="150" y="86" width="100" height="68" rx="6"/><text class="zt" x="200" y="116" text-anchor="middle">운행 금지 구역</text><text class="zt" x="200" y="130" text-anchor="middle">(탄약고)</text>';
+  STOPS.forEach((s,i)=>{
+    const lx=s.x<100?s.x+14:s.x>300?s.x-14:s.x,ly=s.y<50?s.y+22:s.y>200?s.y+24:s.y+4,anc=s.x<100?"start":s.x>300?"end":"middle";
+    h+='<circle class="stop'+(i===myIdx?" mine":"")+(i===m.stop?" on":"")+'" cx="'+s.x+'" cy="'+s.y+'" r="6"/>';
+    h+='<text x="'+lx+'" y="'+ly+'" text-anchor="'+anc+'">'+esc(s.name)+(i===myIdx?' (내 생활관)':'')+'</text>';
+    h+='<text class="sm" x="'+lx+'" y="'+(ly+11)+'" text-anchor="'+anc+'">'+schedTime(i)+'</text>';
+  });
+  const vy=c.y>200?c.y-0:c.y;
+  h+='<circle class="pulse" cx="'+c.x+'" cy="'+vy+'" r="16"/><g class="veh" transform="translate('+c.x+','+(vy-16)+')"><rect x="-15" y="-9" width="30" height="16" rx="5"/><text x="0" y="2.5" text-anchor="middle">PX 1호</text></g>';
+  return h+'</svg>';
+}
+function mobileUser(){
+  const m=S.mobile,cur=STOPS[m.stop],my=myStopIdx(),d=(my-m.stop+STOPS.length)%STOPS.length;
+  const items=Object.entries(m.load).map(([pid,q])=>({p:P(pid),q}));
+  let h=m.halted?'<div class="notice red"><b>운행 일시 중지</b>기상 악화로 이동 PX 운행을 멈췄습니다. 재개되면 알려 드립니다.</div>':'';
+  h+='<div class="box" style="padding:8px">'+mapSVG(my)+'</div>';
+  h+='<div class="mstat"><div><small>현재 위치</small><b>'+esc(cur.name)+'</b><span>'+(m.halted?"운행 중지":"정차 중 · 10분 정차")+'</span></div>'+
+     '<div><small>내 생활관 도착</small><b>'+(d===0?"지금 정차 중":d+"정거장 뒤")+'</b><span>'+(d===0?"차량 앞으로 오세요":schedTime(my)+" 예정")+'</span></div></div>';
+  h+='<button class="toggle" data-act="mnotify" aria-pressed="'+(!!V.notify)+'"><span><b style="display:block;font-size:13px">'+esc(STOPS[my].name)+' 도착 알림</b><small class="muted">차량이 도착하면 알림을 보냅니다</small></span><i></i></button>';
+  h+='<button class="btn" data-act="mopen" '+(m.halted?"disabled":"")+'>차량 앞에서 QR로 문 열기</button><small class="muted" style="display:block;text-align:center;margin:6px 0 14px;font-size:11.5px">'+(d===0?"내 생활관 앞에 정차 중입니다":"시연에서는 지금 정차 지점("+esc(cur.name)+")에서 바로 열 수 있습니다")+'</small>';
+  h+='<div class="box"><h4>지금 차량에 실린 상품</h4>'+items.map(x=>'<div class="line">'+illu(x.p,"mini")+'<div class="grow"><b>'+esc(x.p.name)+'</b><small class="muted num">'+won(x.p.price)+'</small></div><span class="num" style="font-size:12.5px;'+(x.q===0?"color:var(--red)":"")+'">'+(x.q===0?"소진":"남은 "+x.q+"개")+'</span></div>').join("")+'</div>';
+  return h;
+}
+function mobileOverlay(ov){
+  const m=S.mobile,cur=STOPS[m.stop],s=me();
+  if(ov.step==="scan")return '<div class="overlay"><div class="modal"><div class="kiosk"><small>'+esc(m.name)+' · 차량 측면 단말 · '+esc(cur.name)+'</small><div class="scanbox"><div data-qr="SMARTPX|MOBILE|'+s.id+'" data-size="120"></div><div class="bar"></div></div></div><h4>QR 인식 중</h4><p>본인 확인 후 진열장 문을 엽니다</p></div></div>';
+  if(ov.step==="open"){
+    const items=Object.entries(m.load).map(([pid,q])=>({p:P(pid),q,t:ov.take[pid]||0}));
+    const total=items.reduce((a,x)=>a+x.p.price*x.t,0),n=items.reduce((a,x)=>a+x.t,0);
+    return '<div class="overlay"><div class="modal tall"><div class="ok" style="font-size:22px">🔓</div><h4>진열장 문이 열렸습니다</h4><p>꺼낸 상품은 무게 센서가 인식합니다.<br>시연에서는 아래에서 꺼낼 상품을 고르세요.</p>'+
+      items.map(x=>'<div class="line">'+illu(x.p,"mini")+'<div class="grow"><b>'+esc(x.p.name)+'</b><small class="muted num">'+won(x.p.price)+' · 남은 '+x.q+'개</small></div><div class="qty"><button data-act="mtake" data-v="'+x.p.id+'" data-d="-1" aria-label="빼기" '+(x.t===0?"disabled":"")+'>−</button><span class="num">'+x.t+'</span><button data-act="mtake" data-v="'+x.p.id+'" data-d="1" aria-label="꺼내기" '+(x.t>=x.q?"disabled":"")+'>+</button></div></div>').join("")+
+      '<div class="total"><span class="muted">꺼낸 상품 '+n+'개</span><b class="num">'+won(total)+'</b></div>'+
+      '<button class="btn" data-act="mclose" '+(n?"":"disabled")+'>문 닫고 자동 결제</button><button class="btn sec" style="margin-top:8px" data-act="close">아무것도 꺼내지 않고 닫기</button></div></div>';
+  }
+  const sale=m.sales[m.sales.length-1];
+  return '<div class="overlay"><div class="modal"><div class="ok">✓</div><h4>자동 결제 완료</h4><p>'+esc(m.name)+' · '+esc(STOPS[sale.stop].name)+'</p>'+
+    '<div class="box" style="text-align:left;margin-bottom:12px">'+sale.items.map(x=>'<div class="line"><div class="grow"><b>'+esc(P(x.pid).name)+' ×'+x.qty+'</b></div><span class="num">'+won(x.price*x.qty)+'</span></div>').join("")+'</div>'+
+    '<div class="total"><span class="muted">'+(s.pay==="card"?"나라사랑카드":"간편결제")+'</span><b class="num">'+won(sale.total)+'</b></div><button class="btn" data-act="close">확인</button></div></div>';
+}
+function mobileAdmin(){
+  const m=S.mobile,cur=STOPS[m.stop];
+  const sold=m.sales.length,amt=m.sales.reduce((a,x)=>a+x.total,0);
+  const loadSum=Object.values(m.load).reduce((a,b)=>a+b,0),tgtSum=Object.values(m.target).reduce((a,b)=>a+b,0);
+  const need=Object.keys(m.target).map(pid=>({p:P(pid),n:m.target[pid]-m.load[pid]})).filter(x=>x.n>0);
+  return '<div class="ph"><div><h2>자율주행 이동 PX</h2><p>정해진 노선을 저속 자율주행하며 정차 지점마다 10분씩 판매합니다. 관리자는 원격으로 차량을 멈출 수 있습니다.</p></div>'+
+  '<div class="ctrl"><button class="btn sm" data-act="mnext" '+(m.halted?"disabled":"")+'>다음 정차지로 (시연)</button><button class="btn sm sec" data-act="mauto" '+(m.halted?"disabled":"")+'>'+(m.auto?"자동 운행 끄기":"자동 운행 켜기")+'</button><button class="btn sm sec" data-act="mhalt" style="'+(m.halted?"":"color:var(--red)")+'">'+(m.halted?"운행 재개":"운행 중지 (기상·안전)")+'</button></div></div>'+
+  (m.halted?'<div class="notice red"><b>운행 중지 중</b>차량이 '+esc(cur.name)+'에 멈춰 있습니다. 장병 화면에도 중지 안내가 표시됩니다.</div>':'')+
+  '<div class="kpis"><div class="kpi"><small>현재 위치</small><b style="font-size:20px">'+esc(cur.name)+'</b><span>'+m.lap+'회차 · '+(m.halted?"운행 중지":m.auto?"자동 운행 중":"정차 중")+'</span></div><div class="kpi"><small>오늘 판매</small><b class="num">'+sold+'건</b><span class="num">'+won(amt)+'</span></div><div class="kpi"><small>적재 잔량</small><b class="num">'+Math.round(loadSum/tgtSum*100)+'%</b><span class="num">'+loadSum+' / '+tgtSum+'개</span></div><div class="kpi"><small>배터리</small><b class="num">'+m.battery+'%</b><span>'+(m.battery<30?"복귀 충전 필요":"정상")+'</span></div></div>'+
+  '<div class="cols"><div class="panel"><h3>노선 관제 <small>시각은 다음 도착 예정 · 빗금 구역은 진입 금지</small></h3>'+mapSVG(-1)+'</div>'+
+  '<div class="panel"><h3>정차 지점별 판매 <small>오늘</small></h3><div class="tbl-wrap"><table><thead><tr><th>정차 지점</th><th>다음 도착</th><th class="r">건수</th><th class="r">금액</th></tr></thead><tbody>'+
+    STOPS.map((s,i)=>{const ss=m.sales.filter(x=>x.stop===i);return '<tr'+(i===m.stop?' style="background:var(--accent-soft)"':'')+'><td>'+esc(s.name)+(i===m.stop?' <span class="pill p-ready">정차 중</span>':'')+'</td><td class="num muted">'+schedTime(i)+'</td><td class="r num">'+ss.length+'</td><td class="r num">'+won(ss.reduce((a,x)=>a+x.total,0))+'</td></tr>'}).join("")+'</tbody></table></div></div></div>'+
+  '<div class="cols"><div class="panel"><h3>차량 적재 재고</h3><div class="tbl-wrap"><table><thead><tr><th>상품</th><th>잔량</th><th class="r">잔량/기준</th><th class="r">판매</th></tr></thead><tbody>'+
+    Object.keys(m.target).map(pid=>{const p=P(pid),l=m.load[pid],t=m.target[pid];return '<tr><td><div class="pn">'+illu(p,"mini")+esc(p.name)+'</div></td><td><div class="sbar"><i class="'+(l===0?"zero":l<t/3?"low":"")+'" style="width:'+(l/t*100)+'%"></i></div></td><td class="r num"><b>'+l+'</b> / '+t+'</td><td class="r num">'+(t-l)+'</td></tr>'}).join("")+'</tbody></table></div></div>'+
+  '<div class="panel"><h3>복귀 시 자동 보충 목록 <small>본점 재고에서 차감</small></h3>'+
+    (need.length?'<ul class="feed">'+need.map(x=>'<li><span class="ftype ft-in">보충</span><div><b style="font-size:13px">'+esc(x.p.name)+' '+x.n+'개</b><div class="muted" style="font-size:12px">본점 재고 '+x.p.stock+'개</div></div><span></span></li>').join("")+'</ul><button class="btn sm" style="margin-top:12px" data-act="mrefill">본점 복귀 · 보충 완료 처리</button>':'<p class="muted">보충할 상품이 없습니다.</p>')+
+    '<h3 style="margin-top:18px">운행 규칙</h3><dl class="meta" style="margin:0"><dt>회차</dt><dd>'+LAPS.join(", ")+' 출발 · 1회 약 100분</dd><dt>속도</dt><dd>최고 10km/h, 보행자 감지 시 자동 정지</dd><dt>정차</dt><dd>지점마다 10분, 정해진 노선만 주행</dd><dt>금지 구역</dt><dd>탄약고·위병소 주변 진입 금지</dd><dt>중지 조건</dt><dd>우천·결빙·시야 불량, 관리자 원격 정지</dd></dl></div></div>';
+}
+function advanceVehicle(quiet){
+  const m=S.mobile;if(m.halted)return;
+  m.stop=(m.stop+1)%STOPS.length;
+  if(m.stop===0){m.lap=Math.min(m.lap+1,LAPS.length+1)}
+  m.battery=Math.max(5,m.battery-2);save();
+  const my=S.session?myStopIdx():-1;
+  if(V.notify&&m.stop===my)toast("이동 PX 도착 알림",STOPS[my].name+"에 도착했습니다. 10분간 정차합니다");
+  else if(!quiet)toast(m.name,STOPS[m.stop].name+" 정차");
+}
+
+/* ---------- 렌더: 관리자 ---------- */
+function counts(){
+  const live=S.products.filter(p=>!p.disposed);
+  return {
+    low:live.filter(p=>p.stock>0&&p.stock<p.safe).length,
+    out:live.filter(p=>p.stock===0).length,
+    sale:S.products.filter(p=>p.discount&&!p.disposed).length,
+    dis:S.products.filter(p=>p.disposed).length,
+    today:S.orders.filter(o=>isToday(o.created)).length,
+    sales:S.orders.filter(o=>isToday(o.created)).reduce((a,o)=>a+o.total,0),
+    po:S.actions.filter(a=>a.type==="order"&&a.status==="발주중").length,
+    ready:S.orders.filter(o=>o.status==="ready").length,
+    open:S.orders.filter(o=>o.status!=="done").length
+  };
+}
+function adminView(){
+  if(!S.admin)return '<div class="login"><h2>PX 관리자 로그인</h2><p>○○대대 PX 관리관 전용 화면입니다.</p>'+
+    '<div class="field"><label for="ad-id">관리자 ID</label><input id="ad-id" value="pxadmin" autocomplete="off"></div>'+
+    '<div class="field"><label for="ad-pin">PIN</label><input id="ad-pin" type="password" inputmode="numeric" maxlength="4" value="0000"></div>'+
+    (V.adminErr?'<div class="notice amber">'+esc(V.adminErr)+'</div>':'')+
+    '<button class="btn" data-act="adminlogin">로그인</button><small class="muted" style="display:block;margin-top:10px">시연용 계정: pxadmin / 0000</small></div>';
+  const c=counts();
+  const nav=[["dash","대시보드",c.low+c.out+c.sale+c.dis],["stock","재고 현황",0],["actions","발주·재고처리",c.po],["orders","주문·수령 처리",c.ready],["mobile","이동 PX",S.mobile.halted?1:0]];
+  return '<div class="admin"><nav class="nav">'+nav.map(n=>'<button data-act="anav" data-v="'+n[0]+'" '+(V.admin===n[0]?'aria-current="page"':'')+'><span>'+n[1]+'</span>'+(n[2]?'<span class="cnt num">'+n[2]+'</span>':'')+'</button>').join("")+
+    '<div class="who">PX 관리관 · 상사 정○○<br><button class="ghost" data-act="adminlogout" style="margin-top:8px;padding:4px 10px;font-size:12px">로그아웃</button></div></nav>'+
+    '<section style="min-width:0">'+(V.admin==="dash"?dash(c):V.admin==="stock"?stock():V.admin==="actions"?actions():V.admin==="mobile"?mobileAdmin():adminOrders())+'</section></div>'+(V.overlay?overlay():"");
+}
+function dash(c){
+  const d=new Date();
+  const shuttleToday=S.orders.filter(o=>o.method==="shuttle"&&o.slot.startsWith("오늘"));
+  const recent=S.actions.slice().sort((a,b)=>b.time-a.time).slice(0,7);
+  const ro=S.orders.slice().sort((a,b)=>b.created-a.created).slice(0,7);
+  return '<div class="ph"><div><h2>오늘의 PX 현황</h2><p>'+korDate(d)+' · 07:00 일일 재고 점검 기준, 주문 시마다 실시간 갱신</p></div></div>'+
+  '<div class="alert"><div class="ic">'+I.bell+'</div><div><b>일일 재고 알림</b><div class="items">'+
+    '<span>재고 부족 <strong class="num" style="color:var(--amber)">'+c.low+'</strong>건</span><span>품절 <strong class="num" style="color:var(--red)">'+c.out+'</strong>건</span><span>유통기한 임박(할인) <strong class="num" style="color:var(--amber)">'+c.sale+'</strong>건</span><span>폐기 대상 <strong class="num" style="color:var(--red)">'+c.dis+'</strong>건</span><span>오늘 주문 <strong class="num">'+c.today+'</strong>건</span></div></div>'+
+    '<button class="btn sm sec" data-act="anav" data-v="actions">자동 처리 내역 보기</button></div>'+
+  '<div class="kpis"><div class="kpi"><small>오늘 주문</small><b class="num">'+c.today+'건</b><span>미수령 '+c.open+'건</span></div><div class="kpi"><small>오늘 매출</small><b class="num">'+won(c.sales)+'</b><span>판매원 없이 처리</span></div><div class="kpi"><small>자동 발주 진행</small><b class="num">'+c.po+'건</b><span>입고 대기</span></div><div class="kpi"><small>수령 대기</small><b class="num">'+c.ready+'건</b><span>창고·픽업대 도착</span></div></div>'+
+  (()=>{const m=S.mobile;const amt=m.sales.reduce((a,x)=>a+x.total,0);const ls=Object.values(m.load).reduce((a,b)=>a+b,0),ts=Object.values(m.target).reduce((a,b)=>a+b,0);
+    return '<div class="panel" style="display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between"><div style="display:flex;gap:12px;align-items:center"><span style="color:var(--accent);width:30px;height:30px;display:inline-block">'+I.truck+'</span><div><b style="font-size:15px">자율주행 이동 PX 1호</b><div class="muted" style="font-size:12.5px">'+(m.halted?"운행 중지":"현재 "+esc(STOPS[m.stop].name)+" 정차 중")+' · '+m.lap+'회차 · 배터리 '+m.battery+'%</div></div></div>'+
+    '<div style="display:flex;gap:24px;font-size:13px"><span class="muted">오늘 판매 <b class="num" style="color:var(--ink)">'+m.sales.length+'건 · '+won(amt)+'</b></span><span class="muted">적재 잔량 <b class="num" style="color:var(--ink)">'+ls+' / '+ts+'개</b></span></div>'+
+    '<button class="btn sm" data-act="anav" data-v="mobile">이동 PX 관제 열기</button></div>'})()+
+  '<div class="panel"><h3>생활관별 셔틀 배송 현황 <small>오늘 · 무인배송창고</small></h3><div class="dgrid">'+WH.map(w=>{
+    const os=shuttleToday.filter(o=>o.place.startsWith(w));
+    return '<div class="wh"><b>'+w+' 창고</b><div class="rows">'+ROUNDS.map(r=>{const n=os.filter(o=>o.slot.includes(r));const dn=n.filter(o=>o.status==="done").length;return '<div><span class="muted">'+r+'</span><span class="num">'+(n.length?dn+" / "+n.length+"건 수령":"—")+'</span></div>'}).join("")+'</div></div>';
+  }).join("")+'</div></div>'+
+  '<div class="cols"><div class="panel"><h3>최근 주문 <button class="btn sm sec" data-act="anav" data-v="orders">전체 보기</button></h3><div class="tbl-wrap"><table><thead><tr><th>주문번호</th><th>장병</th><th>수령</th><th class="r">금액</th><th>상태</th></tr></thead><tbody>'+
+    ro.map(o=>{const s=S.soldiers.find(x=>x.id===o.sid);return '<tr><td class="mono" style="font-size:12px">'+o.id.slice(-4)+'</td><td>'+esc(s.rank+" "+s.name)+'</td><td>'+placeLabel(o)+'</td><td class="r num">'+won(o.total)+'</td><td>'+stPill(o)+'</td></tr>'}).join("")+'</tbody></table></div></div>'+
+  '<div class="panel"><h3>자동 처리 기록</h3><ul class="feed">'+recent.map(feedItem).join("")+'</ul></div></div>';
+}
+function feedItem(a){
+  const p=P(a.pid);const m={order:["자동발주","ft-order"],sale:["할인","ft-sale"],dispose:["폐기","ft-dis"],in:["입고","ft-in"],load:["차량 보충","ft-in"]}[a.type];
+  return '<li><span class="ftype '+m[1]+'">'+m[0]+'</span><div style="min-width:0"><b style="font-size:13px">'+esc(p.name)+' '+a.qty+'개</b><div class="muted" style="font-size:12px">'+esc(a.reason)+'</div></div><span class="muted num" style="font-size:12px">'+hm(new Date(a.time))+'</span></li>';
+}
+function stock(){
+  const fs=[["all","전체"],["low","부족·품절"],["sale","할인"],["dis","폐기"],["pick","픽업전용"]];
+  let list=S.products.slice();
+  if(V.stockFilter==="low")list=list.filter(p=>!p.disposed&&p.stock<p.safe);
+  if(V.stockFilter==="sale")list=list.filter(p=>p.discount&&!p.disposed);
+  if(V.stockFilter==="dis")list=list.filter(p=>p.disposed);
+  if(V.stockFilter==="pick")list=list.filter(p=>p.pickupOnly);
+  return '<div class="ph"><div><h2>재고 현황</h2><p>막대의 세로선은 안전재고입니다. 그 아래로 내려가면 적정재고까지 자동 발주됩니다.</p></div><div class="chips" style="margin:0">'+fs.map(f=>'<button class="chip" data-act="sfilter" data-v="'+f[0]+'" aria-pressed="'+(V.stockFilter===f[0])+'">'+f[1]+'</button>').join("")+'</div></div>'+
+  '<div class="panel"><div class="tbl-wrap"><table><thead><tr><th>상품</th><th>분류</th><th class="r">판매가</th><th>재고</th><th class="r">현재고</th><th class="r">안전/적정</th><th>유통기한</th><th>상태</th></tr></thead><tbody>'+
+  list.map(p=>{
+    const st=status(p),d=dday(p),w=Math.min(100,p.stock/p.target*100),sm=p.safe/p.target*100;
+    return '<tr><td><div class="pn">'+illu(p,"mini")+'<span>'+esc(p.name)+'</span>'+(p.pickupOnly?'<span class="tag pick">픽업전용</span>':'')+'</div></td><td class="muted">'+CAT[p.cat].name+'</td><td class="r num">'+won(salePrice(p))+'</td>'+
+    '<td><div class="sbar"><i class="'+(p.stock===0?"zero":p.stock<p.safe?"low":"")+'" style="width:'+w+'%"></i><u style="left:'+sm+'%"></u></div></td><td class="r num"><b>'+p.stock+'</b></td><td class="r num muted">'+p.safe+' / '+p.target+'</td>'+
+    '<td class="num">'+(d===null?'<span class="muted">—</span>':(d<=7?'<b style="color:'+(d<=1?"var(--red)":"var(--amber)")+'">D-'+Math.max(d,0)+'</b>':'<span class="muted">'+p.expiry.slice(5).replace("-",".")+'</span>'))+'</td><td><span class="pill '+st[1]+'">'+st[0]+'</span></td></tr>';
+  }).join("")+'</tbody></table></div></div>';
+}
+function actions(){
+  const po=S.actions.filter(a=>a.type==="order").sort((a,b)=>(a.status===b.status?b.time-a.time:a.status==="발주중"?-1:1));
+  const other=S.actions.filter(a=>a.type!=="order").sort((a,b)=>b.time-a.time);
+  return '<div class="ph"><div><h2>발주·재고처리 내역</h2><p>규칙: 안전재고 미만이면 적정재고까지 자동 발주 · 유통기한 D-7~D-2는 30% 할인 · D-1 이하는 폐기 후 판매 중지</p></div></div>'+
+  '<div class="panel"><h3>자동 발주 <small>발주중 '+po.filter(a=>a.status==="발주중").length+'건</small></h3><div class="tbl-wrap"><table><thead><tr><th>처리번호</th><th>상품</th><th class="r">발주 수량</th><th>사유</th><th>생성</th><th>상태</th><th></th></tr></thead><tbody>'+
+  (po.length?po.map(a=>{const p=P(a.pid);return '<tr><td class="mono" style="font-size:12px">'+a.id+'</td><td><div class="pn">'+illu(p,"mini")+esc(p.name)+'</div></td><td class="r num"><b>'+a.qty+'</b></td><td class="muted">'+esc(a.reason)+'</td><td class="num muted">'+hm(new Date(a.time))+'</td><td><span class="pill '+(a.status==="발주중"?"p-move":"p-ready")+'">'+a.status+'</span></td><td>'+(a.status==="발주중"?'<button class="btn sm" data-act="receive" data-v="'+a.id+'">입고 처리</button>':'')+'</td></tr>'}).join(""):'<tr><td colspan="7" class="muted">발주 내역이 없습니다.</td></tr>')+'</tbody></table></div></div>'+
+  '<div class="panel"><h3>할인·폐기·입고 기록</h3><div class="tbl-wrap"><table><thead><tr><th>처리번호</th><th>유형</th><th>상품</th><th class="r">수량</th><th>사유</th><th>시각</th></tr></thead><tbody>'+
+  other.map(a=>{const p=P(a.pid);const m={sale:["할인","ft-sale"],dispose:["폐기","ft-dis"],in:["입고","ft-in"],load:["차량 보충","ft-in"]}[a.type];return '<tr><td class="mono" style="font-size:12px">'+a.id+'</td><td><span class="ftype '+m[1]+'">'+m[0]+'</span></td><td><div class="pn">'+illu(p,"mini")+esc(p.name)+'</div></td><td class="r num">'+a.qty+'</td><td class="muted">'+esc(a.reason)+'</td><td class="num muted">'+hm(new Date(a.time))+'</td></tr>'}).join("")+'</tbody></table></div></div>';
+}
+function adminOrders(){
+  const list=S.orders.slice().sort((a,b)=>{const r=x=>x.status==="ready"?0:x.status==="done"?2:1;return r(a)-r(b)||b.created-a.created});
+  return '<div class="ph"><div><h2>주문·수령 처리</h2><p>창고·픽업대 단말 역할입니다. 주문번호를 입력하거나 장병 화면의 QR을 스캔해 수령을 확정합니다.</p></div></div>'+
+  '<div class="panel"><h3>QR 수령 단말</h3><div class="scanrow"><input id="scan-in" class="mono" placeholder="주문번호 입력 (예: '+(list[0]?list[0].id:"ORD-…")+')" autocomplete="off"><button class="btn sm" data-act="scanin">QR 스캔 / 수령 처리</button></div></div>'+
+  '<div class="panel"><h3>오늘 주문 <small>'+list.length+'건</small></h3><div class="tbl-wrap"><table><thead><tr><th>주문번호</th><th>장병</th><th>상품</th><th>수령</th><th>시간</th><th class="r">금액</th><th>상태</th><th></th></tr></thead><tbody>'+
+  list.map(o=>{const s=S.soldiers.find(x=>x.id===o.sid);const it=o.items.map(x=>P(x.pid).emoji).join(" ");
+    return '<tr><td class="mono" style="font-size:12px">'+o.id+'</td><td style="white-space:nowrap">'+esc(s.rank+" "+s.name)+'</td><td>'+it+'</td><td style="white-space:nowrap">'+placeLabel(o)+'</td><td class="num" style="white-space:nowrap">'+esc(o.slot.replace(" 회차",""))+'</td><td class="r num">'+won(o.total)+'</td><td>'+stPill(o)+'</td><td style="white-space:nowrap">'+(o.status==="done"?"":(o.status==="ready"?'<button class="btn sm" data-act="scan" data-v="'+o.id+'">수령 처리</button>':'<button class="btn sm sec" data-act="advance" data-v="'+o.id+'">다음 단계</button>'))+'</td></tr>'}).join("")+'</tbody></table></div></div>';
+}
+
+/* ---------- 동작 ---------- */
+function advance(id){
+  const o=S.orders.find(x=>x.id===id);if(!o||o.status==="done")return;
+  const f=flow(o),i=f.indexOf(o.status);
+  if(f[i+1]==="done"){openScan(id);return}
+  o.status=f[i+1];save();
+  const msg={prep:"상품을 준비하고 있습니다",move:"무인셔틀이 출발했습니다",ready:o.method==="shuttle"?o.place+"에 도착했습니다":"픽업대에 준비되었습니다"}[o.status];
+  toast(o.id.slice(-4)+"번 주문",msg);render();
+}
+function openScan(id){
+  const o=S.orders.find(x=>x.id===id);if(!o)return;
+  const page=V.mode==="admin";
+  if(o.status!=="ready"){V.overlay={kind:"scan",id,step:"notready",page};render();return}
+  V.overlay={kind:"scan",id,step:"scanning",page};render();
+  setTimeout(()=>{o.status="done";o.received=Date.now();o.locker=1+Math.floor(Math.random()*12);save();V.overlay={kind:"scan",id,step:"done",page};render()},1400);
+}
+function checkout(){
+  const pl=plan(),s=me();
+  V.overlay={kind:"paying"};render();
+  setTimeout(()=>{
+    const ids=[];
+    for(const o of pl){
+      for(const x of o.items){const p=P(x.pid);p.stock=Math.max(0,p.stock-x.qty)}
+      const ord={id:nextOrderId(Date.now()),sid:s.id,items:o.items,total:o.items.reduce((a,x)=>a+x.price*x.qty,0),pay:V.pay,method:o.method,place:o.place,slot:o.slot,status:"wait",created:Date.now(),received:null,locker:null};
+      S.orders.push(ord);ids.push(ord.id);
+    }
+    const made=evaluate();
+    S.cart={};save();
+    V.newIds=ids;V.overlay=null;V.user="orders";render();
+    toast("결제 완료","수령 QR "+ids.length+"개가 생성되었습니다");
+    made.filter(a=>a.type==="order").forEach(a=>toast("관리자 알림 · 자동 발주",P(a.pid).name+" "+a.qty+"개 (안전재고 미만)"));
+  },1500);
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-act]");if(!b)return;
+  const a=b.dataset.act,v=b.dataset.v;
+  if(a!=="reset"&&V.resetArm){V.resetArm=false}
+  switch(a){
+    case"mode":V.mode=v;V.overlay=null;break;
+    case"reset":if(!V.resetArm){V.resetArm=true;render();setTimeout(()=>{if(V.resetArm){V.resetArm=false;render()}},4000);return}
+      V.resetArm=false;try{localStorage.removeItem(KEY)}catch(e){}seed();Object.assign(V,{user:"login",admin:"dash",cat:"all",method:"pickup",wh:"",newIds:[],overlay:null,notify:false});toast("초기화 완료","시연 데이터를 처음 상태로 되돌렸습니다");break;
+    case"login":{
+      const id=document.getElementById("lg-id").value.trim(),pin=document.getElementById("lg-pin").value.trim();
+      const s=S.soldiers.find(x=>x.id===id);
+      if(!s){V.loginErr="등록되지 않은 군번입니다. 아래에서 시연용 계정을 골라 주세요.";break}
+      if(s.pin!==pin){V.loginErr="PIN이 맞지 않습니다. 군번 끝 4자리를 입력해 주세요.";break}
+      S.session=s.id;V.loginErr="";V.user="mall";V.wh=s.wh;V.pay=s.pay;V.newIds=[];save();break}
+    case"logout":S.session=null;S.cart={};V.user="login";V.newIds=[];save();break;
+    case"go":V.user=v;if(v!=="orders")V.newIds=[];break;
+    case"cat":V.cat=v;break;
+    case"add":{const p=P(v);if(!p||p.stock===0)return;S.cart[v]=Math.min(p.stock,(S.cart[v]||0)+1);save();break}
+    case"qty":{const p=P(v);const n=(S.cart[v]||0)+(+b.dataset.d);if(n<=0)delete S.cart[v];else S.cart[v]=Math.min(p.stock,n);save();break}
+    case"method":V.method=v;break;
+    case"pay":V.pay=v;break;
+    case"checkout":checkout();return;
+    case"advance":advance(v);return;
+    case"scan":openScan(v);return;
+    case"close":V.overlay=null;break;
+    case"mnotify":V.notify=!V.notify;if(V.notify)toast("도착 알림 설정",STOPS[myStopIdx()].name+"에 도착하면 알려 드립니다");break;
+    case"mopen":if(S.mobile.halted)return;V.overlay={kind:"mobile",step:"scan",take:{}};render();
+      setTimeout(()=>{if(V.overlay&&V.overlay.kind==="mobile"&&V.overlay.step==="scan"){V.overlay.step="open";render()}},1300);return;
+    case"mtake":{const ov=V.overlay;if(!ov)return;const n=(ov.take[v]||0)+(+b.dataset.d);ov.take[v]=Math.max(0,Math.min(S.mobile.load[v],n));break}
+    case"mclose":{const ov=V.overlay,m=S.mobile,s=me();
+      const items=Object.entries(ov.take).filter(([,q])=>q>0).map(([pid,qty])=>({pid,qty,price:P(pid).price}));if(!items.length)return;
+      items.forEach(x=>m.load[x.pid]-=x.qty);
+      const total=items.reduce((a,x)=>a+x.price*x.qty,0),now=Date.now();
+      m.sales.push({time:now,stop:m.stop,sid:s.id,items,total});
+      S.orders.push({id:nextOrderId(now),sid:s.id,items,total,pay:s.pay,method:"mobile",place:m.name+" · "+STOPS[m.stop].name,slot:"현장 구매 "+hm(new Date(now)),status:"done",created:now,received:now,locker:null});
+      save();ov.step="paid";break}
+    case"mnext":advanceVehicle();break;
+    case"mauto":S.mobile.auto=!S.mobile.auto;save();toast(S.mobile.name,S.mobile.auto?"자동 운행을 시작합니다 (시연: 12초마다 다음 정차지)":"자동 운행을 멈췄습니다");break;
+    case"mhalt":{const m=S.mobile;m.halted=!m.halted;if(m.halted)m.auto=false;save();toast(m.name,m.halted?"운행을 중지했습니다. 차량이 안전하게 정차합니다":"운행을 재개합니다");break}
+    case"mrefill":{const m=S.mobile;const made=[];
+      Object.keys(m.target).forEach(pid=>{const p=P(pid),n=Math.min(m.target[pid]-m.load[pid],p.stock);if(n>0){p.stock-=n;m.load[pid]+=n;addAction({type:"load",pid,qty:n,reason:m.name+" 복귀 보충 · 본점 재고 "+p.stock,status:"처리완료"})}});
+      m.stop=0;m.battery=100;
+      evaluate().filter(a=>a.type==="order").forEach(a=>toast("관리자 알림 · 자동 발주",P(a.pid).name+" "+a.qty+"개 (본점 재고 보충분)"));
+      save();toast(m.name,"본점 복귀, 보충과 충전을 마쳤습니다");break}
+    case"adminlogin":{const id=document.getElementById("ad-id").value.trim(),pin=document.getElementById("ad-pin").value.trim();
+      if(id!=="pxadmin"||pin!=="0000"){V.adminErr="ID 또는 PIN이 맞지 않습니다. 시연용 계정은 pxadmin / 0000입니다.";break}
+      S.admin=true;V.adminErr="";V.admin="dash";save();break}
+    case"adminlogout":S.admin=false;save();break;
+    case"anav":V.admin=v;break;
+    case"sfilter":V.stockFilter=v;break;
+    case"receive":{const ac=S.actions.find(x=>x.id===v);if(!ac)return;const p=P(ac.pid);
+      p.stock+=ac.qty;ac.status="입고완료";
+      if(p.disposed||p.discount){p.disposed=false;p.discount=false;if(p.shelf)p.expiry=ymd(addDays(new Date(),p.shelf))}
+      addAction({type:"in",pid:p.id,qty:ac.qty,reason:ac.id+" 발주분 입고 · 현재고 "+p.stock,status:"처리완료"});
+      evaluate();save();toast("입고 완료",p.name+" "+ac.qty+"개 · 현재고 "+p.stock+"개");break}
+    case"scanin":{const val=document.getElementById("scan-in").value.trim().toUpperCase();
+      const o=S.orders.find(x=>x.id===val||x.id.endsWith(val)&&val.length>=4);
+      if(!o){toast("주문을 찾을 수 없습니다","주문번호를 다시 확인해 주세요");return}
+      if(o.status==="done"){toast("이미 수령한 주문입니다",o.id);return}
+      openScan(o.id);return}
+    default:return;
+  }
+  render();
+});
+document.addEventListener("change",e=>{
+  const el=e.target;
+  if(el.id==="lg-pick"&&el.value){const s=S.soldiers.find(x=>x.id===el.value);document.getElementById("lg-id").value=s.id;document.getElementById("lg-pin").value=s.pin;return}
+  if(el.dataset.bind){V[el.dataset.bind]=el.value;render()}
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Enter"){if(e.target.id==="lg-pin"||e.target.id==="lg-id")document.querySelector('[data-act="login"]').click();
+    if(e.target.id==="ad-pin")document.querySelector('[data-act="adminlogin"]').click();
+    if(e.target.id==="scan-in")document.querySelector('[data-act="scanin"]').click();}
+  if(e.key==="Escape"&&V.overlay&&V.overlay.kind==="scan"&&V.overlay.step!=="scanning"){V.overlay=null;render()}
+});
+function tick(){const d=new Date();document.getElementById("clock").textContent=korDate(d)+" "+hm(d)}
+
+S=load();if(!S)seed();
+if(S.session){V.user="mall";const s=me();if(s){V.wh=s.wh;V.pay=s.pay}else S.session=null}
+// 하루가 지나 유통기한이 바뀐 경우 반영
+if(evaluate().length)save();
+tick();setInterval(tick,30000);
+setInterval(()=>{if(!S.mobile.auto||S.mobile.halted)return;advanceVehicle(true);
+  const a=document.activeElement;if(a&&(a.tagName==="INPUT"||a.tagName==="SELECT"))return;
+  if(V.overlay&&V.overlay.kind==="mobile")return;render()},12000);
+render();
+})();
+</script>
+
+</body>
+</html>

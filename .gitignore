@@ -1,0 +1,7 @@
+# Office 임시·잠금 파일
+~$*
+*.tmp
+# OS
+Thumbs.db
+desktop.ini
+.DS_Store
