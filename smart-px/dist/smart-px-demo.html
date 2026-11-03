@@ -2424,7 +2424,7 @@ const Sync = (() => {
   }
 
   function label() {
-    if (status === 'local') return { text: db === null && window.claude ? '개인 모드 · 실시간 공유 꺼짐' : '오프라인 파일', tone: 'muted' };
+    if (status === 'local') return { text: db === null && window.claude ? '개인 모드 · 실시간 공유 꺼짐' : location.protocol.startsWith('http') ? '이 브라우저에 저장' : '오프라인 파일', tone: 'muted' };
     if (status === 'offline') return { text: '연결 확인 중…', tone: 'warn' };
     const n = pending.size + inflight.size;
     if (n) return { text: `저장 중 ${n}건`, tone: 'busy' };
